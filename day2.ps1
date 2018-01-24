@@ -1,4 +1,4 @@
-$Content = Get-Content "input-day2.txt";
+$Content = Get-Content "input-day2-lytse.txt";
 $sum=0;
 $Content | %{ $h=0;$l=[int]::MaxValue; $_ -Split '\s+' | % { $x = [convert]::ToInt32($_, 10);$h=[math]::max($x,$h);$l=[math]::min($x,$l); }; $sum += ($h-$l); }
 #return $sum;
@@ -17,4 +17,34 @@ $Content | %{
 	}
 }
 
-return $sum;
+Write-Host $sum;
+
+$sum=0;
+$Content | %{ 
+	$digits = $_ -Split '\s+' | % { [convert]::ToInt32($_, 10);	}; 
+	for($x=0;$x -lt $digits.length;$x++) {
+		for($y=0;$y -lt $digits.length;$y++) {
+			if($x -eq $y) { continue; }
+			if($digits[$x] % $digits[$y] -eq 0) {
+				$sum+=$digits[$x] / $digits[$y];
+			}
+		}
+	}
+}
+
+Write-Host $sum;
+
+$sum=0;
+$Content | %{ 
+	$digits = $_ -Split '\s+' | % { [convert]::ToInt32($_, 10);	}; 
+	for($x=0;$x -lt $digits.length;$x++) {
+		for($y=0;$y -lt $digits.length;$y++) {
+			if($digits[$x]/ $digits[$y] -eq 1) { continue; }
+			if($digits[$x] % $digits[$y] -eq 0) {
+				$sum+=$digits[$x] / $digits[$y];
+			}
+		}
+	}
+}
+
+Write-Host $sum;
