@@ -55,4 +55,4 @@ for($i=0;$i -lt $ListSize; $i += $BlockSize) {
 	[void]$DenseParts.Add( ($Block | % { $res=0; } { $res = $res -bxor $_; } { $res; }) );
 }
 
-Write-Output (($DenseParts | ForEach-Object { ("{0:X2}" -f $_) }) -Join "");
+return (($DenseParts | ForEach-Object { ("{0:X2}" -f $_) }) -Join "");

@@ -91,7 +91,6 @@ class GridGroupCounter
         $Groups = 0;
         for([int]$y=0;$y -lt $this.Height; $y++) {
             for([int]$x=0; $x -lt $this.Width; $x++) {
-                Write-Output "X: ${x} Y: ${y}";
                 $x = [int]$x;
                 $y = [int]$y;
                 if($this.CheckCell($x, $y)) {
