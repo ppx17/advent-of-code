@@ -123,18 +123,18 @@ for($i = 0; $i -lt $Bursts; $i++) {
     $NextState = $null;
 
     switch($CurrentNode) {
-        [CellState]::Clean {
+        ([CellState]::Clean) {
             $Navigator.TurnLeft();
             $NextState = if($Part2) { [CellState]::Weakened }else{ [CellState]::Infected };
         }
-        [CellState]::Infected {
+        ([CellState]::Infected) {
             $Navigator.TurnRight();
             $NextState = if($Part2) { [CellState]::Flagged; }else { [CellState]::Clean; };
         }
-        [CellState]::Weakened {
+        ([CellState]::Weakened) {
             $NextState = [CellState]::Infected;
         }
-        [CellState]::Flagged {
+        ([CellState]::Flagged) {
             $Navigator.Reverse();
             $NextState = [CellState]::Clean;
         }
