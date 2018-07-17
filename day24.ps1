@@ -1,6 +1,5 @@
 Param(
-    [string]$InputFile = 'input-day24.txt',
-    [switch]$Part2
+    [string]$InputFile = 'input-day24.txt'
 );
 
 Class Node {
@@ -102,12 +101,12 @@ $StartOptions |  ForEach-Object {
     Invoke-History -History $History;
 }
 
-if($Part2) {
-    $AllHistories | Select-Object TotalStrength, `
-        @{"Name"="Length"; Expression={$_.GetLength()}}, `
-        @{"Name"="Representation"; Expression={$_.ToString()}} | Sort-Object -Descending Length,TotalStrength | Select-Object -First 10;
-}else{
-    $AllHistories | Select-Object TotalStrength, `
-        @{"Name"="Length"; Expression={$_.GetLength()}}, `
-        @{"Name"="Representation"; Expression={$_.ToString()}} | Sort-Object -Descending TotalStrength | Select-Object -First 10;
-}
+$Bridges = $AllHistories | Select-Object TotalStrength, `
+    @{"Name"="Length"; Expression={$_.GetLength()}}, `
+    @{"Name"="Representation"; Expression={$_.ToString()}}
+
+Write-Output "Part 1:";
+$Bridges | Sort-Object -Descending TotalStrength | Select-Object -First 10;
+
+Write-Output "Part 2:";
+$Bridges | Sort-Object -Descending Length,TotalStrength | Select-Object -First 10;
