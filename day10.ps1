@@ -52,7 +52,7 @@ Write-Verbose ("Part 1 Checksum: {0} * {1} = {2}" -f $List[0], $List[1], ($List[
 $DenseParts = [System.Collections.ArrayList]@();
 for($i=0;$i -lt $ListSize; $i += $BlockSize) {
 	$Block = $List | Select-Object -First $BlockSize -Skip $i;
-	[void]$DenseParts.Add( ($Block | % { $res=0; } { $res = $res -bxor $_; } { $res; }) );
+	[void]$DenseParts.Add( ($Block | ForEach-Object { $res=0; } { $res = $res -bxor $_; } { $res; }) );
 }
 
 return (($DenseParts | ForEach-Object { ("{0:X2}" -f $_) }) -Join "");
