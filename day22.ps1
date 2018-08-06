@@ -40,7 +40,7 @@ class Grid {
 
     [CellState]Get([int]$x, [int]$y) {
         $Key = $this.Key($x, $y);
-        if($this.Grid[$Key] -eq $null) {
+        if($null -eq $this.Grid[$Key]) {
             return [CellState]::Clean;
         }
         return $this.Grid[$Key];
@@ -139,7 +139,7 @@ for($i = 0; $i -lt $Bursts; $i++) {
             $NextState = [CellState]::Clean;
         }
     }
-    
+
     if($NextState -eq [CellState]::Infected) {
         $InfectedCount++;
     }
