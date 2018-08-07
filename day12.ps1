@@ -32,7 +32,7 @@ Function DiscoverGroup($ProgramId) {
 }
 
 $ZeroGroup = DiscoverGroup($ProgramId);
-$ZeroGroup | Measure-Object;
+Write-Output ("Part 1: {0}" -f ($ZeroGroup | Measure-Object).Count);
 
 $AllNodes = [System.Collections.ArrayList]((0..($Nodes.Count - 1)) | ForEach-Object { [string]$_; })
 
@@ -47,4 +47,4 @@ do {
     $GroupCount++;
 }while($AllNodes.Count -gt 0);
 
-Write-Output $GroupCount;
+Write-Output "Part 2: ${GroupCount}";
