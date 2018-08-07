@@ -1,4 +1,8 @@
-$Content = (Get-Content 'input-day11.txt') -Split ',';
+Param(
+	[string]$InputFile = 'input-day11.txt'
+);
+
+$Content = (Get-Content $InputFile) -Split ',';
 $Furthest = $X = $Y = 0;
 $Content | ForEach-Object {
 	switch ($_) {
