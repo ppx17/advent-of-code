@@ -1,9 +1,6 @@
-$Content = (gc 'input-day11.txt') -Split ',';
-
-$X = $Y = 0;
-$Furthest = 0;
-
-$Content | % {
+$Content = (Get-Content 'input-day11.txt') -Split ',';
+$Furthest = $X = $Y = 0;
+$Content | ForEach-Object {
 	switch ($_) {
 		"N" { $Y++; }
 		"S" { $Y--; }
@@ -16,7 +13,6 @@ $Content | % {
 	}
 	
 	$Distance = ([math]::abs($X) + [math]::abs($Y));
-	
 	if($Distance -gt $Furthest) { $Furthest = $Distance; }
 }
 Write-Host $Distance, $Furthest;
