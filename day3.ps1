@@ -35,20 +35,18 @@ Write-Host $Distance;
 
 Class Matrix {
 	[System.Collections.HashTable]$data = @{};
-		
+
 	[int]Read([int]$x, [int]$y) {
-		if($this.data[$x] -ne $null -and $this.data[$x][$y] -ne $null) {
-			return $this.data[$x][$y];
+		$Key = $this.Key($x, $y);
+		if($this.data[$Key]) {
+			return $this.data[$Key];
 		}else{
 			return 0;
 		}
 	}
 	
 	[void]Write([int]$x, [int]$y, [int]$val) {
-		if($this.data[$x] -eq $null) {
-			$this.data[$x] = [System.Collections.HashTable]@{};
-		}
-		$this.data[$x][$y] = $val;
+		$this.data[$this.Key($x, $y)] = $val;
 	}
 	
 	[int]SumOfNeighbors([int]$x, [int]$y) {
@@ -60,6 +58,10 @@ Class Matrix {
 			}
 		}
 		return $sum;
+	}
+
+	[string]Key([int]$x, [int]$y) {
+		return ("{0}:{1}" -f $x, $y);
 	}
 }
 
