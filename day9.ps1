@@ -1,8 +1,9 @@
 Param(
-	$Stream
+	$Stream,
+	$InputFile = 'input-day9.txt'
 );
-if($Stream -eq $Null) {
-	$Stream = GC 'input-day9.txt';
+if($null -eq $Stream) {
+	$Stream = Get-Content $InputFile;
 }
 $EscapedStream = ($Stream -replace "!.","");
 
@@ -20,11 +21,11 @@ foreach($Char in $GarbagelessStream.ToCharArray()) {
 	}
 }
 
-Write-host $GroupLevelCount;
+Write-Output "Part 1: ${GroupLevelCount}";
 
 # Part two
 
 $TotalLength = 0;
-([regex]"<[^>]*>").Matches($EscapedStream) | % { $TotalLength += $_.Length - 2; }
+([regex]"<[^>]*>").Matches($EscapedStream) | ForEach-Object { $TotalLength += $_.Length - 2; }
 
-Write-Host $TotalLength;
+Write-Output "Part 2: ${TotalLength}";
