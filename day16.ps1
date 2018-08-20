@@ -1,17 +1,14 @@
 Param(
-    [string]$MoveText,
-    [int]$NumDancers = 16,
-    [int]$Iterations=1
+    [string]$InputFile="input-day16.txt",
+    [int]$NumDancers=16,
+    [int]$Iterations=1000000000
 );
 
-if([string]::IsNullOrEmpty($MoveText)) {
-    $MoveText = (Get-Content "input-day16.txt" -Raw);
-}
-$Moves = $MoveText -Split ",";
+$Moves = (Get-Content $InputFile -Raw) -Split ",";
 
 # The explicit string[] casting makes sure IndexOf works with strings, otherwise the result will be an object[].
 $Dancers = ([string[]] $((([int][char]'a')..(([int][char]'a')+($NumDancers-1))) | ForEach-Object { [char]$_ }))
-$DancersOriginal = $Dancers.Clone();
+$OriginalPositions = ($Dancers -Join "");
 
 function GetParams($Instruction) {
     $Instruction.Substring(1) -Split "/";
@@ -34,47 +31,41 @@ foreach($Move in $Moves) {
     }
 }
 
-foreach($Instruction in $CompiledInstructions) {
-    switch( $Instruction[0] ) {
-        "s" {
-            $SpinSize = $Instruction[1]
-            # The explicit string[] casting makes sure IndexOf works with strings, otherwise the result will be an object[].
-            $Dancers = ($Dancers[-$SpinSize..-1] + $Dancers[0..($Dancers.Count-$SpinSize-1)]);;
-        }
-        "x" {
-            $tmp = $Dancers[[int]$Instruction[1]];
-            $Dancers[[int]$Instruction[1]] = $Dancers[[int]$Instruction[2]];
-            $Dancers[[int]$Instruction[2]] = $tmp;
-        }
-        "p" {
-            $pos1 = $Dancers.IndexOf($Instruction[1]);
-            $pos2 = $Dancers.IndexOf($Instruction[2])
-            $tmp = $Dancers[$pos1];
-            $Dancers[$pos1] = $Dancers[$pos2];
-            $Dancers[$pos2] = $tmp;
+$PositionsPerIteration = [System.Collections.ArrayList]@();
+for($i=0; $i -lt $Iterations; $i++) {
+    foreach($Instruction in $CompiledInstructions) {
+        switch( $Instruction[0] ) {
+            "s" {
+                $SpinSize = $Instruction[1]
+                # The explicit string[] casting makes sure IndexOf works with strings, otherwise the result will be an object[].
+                $Dancers = ($Dancers[-$SpinSize..-1] + $Dancers[0..($Dancers.Count-$SpinSize-1)]);
+            }
+            "x" {
+                $tmp = $Dancers[[int]$Instruction[1]];
+                $Dancers[[int]$Instruction[1]] = $Dancers[[int]$Instruction[2]];
+                $Dancers[[int]$Instruction[2]] = $tmp;
+            }
+            "p" {
+                $pos1 = $Dancers.IndexOf($Instruction[1]);
+                $pos2 = $Dancers.IndexOf($Instruction[2])
+                $tmp = $Dancers[$pos1];
+                $Dancers[$pos1] = $Dancers[$pos2];
+                $Dancers[$pos2] = $tmp;
+            }
         }
     }
-}
-
-$Map = [int[]]::new($DancersOriginal.Count);
-
-Write-Output ($DancersOriginal -Join "");
-for($i=0;$i -lt $DancersOriginal.Count; $i++) {
-    $Map[$i] = $Dancers.IndexOf($DancersOriginal[$i]);
-}
-Write-Output ($Map -Join " ");
-
-
-$Dancers = $DancersOriginal.Clone();
-$MapTime = (Measure-Command {
-for($Iteration=0;$Iteration -lt $Iterations; $Iteration++) {
-    $Tmp = $Dancers.Clone();
-    for($i=0;$i -lt $Map.Length; $i++) {
-        $Dancers[$Map[$i]] = $Tmp[$i];
+    $Positions = ($Dancers -Join "");
+    [void]$PositionsPerIteration.Add($Positions);
+    if($i -eq 0) { 
+        Write-Output "Part 1: ${Positions}";
+    }
+    if($Positions -eq $OriginalPositions) { 
+        $Left = $Iterations % ($i + 1);
+        if($PositionsPerIteration.Count -gt $Left) {
+            Write-Output ("Part 2: {0}" -f $PositionsPerIteration[$Left - 1]);
+        }else{
+            Write-Output "Whoops, haven't calculated the left yet.";
+        }
+        break;
     }
 }
-}).TotalMilliseconds;
-
-Write-Output ("Runtime with map: {0} ms" -f $MapTime)
-
-Write-Output ($Dancers -Join "");
