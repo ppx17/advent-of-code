@@ -3,16 +3,13 @@ Param(
     [int]$NumDancers=16,
     [int]$Iterations=1000000000
 );
+$Start = Get-Date;
 
 $Moves = (Get-Content $InputFile -Raw) -Split ",";
 
 # The explicit string[] casting makes sure IndexOf works with strings, otherwise the result will be an object[].
 $Dancers = ([string[]] $((([int][char]'a')..(([int][char]'a')+($NumDancers-1))) | ForEach-Object { [char]$_ }))
 $OriginalPositions = ($Dancers -Join "");
-
-function GetParams($Instruction) {
-    $Instruction.Substring(1) -Split "/";
-}
 
 $CompiledInstructions = [System.Collections.ArrayList]@();
 foreach($Move in $Moves) {
@@ -21,11 +18,11 @@ foreach($Move in $Moves) {
             [void]$CompiledInstructions.Add(@("s", [int]$Move.Substring(1)));
         }
         "x" {
-            $Params = GetParams($Move);
+            $Params = $Move.Substring(1) -Split "/"
             [void]$CompiledInstructions.Add(@("x", [int]$Params[0], [int]$Params[1]));
         }
         "p" {
-            $Params = GetParams($Move);
+            $Params = $Move.Substring(1) -Split "/";
             [void]$CompiledInstructions.Add(@("p", $Params[0], $Params[1]));
         }
     }
@@ -58,14 +55,11 @@ for($i=0; $i -lt $Iterations; $i++) {
     [void]$PositionsPerIteration.Add($Positions);
     if($i -eq 0) { 
         Write-Output "Part 1: ${Positions}";
-    }
-    if($Positions -eq $OriginalPositions) { 
+        Write-Output ("{0:N2} ms" -f ((Get-Date) - $Start).TotalMilliSeconds);
+    }elseif($Positions -eq $OriginalPositions) { 
         $Left = $Iterations % ($i + 1);
-        if($PositionsPerIteration.Count -gt $Left) {
-            Write-Output ("Part 2: {0}" -f $PositionsPerIteration[$Left - 1]);
-        }else{
-            Write-Output "Whoops, haven't calculated the left yet.";
-        }
+        Write-Output ("Part 2: {0}" -f $PositionsPerIteration[$Left - 1]);
+        Write-Output ("{0:N2} ms" -f ((Get-Date) - $Start).TotalMilliSeconds);
         break;
     }
 }
