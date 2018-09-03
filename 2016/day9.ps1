@@ -5,39 +5,31 @@ Param(
 $Compressed = (Get-Content $InputFile -Raw).Trim();
 
 $Cursor = 0;
-
-$Uncompressed = [System.Text.StringBuilder]::new()
+$UncompressedSize = 0;
 
 while( ($Compressed.SubString($Cursor) -Match "\(([0-9]+)x([0-9]+)\)") ) {
     # If the match was not the first character at the cursor, we need to put all characters before it in uncompressed
     $Partial = $Compressed.SubString($Cursor);
-
     $Loc = $Partial.IndexOf($Matches[0]);
-    if($Loc -gt 0) {
-        [void]$Uncompressed.Append($Partial.SubString(0, $Loc));
-        
-        # Move the cursor to the match
-        $Cursor += $Loc;
-
-        # Move partial ahead
-        $Partial = $Compressed.SubString($Cursor);
-    }
+    # Add prefix to total length
+    $UncompressedSize += $Loc;
+    
+    # Move the cursor to the match
+    $Cursor += $Loc;
 
     # Expand the match
     $Size = [int]$Matches[1];
     $Times = [int]$Matches[2];
-    $Block = $Partial.SubString($Matches[0].Length, $Size);
-
-    [void]$Uncompressed.Append( ($Block * $Times) );
+    $UncompressedSize += ($Size * $Times);
 
     # Move cursor along
     $Cursor += ($Matches[0].Length + $Size);
 }
 
 # If we have anything left, append it
-[void]$Uncompressed.Append( $Compressed.SubString($Cursor) );
+$UncompressedSize += ($Compressed.Length - $Cursor);
 
-Write-Output ("Part 1: {0}" -f $Uncompressed.ToString().Length);
+Write-Output ("Part 1: {0}" -f $UncompressedSize);
 
 ##
 ## Part 2
