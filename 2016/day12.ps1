@@ -1,101 +1,40 @@
 Param(
-    [string]$InputFile = 'input-day12.txt'
+    [switch]$Part2
 );
 
-Class AssemblyRegistry {
-    [System.Collections.Hashtable]$Registry = [System.Collections.Hashtable]@{}
+if($Part2) {
+    $c = 1;
+}
 
-    [Int64]Get([string]$Name) {
-        if($null -eq $this.Registry[$Name]) {
-            return 0;
-        }
-        return $this.Registry[$Name];
-    }
+$a=1; #L1
+$b=1; #L2
+$d=26; # L3
 
-    [void]Set([string]$Name, [string]$NameOrValue) {
-        $this.Registry[$Name] = $this.ResolveNameOrValue($NameOrValue);
-    }
+if($c -ne 0) { #L4 L5
+    $c = 7; # L6
 
-    [void]Add([string]$Name, [string]$NameOrValue) {
-        $this.Set($Name, ($this.Get($Name) + $this.ResolveNameOrValue($NameOrValue)));
-    }
+    do {
+        $d++; # L7
+        $c--; # L8
+    }while($c -ne 0); # L9
+}
 
-    [void]Mul([string]$Name1,  [string]$NameOrValue) {
-        $this.Set([string]$Name1, ($this.Get($Name1) * $this.ResolveNameOrValue($NameOrValue)));
-    }
+do {
+    $c = $a; # L10
+    do {
+        $a++; # L11
+        $b--; # L12
+    }while($b -ne 0); # L13
 
-    [void]Mod([string]$Name, [string]$NameOrValue) {
-        $this.Set([string]$Name, ($this.Get($Name) % $this.ResolveNameOrValue($NameOrValue)));
-    }
+    $b = $c; # L14
+    $d--; # L15
+}while($d -ne 0); # L16
 
-    [Int64]ResolveNameOrValue([string]$NameOrValue) {
-        if($NameOrValue -match "^[a-z]+$") {
-            return $this.Get($NameOrValue);
-        }
-        return $NameOrValue;
+# L17
+for($c=16; $c -gt 0; $c--) {
+    for($d=12; $d -gt 0; $d--) {
+        $a++; # L19
     }
 }
 
-Class AssemblyInterpreter 
-{
-    [AssemblyRegistry]$Registry;
-    [array]$Instructions;
-    [string[][]]$ParsedInstructions;
-    [int]$LastD = 0;
-
-    AssemblyInterpreter([array]$Instructions) {
-        $this.Instructions = $Instructions;
-        $this.Registry = [AssemblyRegistry]::new();
-        $this.ParseInstructions();
-    }
-
-    [void]ParseInstructions() {
-        $this.ParsedInstructions = New-Object string[][] $this.Instructions.Count,3;
-        for($InX = 0; $InX -lt $this.Instructions.Count; $InX++) {
-            $this.ParsedInstructions[$InX] = ($this.Instructions[$InX] -Split " ");
-        }
-    }
-
-    [void]Run() {
-        $InX = 0;
-        do {
-            $InX = $this.RunInstruction($InX);
-            if($this.Registry.Registry["d"] -ne $this.LastD) {
-                Write-Host ($This.Registry.Registry | ConvertTo-Json -Compress);
-                $this.LastD = $this.Registry.Get("d");
-            }
-        }while($this.IsValidInstruction($InX));
-    }
-
-    [bool]IsValidInstruction($InX) {
-        return $InX -ge 0 -and $InX -lt $this.Instructions.Count;
-    }
-
-    [int]RunInstruction($InX) {
-
-        $Instruction = $this.GetInstruction($InX);
-        $Jump = 1;
-        switch($Instruction[0]) {
-            "cpy" { $this.Registry.Set($Instruction[2], $Instruction[1]); }
-            "inc" { $this.Registry.Add($Instruction[1], 1); }
-            "dec" { $this.Registry.Add($Instruction[1], -1); }
-            "jnz" { 
-                if( $this.Registry.Get($Instruction[1]) -gt 0) { 
-                    $Jump = [int]$Instruction[2];
-                }
-            }
-        }
-        return $InX + $Jump;
-    }
-
-    [array]GetInstruction($InX) {
-        return $this.ParsedInstructions[$InX];
-    }
-}
-
-$Instructions = Get-Content $InputFile;
-$Interpreter = [AssemblyInterpreter]::new($Instructions);
-$Interpreter.Run();
-
-Write-Host ($Interpreter.Registry.Registry | ConvertTo-Json -Compress);
-# 9227465 too high
+Write-Output $a;
