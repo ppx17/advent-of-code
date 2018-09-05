@@ -97,5 +97,5 @@ $Instructions = Get-Content $InputFile;
 $Interpreter = [AssemblyInterpreter]::new($Instructions);
 $Interpreter.Run();
 
-Write-Output $Interpreter.Registry.Get("a");
+Write-Host ($Interpreter.Registry.Registry | ConvertTo-Json -Compress);
 # 9227465 too high
