@@ -1,7 +1,16 @@
-import numpy as np
+with open('../input/input-day1.txt', 'r') as content_file:
+    puzzleInput = content_file.read()
 
-array = [1,2,3]
+part1=0
+part2=0
+length = len(puzzleInput)
 
-print("Welcome to an empty Python repo. Numpy is available.")
+for index, character in enumerate(puzzleInput):
+    if character == puzzleInput[(index+1) % length]:
+        part1 += int(character)
+    
+    if character == puzzleInput[(index + int(length/2)) % length]:
+        part2 += int(character)
 
-print(np.sum(array))
+print("Part 1:" + str(part1))
+print("Part 2:" + str(part2))
