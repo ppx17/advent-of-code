@@ -1,5 +1,5 @@
 Param(
-    [string]$InputFile = 'input-day9.txt'
+    [string]$InputFile = '../input/input-day9.txt'
 );
 
 $Compressed = (Get-Content $InputFile -Raw).Trim();

@@ -1,5 +1,5 @@
 Param(
-    [string]$InputFile = 'input-day8.txt',
+    [string]$InputFile = '../input/input-day8.txt',
     [int]$Width = 50,
     [int]$Height = 6
 );

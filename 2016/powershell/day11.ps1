@@ -1,5 +1,5 @@
 Param(
-    [string]$InputFile = 'input-day11.txt'
+    [string]$InputFile = '../input/input-day11.txt'
 );
 
 $FloorContent = Get-Content $InputFile;

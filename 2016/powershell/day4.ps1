@@ -1,5 +1,5 @@
 Param(
-    [string]$InputFile = 'input-day4.txt'
+    [string]$InputFile = '../input/input-day4.txt'
 );
 
 $RoomList = Get-Content $InputFile;

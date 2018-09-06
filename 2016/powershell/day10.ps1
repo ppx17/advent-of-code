@@ -1,5 +1,5 @@
 Param(
-    [string]$InputFile = 'input-day10.txt'
+    [string]$InputFile = '../input/input-day10.txt'
 );
 
 Class Bot

@@ -1,5 +1,5 @@
 Param(
-    [string]$InputFile = 'input-day6.txt'
+    [string]$InputFile = '../input/input-day6.txt'
 );
 
 $Messages = (Get-Content $InputFile);

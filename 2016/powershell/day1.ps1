@@ -1,5 +1,5 @@
 Param(
-    [string]$InputFile = 'input-day1.txt'
+    [string]$InputFile = '../input/input-day1.txt'
 );
 
 $Instructions = ((Get-Content $InputFile -Raw) -Split ", ");

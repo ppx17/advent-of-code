@@ -1,5 +1,5 @@
 Param(
-    [string]$InputFile = 'input-day3.txt'
+    [string]$InputFile = '../input/input-day3.txt'
 );
 
 $Lines = Get-Content $InputFile;
