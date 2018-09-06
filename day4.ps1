@@ -1,11 +1,11 @@
 Function Validate-DoubleWords {
 	Param([string]$Phrase);
 	$WordList = [System.Collections.ArrayList]@();
-	return $(if($($Phrase -Split '\s+' | % { if($WordList.IndexOf($_) -gt -1) { return $True; break; } $null = $WordList.Add($_); })) { 0 }else{ 1 });
+	return $(if($($Phrase -Split '\s+' | ForEach-Object { if($WordList.IndexOf($_) -gt -1) { return $True; break; } $null = $WordList.Add($_); })) { 0 }else{ 1 });
 }
 
 $sum = 0;
-Get-Content 'input-day4.txt' | % { $sum += (Validate-DoubleWords $_); }
+Get-Content 'input-day4.txt' | ForEach-Object { $sum += (Validate-DoubleWords $_); }
 
 Write-Host $sum;
 
@@ -17,9 +17,9 @@ Function Is-Anagram {
 	}
 	$Count1 = [System.Collections.HashTable]@{};
 	$Count2 = [System.Collections.HashTable]@{};
-	$Word1.ToCharArray() | % { $Count1[$_]++; }
-	$Word2.ToCharArray() | % { $Count2[$_]++; }
-	$Result = $Count1.Keys | %{ if($Count1[$_] -ne $Count2[$_]) { return $True; break; } }
+	$Word1.ToCharArray() | ForEach-Object { $Count1[$_]++; }
+	$Word2.ToCharArray() | ForEach-Object { $Count2[$_]++; }
+	$Result = $Count1.Keys | ForEach-Object{ if($Count1[$_] -ne $Count2[$_]) { return $True; break; } }
 	return -Not $Result;
 }
 
@@ -38,7 +38,7 @@ Function Validate-Anagrams {
 }
 
 $sum = 0;
-Get-Content 'input-day4.txt' | % {
+Get-Content 'input-day4.txt' | ForEach-Object {
 	$PhraseResult = $(Validate-DoubleWords $_) + $(Validate-Anagrams $_);
 	if($PhraseResult -eq 2) { $sum++ }
 }
