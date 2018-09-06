@@ -63,5 +63,3 @@ for($i=0; $i -lt $Steps; $i++) {
 }
 
 Write-Output "Part 1: ${count}";
-
-# 4227670 too high
