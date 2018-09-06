@@ -1,5 +1,5 @@
 Param(
-    [string]$InputFile = 'input-day22.txt',
+    [string]$InputFile = '../input/input-day22.txt',
     [int]$Bursts = 10000,
     [switch]$Part2
 );

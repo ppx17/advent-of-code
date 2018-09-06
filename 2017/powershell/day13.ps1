@@ -1,5 +1,5 @@
 Param(
-    [string]$InputFile = 'input-day13.txt',
+    [string]$InputFile = '../input/input-day13.txt',
     [int]$MinimumDelay = 0
 );
 

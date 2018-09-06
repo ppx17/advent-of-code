@@ -1,5 +1,5 @@
 Param(
-	[string]$InputFile = 'input-day1.txt'
+	[string]$InputFile = '../input/input-day1.txt'
 );
 $Chars = (Get-Content $InputFile -Raw).ToCharArray() | ForEach-Object { [Convert]::ToInt32($_, 10) };
 for($i,$y,$y2=0;$i -lt $Chars.Length;$i++) { 

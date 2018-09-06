@@ -1,6 +1,6 @@
 [CmdletBinding()]
 Param(
-	[string]$InputFile = 'input-day7.txt'
+	[string]$InputFile = '../input/input-day7.txt'
 );
 
 Class Node {

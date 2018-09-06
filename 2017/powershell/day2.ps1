@@ -1,5 +1,5 @@
 Param(
-	[string]$InputFile = 'input-day2.txt'
+	[string]$InputFile = '../input/input-day2.txt'
 );
 $Content = Get-Content $InputFile;
 $sum=0;

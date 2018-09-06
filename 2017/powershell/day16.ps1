@@ -1,5 +1,5 @@
 Param(
-    [string]$InputFile="input-day16.txt",
+    [string]$InputFile="../input/input-day16.txt",
     [int]$NumDancers=16,
     [int]$Iterations=1000000000
 );

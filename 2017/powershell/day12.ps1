@@ -1,6 +1,6 @@
 [CmdletBinding()]
 Param(
-    [string]$InputFile = 'input-day12.txt',
+    [string]$InputFile = '../input/input-day12.txt',
     [int]$ProgramId = 0
 );
 

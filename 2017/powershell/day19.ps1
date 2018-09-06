@@ -1,6 +1,6 @@
 [CmdletBinding()]
 Param(
-    [string]$InputFile = 'input-day19.txt'
+    [string]$InputFile = '../input/input-day19.txt'
 );
 
 class Navigator {

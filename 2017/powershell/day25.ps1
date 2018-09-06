@@ -1,5 +1,5 @@
 Param(
-    [string]$InputFile = 'input-day25.txt'
+    [string]$InputFile = '../input/input-day25.txt'
 );
 
 $State = [char]"A";

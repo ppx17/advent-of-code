@@ -1,4 +1,8 @@
-$digits = Get-Content "input-day5.txt" | % { [convert]::ToInt32($_, 10) }; 
+Param(
+	[string]$InputFile = '../input/input-day5.txt'
+);
+
+$digits = Get-Content $InputFile | % { [convert]::ToInt32($_, 10) }; 
 
 $i,$steps=0;
 while($true) {
@@ -14,7 +18,7 @@ while($true) {
 
 Write-Host $steps;
 
-$digits = Get-Content "input-day5.txt" | % { [convert]::ToInt32($_, 10) }; 
+$digits = Get-Content $InputFile | % { [convert]::ToInt32($_, 10) }; 
 $i,$steps=0;
 while($true) {
 	$y = $i;

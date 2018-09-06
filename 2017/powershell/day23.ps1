@@ -1,6 +1,6 @@
 [CmdletBinding()]
 Param(
-    [string]$InputFile = 'input-day23.txt',
+    [string]$InputFile = '../input/input-day23.txt',
     [switch]$Part2
 );
 

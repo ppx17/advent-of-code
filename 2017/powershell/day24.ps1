@@ -1,5 +1,5 @@
 Param(
-    [string]$InputFile = 'input-day24.txt'
+    [string]$InputFile = '../input/input-day24.txt'
 );
 
 Class Node {

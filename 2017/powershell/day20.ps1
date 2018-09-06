@@ -1,6 +1,6 @@
 [CmdletBinding()]
 Param(
-    [string]$InputFile = 'input-day20.txt',
+    [string]$InputFile = '../input/input-day20.txt',
     [int]$Iterations = 300,
     [int]$ReportEvery = 10,
     [switch]$Collide

@@ -1,6 +1,6 @@
 Param(
 	$Stream,
-	$InputFile = 'input-day9.txt'
+	$InputFile = '../input/input-day9.txt'
 );
 if($null -eq $Stream) {
 	$Stream = Get-Content $InputFile;

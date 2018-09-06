@@ -1,6 +1,6 @@
 [CmdletBinding()]
 Param(
-    [string]$InputFile = 'input-day18.txt'
+    [string]$InputFile = '../input/input-day18.txt'
 );
 
 Class AssemblyRegistry {

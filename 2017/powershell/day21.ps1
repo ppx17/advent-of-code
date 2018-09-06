@@ -1,6 +1,6 @@
 
 Param(
-    [string]$InputFile = '.\input-day21-test.txt',
+    [string]$InputFile = '../input/input-day21-test.txt',
     [int]$Iterations = 2
 );
 

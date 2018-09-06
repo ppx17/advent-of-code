@@ -1,4 +1,4 @@
-$JumpOffsets = Get-Content .\input-day5-lytse.txt | % { [convert]::ToInt32($_, 10); }
+$JumpOffsets = Get-Content '../input/input-day5-lytse.txt' | % { [convert]::ToInt32($_, 10); }
 $Position = 0;
 $i = 0;
 

@@ -1,3 +1,7 @@
+Param(
+	[string]$InputFile = '../input/input-day4.txt'
+);
+
 Function Validate-DoubleWords {
 	Param([string]$Phrase);
 	$WordList = [System.Collections.ArrayList]@();
@@ -5,7 +9,7 @@ Function Validate-DoubleWords {
 }
 
 $sum = 0;
-Get-Content 'input-day4.txt' | ForEach-Object { $sum += (Validate-DoubleWords $_); }
+Get-Content $InputFile | ForEach-Object { $sum += (Validate-DoubleWords $_); }
 
 Write-Host $sum;
 
