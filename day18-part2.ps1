@@ -65,7 +65,6 @@ Class AssemblyInterpreter {
     [object]RunInstruction($InX) {
         if( -not $this.IsValidInstruction($InX)) {
             # End of program reached, terminate
-            Write-Verbose ("#{0}: Terminated because end of code is reached" -f $this.ProcessId);
             $this.Terminate();
             return $null;
         }
@@ -113,7 +112,6 @@ Class AssemblyInterpreter {
     }
 
     [array]GetInstruction($InX) {
-        Write-Verbose ("#{0}: ({1}) {2}" -f $this.ProcessId, $InX, $this.Instructions[$InX]);
         return ($this.Instructions[$InX] -Split " ");
     }
 
@@ -132,21 +130,18 @@ while($Instance1.IsRunning) {
 
     if($Instance0.IsRunning -and -not $Instance0.IsWaitingForMessage) {
         $Message = $Instance0.RunNextInstruction();
-        if($Message -ne $null) {
-            Write-Verbose ("Sending message '{0}' from {1} to {2}" -f $Message, $Instance0.ProcessId, $Instance1.ProcessId);
+        if($null -ne $Message) {
             $Instance1.ReceiveMessage($Message);
         }
     }
     if($Instance1.IsRunning -and -not $Instance1.IsWaitingForMessage) {
         $Message = $Instance1.RunNextInstruction();
-        if($Message -ne $null) {
+        if($null -ne $Message) {
             $MessagesSentInstance1++;
-            Write-Verbose ("Sending message '{0}' from {1} to {2}" -f $Message, $Instance1.ProcessId, $Instance0.ProcessId);
             $Instance0.ReceiveMessage($Message);
         }
     }
     if($Instance0.IsWaitingForMessage -and $Instance1.IsWaitingForMessage) {
-        Write-Verbose "Deadlock detected, terminating both programs";
         $Instance0.Terminate();
         $Instance1.Terminate();
     }
