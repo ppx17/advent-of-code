@@ -177,7 +177,7 @@ foreach($Rule in $Rules) {
 }
 
 # Apply Transformation Rules in double iteratons (2 -> 3 and 3 -> 4 a single TransformationRule)
-for($i=1; $i -lt $Iterations; $i+=2) {
+for($i=1; $i -lt $Iterations; $i++) {
 
     $MatrixSize = $CompleteSquare.Matrix[0].Count;
 
@@ -196,12 +196,23 @@ for($i=1; $i -lt $Iterations; $i+=2) {
         }
     }
 
-    
-    # Create a new Matrix with 2x the size.
-    $Matrix = [bool[][]]::new($MatrixSize*2, $MatrixSize*2);
+    if( ($MatrixSize * 1.5) % 2 -eq 0) {
+        # Just a single iteration will give an evenly divisable matrix, only do 1 iteration.
+        $TES = 3;
+        
+        # Create a new Matrix with 2x the size.
+        $Matrix = [bool[][]]::new($MatrixSize*1.5, $MatrixSize*1.5);
 
-    # Currently we only support transforming 2x2 to 4x4, so the end size is always 4.
-    $TES = 4; # Transformation End Size
+        $IterationsThisRound = 1;
+    }else{
+        $TES = 4;
+        
+        # Create a new Matrix with 2x the size.
+        $Matrix = [bool[][]]::new($MatrixSize*2, $MatrixSize*2);
+
+        $IterationsThisRound = 2;
+        $i++;
+    }
 
     # For every row of sub squares
     for($y=0;$y -lt $Squares.Count; $y++) {
@@ -210,16 +221,24 @@ for($i=1; $i -lt $Iterations; $i+=2) {
             # Find the rule that matches it
             foreach($TransformationRule in $TransformationRules) {
                 # if rule matches...
-                if($Squares[$y][$x].MatchesRule($TransformationRule.TwoByTwo)) {
+                if( -not $Squares[$y][$x].MatchesRule($TransformationRule.TwoByTwo)) {
+                    continue;
+                }
+                
+                if($IterationsThisRound -eq 1) {
+                    # Grab the matching 3x3 matrix
+                    $ResultMatrix = [MatrixHelper]::FromString($TransformationRule.ThreeByThree);
+                }elseif($IterationsThisRound -eq 2) {
                     # Grab the matching 4x4 matrix
-                    $FourByFour = [MatrixHelper]::FromString($TransformationRule.FourByFour);
-                    # For each of its rows
-                    for($fy=0;$fy -lt $TES; $fy++) {
-                        # and each of its columns
-                        for($fx=0;$fx -lt $TES; $fx++) {
-                            # Write to destination matrix
-                            $Matrix[$y*$TES + $fy][$x*$TES + $fx] = $FourByFour[$fy][$fx];
-                        }
+                    $ResultMatrix = [MatrixHelper]::FromString($TransformationRule.FourByFour);
+                }
+                
+                # For each of its rows
+                for($fy=0;$fy -lt $TES; $fy++) {
+                    # and each of its columns
+                    for($fx=0;$fx -lt $TES; $fx++) {
+                        # Write to destination matrix
+                        $Matrix[$y*$TES + $fy][$x*$TES + $fx] = $ResultMatrix[$fy][$fx];
                     }
                 }
             }
@@ -232,7 +251,6 @@ for($i=1; $i -lt $Iterations; $i+=2) {
 }
 
 Write-Output "Ran ${i} iterations"
-Write-Output ("Matrix is {0}x{1}" -f $CompleteSquare.Matrix.Count, $CompleteSquare.Matrix[0].Count);
 
 # 114 too low
 #8905 too high
