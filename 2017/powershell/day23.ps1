@@ -1,7 +1,6 @@
 [CmdletBinding()]
 Param(
-    [string]$InputFile = '../input/input-day23.txt',
-    [switch]$Part2
+    [string]$InputFile = '../input/input-day23.txt'
 );
 
 Class AssemblyRegistry {
@@ -25,20 +24,12 @@ Class AssemblyRegistry {
         $this.Registry[$Name] = $this.ResolveNameOrValue($NameOrValue);
     }
 
-    [void]Add([string]$Name, [string]$NameOrValue) {
-        $this.Set($Name, ($this.Get($Name) + $this.ResolveNameOrValue($NameOrValue)));
-    }
-
     [void]Sub([string]$Name, [string]$NameOrValue) {
         $this.Set($Name, ($this.Get($Name) - $this.ResolveNameOrValue($NameOrValue)));
     }
 
     [void]Mul([string]$Name,  [string]$NameOrValue) {
         $this.Set($Name, ($this.Get($Name) * $this.ResolveNameOrValue($NameOrValue)));
-    }
-
-    [void]Mod([string]$Name, [string]$NameOrValue) {
-        $this.Set($Name, ($this.Get($Name) % $this.ResolveNameOrValue($NameOrValue)));
     }
 }
 
@@ -72,10 +63,8 @@ Class AssemblyInterpreter {
         $Jump = 1;
         switch($Instruction[0]) {
             "set" { $this.Registry.Set($Instruction[1], $Instruction[2]); }
-            "add" { $this.Registry.Add($Instruction[1], $Instruction[2]); }
             "sub" { $this.Registry.Sub($Instruction[1], $Instruction[2]); }
             "mul" { $this.Registry.Mul($Instruction[1], $Instruction[2]); }
-            "mod" { $this.Registry.Mod($Instruction[1], $Instruction[2]); }
             "jnz" {
                 $CheckValue = $this.Registry.ResolveNameOrValue($Instruction[1]);
                 $Distance =  $this.Registry.ResolveNameOrValue($Instruction[2]);
@@ -106,13 +95,7 @@ $InstructionTexts = Get-Content $InputFile;
 $Instructions = [System.Collections.ArrayList]@();
 $InstructionTexts | Foreach-Object { [void]$Instructions.Add($_.Split(" ")); }
 $Interpreter = [AssemblyInterpreter]::new($Instructions);
-if($Part2) {
-    $Interpreter.Registry.Set("a", 1);
-}
+
 $Interpreter.Run();
 
-Write-Output "Instruction counters:";
-$Interpreter.InstructionCounter | Format-Table;
-
-Write-Output "Registry content:";
-$Interpreter.Registry.Registry | Format-Table;
+Write-Output ("Part 1: {0}" -f $Interpreter.InstructionCounter.mul);

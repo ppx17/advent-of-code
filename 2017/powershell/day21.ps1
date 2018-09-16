@@ -1,7 +1,7 @@
 [CmdLetBinding()]
 Param(
     [string]$InputFile = '../input/input-day21.txt',
-    [int]$Iterations = 2
+    [int]$Iterations = 5
 );
 
 Class MatrixHelper {
@@ -62,9 +62,16 @@ Class MatrixHelper {
     }
 
     [void]static WriteMatrixToHost([bool[][]]$Matrix) {
+        [MatrixHelper]::WriteMatrixToHost($Matrix, $True);
+    }
+
+    [void]static WriteMatrixToHost([bool[][]]$Matrix, [bool]$PrintMatrix) {
         $MatrixString = (([Square]::new($Matrix)).ToString());
-        Write-Host ("Pixels on: {0}" -f ([regex]::Matches($MatrixString, "#" )).count);
-        Write-Host $MatrixString.Replace("/", "`n");
+        Write-Host ("Pixels on: {0}; Matrix Size {1}x{2}" -f ([regex]::Matches($MatrixString, "#" )).count,
+            $Matrix.Count, $Matrix[0].Count);
+        if($PrintMatrix) {
+            Write-Host $MatrixString.Replace("/", "`n");
+        }
     }
 
     [bool[][]] static FromString([string]$FromString) {
@@ -100,7 +107,6 @@ Class Square {
     [bool]MatchesRule([string]$Rule) {
         if($Rule -eq [MatrixHelper]::ToString($this.Matrix)) 
         { 
-            Write-Verbose ("Matched Rule ${Rule} on matrix {0} without modification" -f [MatrixHelper]::ToString($this.Matrix));
             return $true; 
         }
         $RotatedMatrix = [MatrixHelper]::Clone($this.Matrix);
@@ -109,7 +115,6 @@ Class Square {
             [MatrixHelper]::Rotate($RotatedMatrix);
             if($Rule -eq [MatrixHelper]::ToString($RotatedMatrix)) 
             { 
-                Write-Verbose ("Matched Rule ${Rule} on matrix {0} with {1} rotation(s)" -f [MatrixHelper]::ToString($this.Matrix),($i+1));
                 return $true; 
             }
         }
@@ -119,7 +124,6 @@ Class Square {
         for($i=0;$i -lt 4; $i++) {
             if($Rule -eq [MatrixHelper]::ToString($FlippedMatrix)) 
             { 
-                Write-Verbose ("Matched Rule ${Rule} on matrix {0} with a flip and ${i} rotation(s)" -f [MatrixHelper]::ToString($this.Matrix));
                 return $true; 
             }
             [MatrixHelper]::Rotate($FlippedMatrix);
@@ -137,6 +141,31 @@ Class TransformationRule {
     [string]$TwoByTwo;
     [string]$ThreeByThree;
     [string]$FourByFour;
+}
+
+Class TransformationRuleFinder {
+    [System.Collections.ArrayList]$TransformationRules;
+    [System.Collections.Hashtable]$Index;
+
+    TransformationRuleFinder([System.Collections.ArrayList]$TransformationRules) {
+        $this.TransformationRules = $TransformationRules;
+        $this.Index = [System.Collections.Hashtable]::new();
+    }
+
+    [TransformationRule]RuleForSquare([Square]$Square) {
+        $Key = $Square.ToString();
+        if($null -eq $this.Index[$Key]) {
+            foreach($TransformationRule in $this.TransformationRules) {
+                # if rule matches...
+                if($Square.MatchesRule($TransformationRule.TwoByTwo)) {
+                    $this.Index[$Key] = $TransformationRule;
+                    break;
+                }
+            }
+        }
+        return $this.Index[$Key];
+    }
+
 }
 
 $StartLayout = ".#./..#/###";
@@ -176,9 +205,12 @@ foreach($Rule in $Rules) {
     }
 }
 
-# Apply Transformation Rules in double iteratons (2 -> 3 and 3 -> 4 a single TransformationRule)
-for($i=1; $i -lt $Iterations; $i+=2) {
+$RuleFinder = [TransformationRuleFinder]::new($TransformationRules);
 
+# Apply Transformation Rules in double iteratons (2 -> 3 and 3 -> 4 a single TransformationRule)
+for($i=1; $i -lt $Iterations; $i++) {
+    Write-Host -NoNewline ("Iteration: {0}" -f ($i + 1));
+    $StartTime = (Get-Date);
     $MatrixSize = $CompleteSquare.Matrix[0].Count;
 
     $Squares = [Square[][]]::new($MatrixSize / 2, $MatrixSize / 2);
@@ -196,31 +228,41 @@ for($i=1; $i -lt $Iterations; $i+=2) {
         }
     }
 
-    
-    # Create a new Matrix with 2x the size.
-    $Matrix = [bool[][]]::new($MatrixSize*2, $MatrixSize*2);
-
-    # Currently we only support transforming 2x2 to 4x4, so the end size is always 4.
-    $TES = 4; # Transformation End Size
+    if( ($MatrixSize * 1.5) % 2 -eq 0 -or $i -eq ($Iterations - 1)) {
+        # Just a single iteration will give an evenly divisable matrix, only do 1 iteration.
+        $TES = 3;
+        
+        # Create a new Matrix with 2x the size.
+        $Matrix = [bool[][]]::new($MatrixSize*1.5, $MatrixSize*1.5);
+    }else{
+        $TES = 4;
+        
+        # Create a new Matrix with 2x the size.
+        $Matrix = [bool[][]]::new($MatrixSize*2, $MatrixSize*2);
+        $i++;
+    }
 
     # For every row of sub squares
     for($y=0;$y -lt $Squares.Count; $y++) {
         # For every column of subsquares
         for($x=0;$x -lt $Squares[0].Count; $X++) {
             # Find the rule that matches it
-            foreach($TransformationRule in $TransformationRules) {
-                # if rule matches...
-                if($Squares[$y][$x].MatchesRule($TransformationRule.TwoByTwo)) {
-                    # Grab the matching 4x4 matrix
-                    $FourByFour = [MatrixHelper]::FromString($TransformationRule.FourByFour);
-                    # For each of its rows
-                    for($fy=0;$fy -lt $TES; $fy++) {
-                        # and each of its columns
-                        for($fx=0;$fx -lt $TES; $fx++) {
-                            # Write to destination matrix
-                            $Matrix[$y*$TES + $fy][$x*$TES + $fx] = $FourByFour[$fy][$fx];
-                        }
-                    }
+            $TransformationRule = $RuleFinder.RuleForSquare($Squares[$y][$x]);
+            
+            if($TES -eq 3) {
+                # Grab the matching 3x3 matrix
+                $ResultMatrix = [MatrixHelper]::FromString($TransformationRule.ThreeByThree);
+            }elseif($TES -eq 4) {
+                # Grab the matching 4x4 matrix
+                $ResultMatrix = [MatrixHelper]::FromString($TransformationRule.FourByFour);
+            }
+            
+            # For each of its rows
+            for($fy=0;$fy -lt $TES; $fy++) {
+                # and each of its columns
+                for($fx=0;$fx -lt $TES; $fx++) {
+                    # Write to destination matrix
+                    $Matrix[$y*$TES + $fy][$x*$TES + $fx] = $ResultMatrix[$fy][$fx];
                 }
             }
         }
@@ -228,11 +270,8 @@ for($i=1; $i -lt $Iterations; $i+=2) {
 
     $CompleteSquare = [Square]::new($Matrix);
 
-    [MatrixHelper]::WriteMatrixToHost($Matrix);
+    Write-Host (" - {0:N0} sec" -f ((Get-Date) - $StartTime).TotalSeconds);
 }
 
-Write-Output "Ran ${i} iterations"
-Write-Output ("Matrix is {0}x{1}" -f $CompleteSquare.Matrix.Count, $CompleteSquare.Matrix[0].Count);
-
-# 114 too low
-#8905 too high
+Write-Output "Ran ${i} iterations";
+[MatrixHelper]::WriteMatrixToHost($Matrix, ($i -le 5));

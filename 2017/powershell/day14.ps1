@@ -1,7 +1,7 @@
 Param(
     $HashInput = "oundnydw",
     $RowCount = 128,
-    $InMapFile = "map-day14.txt",
+    $InMapFile = "../input/map-day14.txt",
     $OutMapFile
 );
 
