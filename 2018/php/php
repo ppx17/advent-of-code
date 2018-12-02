@@ -1,0 +1,9 @@
+#!/bin/bash
+docker run --rm \
+            --volume=$(realpath .):/opt/advent/php \
+            --volume=$(realpath ../input):/opt/advent/input \
+            -w /opt/advent/php \
+            -ti \
+            php:7-cli \
+            php "$@"
+echo ""
