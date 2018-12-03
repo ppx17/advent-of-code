@@ -42,6 +42,5 @@ function part2($ids): ?string
     }
     return null;
 }
-
 echo "part1: " . part1($ids) . PHP_EOL;
 echo "part2: " . part2($ids);

@@ -1,25 +1,20 @@
 <?php
 $InputFile = "../input/input-day1.txt";
 
-$statements = explode("\n", trim(file_get_contents($InputFile)));
+$deltas = array_map("intval", explode("\n", trim(file_get_contents($InputFile))));
 
-$sum = 0;
-$history = [];
-$part1 = $part2 = null;
+echo "Part 1: ".array_sum($deltas).PHP_EOL;
 
-while($part2 === null) {
-    foreach($statements as $statement) {
-        $sum += $statement;
-        if($part2 === null && in_array($sum, $history)) {
-            $part2 = $sum;
-            break;
+$frequency = 0;
+$seen = [];
+
+while(true) {
+    foreach($deltas as $statement) {
+        $frequency += $statement;
+        if(isset($seen[$frequency])) {
+            echo "Part 2: ".$frequency.PHP_EOL;
+            break 2;
         }
-        $history[] = $sum;
-    }
-    if($part1 === null) {
-        $part1 = $sum;
+        $seen[$frequency] = true;
     }
 }
-
-echo "Part 1: ".$part1.PHP_EOL;
-echo "Part 2: ".$part2.PHP_EOL;
