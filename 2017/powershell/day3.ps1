@@ -1,6 +1,6 @@
 # Day 3
 Param(
-	[int]$Element
+	[int]$Element=361527
 );
 
 # Calculate rings
@@ -29,7 +29,7 @@ if($Offset -lt $SideLength) {
 
 $Distance = $Rings + [math]::abs(($SideLength - 1)/2 - ($Offset - $X));
 
-Write-Host $Distance;
+Write-Output "Part 1: ${Distance}";
 
 ## Part two
 
@@ -87,7 +87,8 @@ while($true) {
 		$LatestEntry = $Matrix.SumOfNeighbors($x, $y);
 		if($LatestEntry -gt $Element) {
 			# Found the bitch!
-			return $LatestEntry;
+			Write-Output "Part 2: ${LatestEntry}";
+			return;
 		}
 		$Matrix.Write($x, $y, $LatestEntry);
 		
@@ -103,7 +104,8 @@ while($true) {
 		$LatestEntry = $Matrix.SumOfNeighbors($x, $y);
 		if($LatestEntry -gt $Element) {
 			# Found the bitch!
-			return $LatestEntry;
+			Write-Output "Part 2: ${LatestEntry}";
+			return;
 		}
 		$Matrix.Write($x, $y, $LatestEntry);
 		
@@ -119,7 +121,8 @@ while($true) {
 		$LatestEntry = $Matrix.SumOfNeighbors($x, $y);
 		if($LatestEntry -gt $Element) {
 			# Found the bitch!
-			return $LatestEntry;
+			Write-Output "Part 2: ${LatestEntry}";
+			return;
 		}
 		$Matrix.Write($x, $y, $LatestEntry);
 		
@@ -135,7 +138,8 @@ while($true) {
 		$LatestEntry = $Matrix.SumOfNeighbors($x, $y);
 		if($LatestEntry -gt $Element) {
 			# Found the bitch!
-			return $LatestEntry;
+			Write-Output "Part 2: ${LatestEntry}";
+			return;
 		}
 		$Matrix.Write($x, $y, $LatestEntry);
 		
@@ -146,5 +150,3 @@ while($true) {
 	}
 
 }
-
-$Matrix.Print();
