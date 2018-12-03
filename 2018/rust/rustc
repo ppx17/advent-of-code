@@ -1,0 +1,15 @@
+#!/bin/bash
+docker run --rm \
+            --volume=$(realpath .):/opt/advent/rust \
+            --volume=$(realpath ../input):/opt/advent/input \
+            --volume=$(realpath ../expected):/opt/advent/expected \
+            -w /opt/advent/rust \
+            -ti \
+            rust:latest \
+            rustc "$@"
+
+if [ "$?" == "0" ]; then
+
+    ./$(basename "$@" .rs)
+    echo ""
+fi
