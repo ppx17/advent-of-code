@@ -30,30 +30,24 @@ foreach ($events as $event) {
     }
 }
 
-usort($guards, function($a, $b) {
+usort($guards, function ($a, $b) {
     return $b['totalMinutes'] - $a['totalMinutes'];
 });
 
-$mostAsleep = $guards[0];
-$max = 0; $maxMin = null;
-foreach($mostAsleep['minutes'] as $min => $time) {
-    if($time > $max) {
-        $max = $time;
-        $maxMin = $min;
+$mostAsleepOnMinute = array_search(max($guards[0]['minutes']), $guards[0]['minutes']);
+echo "Part 1: " . ($guards[0]['id'] * $mostAsleepOnMinute) . PHP_EOL;
+
+$mostSleptOnMinute = 0;
+$globalSleepingRecord = null;
+$guardWithRecord = null;
+foreach ($guards as $guard) {
+    if(count($guard['minutes']) === 0) continue;
+    $personalSleepingRecord = max($guard['minutes']);
+    if ($personalSleepingRecord > $mostSleptOnMinute) {
+        $mostSleptOnMinute = $personalSleepingRecord;
+        $globalSleepingRecord = array_search($personalSleepingRecord, $guard['minutes']);
+        $guardWithRecord = $guard['id'];
     }
 }
 
-echo "Part 1: ".($mostAsleep['id'] * $maxMin).PHP_EOL;
-
-$mostTimes = 0; $mostMinute = null; $guardId = null;
-foreach($guards as $guard) {
-    foreach($guard['minutes'] as $minute => $times) {
-        if($times > $mostTimes) {
-            $mostTimes = $times;
-            $mostMinute = $minute;
-            $guardId = $guard['id'];
-        }
-    }
-}
-
-echo "Part 2: ".($guardId * $mostMinute).PHP_EOL;
+echo "Part 2: " . ($guardWithRecord * $globalSleepingRecord) . PHP_EOL;
