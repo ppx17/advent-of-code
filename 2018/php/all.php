@@ -7,6 +7,11 @@ function runInScope($file): string {
     return ob_get_clean();
 }
 $total = 0;
+
+function ms($seconds) {
+    return round($seconds * 1000);
+}
+
 foreach($files as $file) {
     printf("File %s: ", $file);
 
@@ -25,10 +30,10 @@ foreach($files as $file) {
     }else{
         echo '? answer unknown';
     }
-    echo ' in '.round($time, 3) . " s".PHP_EOL;
+    echo ' in '.ms($time) . " ms".PHP_EOL;
 }
 
-printf("\nRan %s files in %s sec. Avg %s per file.",
+printf("\nRan %s files in %s ms. Avg %s ms per file.",
     count($files),
-    round($total, 4),
-    round($total / count($files), 4));
+    ms($total),
+    ms($total / count($files)));
