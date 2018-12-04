@@ -1,39 +1,81 @@
 <?php
-$files = glob('day*.php');
 
-function runInScope($file): string {
-    ob_start();
-    include $file;
-    return ob_get_clean();
-}
-$total = 0;
+class Runner
+{
+    private $totalRunTime = 0;
 
-function ms($seconds) {
-    return round($seconds * 1000);
-}
+    public function runFiles(array $files)
+    {
+        $this->totalRunTime = 0;
 
-foreach($files as $file) {
-    printf("File %s: ", $file);
-
-    $s = microtime(true);
-    $result = runInScope($file);
-    $time = microtime(true) - $s;
-    $total += $time;
-    $day = substr(basename($file), 0, -4);
-    if(file_exists('../expected/'.$day.'.txt')) {
-        $expected = file_get_contents('../expected/'.$day.'.txt');
-        if(trim($result) == trim($expected)) {
-            echo '✔ correct answer';
-        }else {
-            echo '⨯ wrong answer';
+        foreach ($files as $file) {
+            $this->runFile($file);
         }
-    }else{
-        echo '? answer unknown';
+
+        printf("\nRan %s files in %s ms. Avg %s ms per file.",
+            count($files),
+            $this->ms($this->totalRunTime),
+            $this->ms($this->totalRunTime / count($files)));
     }
-    echo ' in '.ms($time) . " ms".PHP_EOL;
+
+    /**
+     * @param $file
+     */
+    private function runFile($file)
+    {
+        $s = microtime(true);
+        $result = $this->runInScope($file);
+        $time = microtime(true) - $s;
+        $this->totalRunTime += $time;
+
+        printf("File %s: %s in %s ms\n",
+            $file, $this->judgeFile($file, $result), $this->ms($time));
+    }
+
+    private function runInScope($file): string
+    {
+        ob_start();
+        include $file;
+        return ob_get_clean();
+    }
+
+    private function judgeFile($file, $result)
+    {
+        $day = $this->dayFromFilename($file);
+        if (!$this->hasAnswerForDay($day)) {
+            return '? answer unknown';
+        }
+
+        return (trim($result) == trim($this->answerForDay($day))) ? '✔ correct answer' : '⨯ wrong answer';
+    }
+
+    private function dayFromFilename($filename)
+    {
+        return substr(basename($filename), 0, -4);
+    }
+
+    private function hasAnswerForDay($day)
+    {
+        return file_exists($this->fileForDay($day));
+    }
+
+    private function fileForDay($day)
+    {
+        return '../expected/' . $day . '.txt';
+    }
+
+    private function answerForDay($day)
+    {
+        if ($this->hasAnswerForDay($day)) {
+            return file_get_contents($this->fileForDay($day));
+        }
+        return null;
+    }
+
+    private function ms($seconds)
+    {
+        return round($seconds * 1000);
+    }
 }
 
-printf("\nRan %s files in %s ms. Avg %s ms per file.",
-    count($files),
-    ms($total),
-    ms($total / count($files)));
+(new Runner())->runFiles(glob('day*.php'));
