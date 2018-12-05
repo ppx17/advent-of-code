@@ -74,7 +74,7 @@ class Runner
 
     private function ms($seconds)
     {
-        return round($seconds * 1000);
+        return round($seconds * 1000, 2);
     }
 }
 
