@@ -1,7 +1,7 @@
 <?php
-$InputFile = "../input/input-day2.txt";
+$data = $data ?? file_get_contents("../input/input-".basename(__FILE__, '.php').".txt");
 
-$ids = explode("\n", trim(file_get_contents($InputFile)));
+$ids = explode("\n", trim($data));
 
 function part1(array $ids): int
 {

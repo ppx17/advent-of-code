@@ -1,7 +1,7 @@
 <?php
-$InputFile = "../input/input-day1.txt";
+$data = $data ?? file_get_contents("../input/input-".basename(__FILE__, '.php').".txt");
 
-$deltas = array_map("intval", explode("\n", trim(file_get_contents($InputFile))));
+$deltas = array_map("intval", explode("\n", trim($data)));
 
 echo "Part 1: ".array_sum($deltas).PHP_EOL;
 

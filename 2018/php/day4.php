@@ -1,7 +1,7 @@
 <?php
-$InputFile = "../input/input-day4.txt";
+$data = $data ?? file_get_contents("../input/input-".basename(__FILE__, '.php').".txt");
 
-$events = explode("\n", trim(file_get_contents($InputFile)));
+$events = explode("\n", trim($data));
 sort($events);
 
 $guards = [];

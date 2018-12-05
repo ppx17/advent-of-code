@@ -1,7 +1,7 @@
 <?php
-$InputFile = "../input/input-day5.txt";
+$data = $data ?? file_get_contents("../input/input-".basename(__FILE__, '.php').".txt");
 
-$units = trim(file_get_contents($InputFile));
+$units = trim($data);
 
 function react_str_replace(string $units, ?string $exclude = null): string
 {
