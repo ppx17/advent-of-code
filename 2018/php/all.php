@@ -8,20 +8,25 @@ class Runner
     {
         $this->totalRunTime = 0;
 
+        $errors = 0;
         foreach ($files as $file) {
-            $this->runFile($file);
+            if( ! $this->runFile($file)) {
+                $errors++;
+            }
         }
 
         printf("\nRan %s files in %s ms. Avg %s ms per file.",
             count($files),
             $this->ms($this->totalRunTime),
             $this->ms($this->totalRunTime / count($files)));
+
+        exit($errors);
     }
 
     /**
      * @param $file
      */
-    private function runFile($file)
+    private function runFile($file): bool
     {
         // To prevent disk latency from influencing benchmark results we read the data outside the measurement.
         $data = $this->dataForDay($this->dayFromFilename($file));
@@ -32,6 +37,8 @@ class Runner
 
         printf("File %s: %s in %s ms\n",
             $file, $this->judgeFile($file, $result), $this->ms($time));
+
+        return $this->correctAnswer($result, $result);
     }
 
     private function runInScope(string $file, ?string $data = null): string
@@ -48,7 +55,7 @@ class Runner
             return '? answer unknown';
         }
 
-        return (trim($result) == trim($this->answerForDay($day))) ? '✔ correct answer' : '⨯ wrong answer';
+        return $this->correctAnswer($result, $day) ? '✔ correct answer' : '⨯ wrong answer';
     }
 
     private function dayFromFilename($filename)
@@ -92,6 +99,17 @@ class Runner
     private function dataFileForDay($day): string
     {
         return "../input/input-" . $day . ".txt";
+    }
+
+    /**
+     * @param $result
+     * @param string $day
+     * @return bool
+     */
+    private function correctAnswer($result, string $day): bool
+    {
+        if( ! $this->hasAnswerForDay($day)) return false;
+        return (trim($result) == trim($this->answerForDay($day)));
     }
 }
 

@@ -1,0 +1,8 @@
+stages:
+  - 2018
+
+2018-php:
+  stage: 2018
+  image: php:7.2-cli
+  script:
+    - cd 2018/php && php ./all.php
