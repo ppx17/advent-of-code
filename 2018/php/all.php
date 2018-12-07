@@ -4,23 +4,24 @@ class Runner
 {
     private $totalRunTime = 0;
 
-    public function runFiles(array $files)
+    public function runFiles(array $files): int
     {
         $this->totalRunTime = 0;
 
         $errors = 0;
         foreach ($files as $file) {
-            if( ! $this->runFile($file)) {
+            if (!$this->runFile($file)) {
+                echo "Failed on $file\n";
                 $errors++;
             }
         }
 
-        printf("\nRan %s files in %s ms. Avg %s ms per file.",
+        printf("\nRan %s files in %s ms. Avg %s ms per file.\n",
             count($files),
             $this->ms($this->totalRunTime),
             $this->ms($this->totalRunTime / count($files)));
 
-        exit($errors);
+        return $errors;
     }
 
     /**
@@ -38,7 +39,7 @@ class Runner
         printf("File %s: %s in %s ms\n",
             $file, $this->judgeFile($file, $result), $this->ms($time));
 
-        return $this->correctAnswer($result, $result);
+        return $this->correctAnswer($result, $this->dayFromFilename($file));
     }
 
     private function runInScope(string $file, ?string $data = null): string
@@ -108,9 +109,15 @@ class Runner
      */
     private function correctAnswer($result, string $day): bool
     {
-        if( ! $this->hasAnswerForDay($day)) return false;
+        if (!$this->hasAnswerForDay($day)) {
+            return false;
+        }
         return (trim($result) == trim($this->answerForDay($day)));
     }
 }
 
-(new Runner())->runFiles(glob('day*.php'));
+$errorCount = (new Runner())->runFiles(glob('day*.php'));
+if ($errorCount > 0) {
+    echo $errorCount;
+    exit(1);
+}
