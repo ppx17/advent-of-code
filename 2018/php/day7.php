@@ -20,9 +20,8 @@ class Steps
         $this->stepCount = count($this->steps);
     }
 
-    public function count(): int
-    {
-        return $this->stepCount;
+    public function count(): int {
+        return count($this->steps);
     }
 
     public function addRule(string $target, string $requirement): void
@@ -64,42 +63,32 @@ class Solver
 
     public function getOrder(): string
     {
-        $mySteps = $this->localStepsCopy();
-        $solved = 0;
+        $steps = $this->localStepsCopy();
         $result = '';
-        while ($solved < $mySteps->count()) {
-            $step = $mySteps->nextAvailableStep();
+        while ($steps->count() > 0) {
+            $step = $steps->nextAvailableStep();
             $result .= $step;
-            $mySteps->finishStep($step);
-            $mySteps->removeFromRequirements($step);
-            $solved++;
+            $steps->finishStep($step);
+            $steps->removeFromRequirements($step);
         }
         return $result;
     }
 
     public function getDuration(int $workerCount): int
     {
-        $mySteps = $this->localStepsCopy();
-        $workforce = new Workforce($workerCount);
+        $steps = $this->localStepsCopy();
         $time = 0;
-        $solved = 0;
-        $finishAt = [];
-        while ($solved < $mySteps->count() || count($finishAt) > 0) {
-            foreach ($finishAt as $step => $atTime) {
+        $workInProgress = [];
+        while ($steps->count() > 0 || count($workInProgress) > 0) {
+            foreach ($workInProgress as $step => $atTime) {
                 if ($time === $atTime) {
-                    unset($finishAt[$step]);
-                    $mySteps->removeFromRequirements($step);
-                    $solved++;
+                    unset($workInProgress[$step]);
+                    $steps->removeFromRequirements($step);
                 }
             }
-            while ($workforce->hasWorker($time)) {
-                $step = $mySteps->nextAvailableStep();
-                if ($step === null) {
-                    break;
-                }
-                $finishAt[$step] = $time + $this->duration($step);
-                $workforce->workUntil($finishAt[$step]);
-                $mySteps->finishStep($step);
+            while (count($workInProgress) < $workerCount && $step = $steps->nextAvailableStep()) {
+                $workInProgress[$step] = $time + $this->duration($step);
+                $steps->finishStep($step);
             }
 
             $time++;
@@ -116,39 +105,6 @@ class Solver
     private function duration(string $step)
     {
         return ord($step) - 4;
-    }
-}
-
-class Workforce
-{
-    private $workers;
-    private $workerCount;
-
-    public function __construct($workerCount)
-    {
-        $this->workers = [];
-        $this->workerCount = $workerCount;
-    }
-
-    public function hasWorker(int $time): bool
-    {
-        return $this->availableWorkerIndex($time) !== null;
-    }
-
-    public function workUntil(int $time)
-    {
-        $worker = $this->availableWorkerIndex($time);
-        $this->workers[$worker] = $time;
-    }
-
-    private function availableWorkerIndex(int $time): ?int
-    {
-        for ($i = 0; $i < $this->workerCount; $i++) {
-            if (!isset($this->workers[$i]) || $this->workers[$i] < $time) {
-                return $i;
-            }
-        }
-        return null;
     }
 }
 
