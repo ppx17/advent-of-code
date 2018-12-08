@@ -37,7 +37,8 @@ class Runner
         $this->totalRunTime += $time;
 
         printf("File %s: %s in %s ms\n",
-            $file, $this->judgeFile($file, $result), $this->ms($time));
+            $file, $this->judgeFile($file, $result),
+            str_pad($this->ms($time), 7, ' ', STR_PAD_LEFT));
 
         return $this->correctAnswer($result, $this->dayFromFilename($file));
     }
