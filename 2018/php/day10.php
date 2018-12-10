@@ -8,6 +8,7 @@ class Sky
     private $velocitiesX = [];
     private $velocitiesY = [];
     private $lights = 0;
+    private $stepsTaken = 0;
 
     public function addLight(int $posX, int $posY, int $velX, int $velY): void
     {
@@ -18,12 +19,13 @@ class Sky
         $this->lights++;
     }
 
-    public function move(): void
+    public function move(int $steps = 1): void
     {
         for ($i = 0; $i < $this->lights; $i++) {
-            $this->positionsX[$i] += $this->velocitiesX[$i];
-            $this->positionsY[$i] += $this->velocitiesY[$i];
+            $this->positionsX[$i] += ($this->velocitiesX[$i] * $steps);
+            $this->positionsY[$i] += ($this->velocitiesY[$i] * $steps);
         }
+        $this->stepsTaken += $steps;
     }
 
     public function height(): int
@@ -47,28 +49,34 @@ class Sky
                 return implode("", $row);
             }, $sky)) . PHP_EOL;
     }
+
+    public function getStepsTaken(): int
+    {
+        return $this->stepsTaken;
+    }
 }
 
 
 preg_match_all(
     '/position=<\s*(?<px>-?\d+),\s*(?<py>-?\d+)> velocity=<\s*(?<vx>-?\d+),\s*(?<vy>-?\d+)>/',
     $data,
-    $matches, PREG_SET_ORDER);
+    $matches,
+    PREG_SET_ORDER
+);
 
-;
 $sky = new Sky();
 
 foreach ($matches as $match) {
     $sky->addLight($match['px'], $match['py'], $match['vx'], $match['vy']);
 }
 
-$iterations = 0;
+// Mabye a little dangerous, probably requires tuning on other inputs
+$sky->move(10000);
 do {
     $sky->move();
-    $iterations++;
 } while ($sky->height() > 10);
 
 
 echo "Part 1:" . PHP_EOL;
 echo $sky->print();
-echo "Part 2: " . $iterations.PHP_EOL;
+echo "Part 2: " . $sky->getStepsTaken().PHP_EOL;
