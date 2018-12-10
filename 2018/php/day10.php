@@ -1,6 +1,6 @@
 <?php
 $data = $data ?? file_get_contents("../input/input-" . basename(__FILE__, '.php') . ".txt");
-require_once  'helpers.php';
+
 class Sky
 {
     private $positionsX = [];
@@ -31,16 +31,6 @@ class Sky
     public function height(): int
     {
         return max($this->positionsY) - min($this->positionsY);
-    }
-
-    public function width(): int
-    {
-        return max($this->positionsX) - min($this->positionsX);
-    }
-
-    public function size(): int
-    {
-        return $this->width() * $this->height();
     }
 
     public function print(): string
@@ -80,15 +70,15 @@ foreach ($matches as $match) {
     $sky->addLight($match['px'], $match['py'], $match['vx'], $match['vy']);
 }
 
-$size = $sky->size();
+$size = $sky->height();
 $jumpSize = 1000;
 do {
     $sky->move($jumpSize);
-    $newSize = $sky->size();
+    $newSize = $sky->height();
     if($size < $newSize && $jumpSize > 1) {
         // we've jumped to far, revert and go to next size
         $sky->move(-$jumpSize*2);
-        $newSize = $sky->size();
+        $newSize = $sky->height();
         $jumpSize /= 10;
     }
     $size = $newSize;
