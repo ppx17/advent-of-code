@@ -9,6 +9,7 @@ class Runner
         $this->totalRunTime = 0;
 
         $errors = 0;
+        natsort($files);
         foreach ($files as $file) {
             if (!$this->runFile($file)) {
                 echo "Failed on $file\n";
@@ -24,9 +25,6 @@ class Runner
         return $errors;
     }
 
-    /**
-     * @param $file
-     */
     private function runFile($file): bool
     {
         // To prevent disk latency from influencing benchmark results we read the data outside the measurement.
@@ -37,7 +35,8 @@ class Runner
         $this->totalRunTime += $time;
 
         printf("File %s: %s in %s ms\n",
-            $file, $this->judgeFile($file, $result),
+            str_pad($file, 9, ' ', STR_PAD_RIGHT),
+            $this->judgeFile($file, $result),
             str_pad($this->ms($time), 7, ' ', STR_PAD_LEFT));
 
         return $this->correctAnswer($result, $this->dayFromFilename($file));
@@ -94,21 +93,13 @@ class Runner
             file_get_contents($this->dataFileForDay($day)) : null;
     }
 
-    /**
-     * @param $day
-     * @return string
-     */
-    private function dataFileForDay($day): string
+
+    private function dataFileForDay(string $day): string
     {
         return "../input/input-" . $day . ".txt";
     }
 
-    /**
-     * @param $result
-     * @param string $day
-     * @return bool
-     */
-    private function correctAnswer($result, string $day): bool
+    private function correctAnswer(string $result, string $day): bool
     {
         if (!$this->hasAnswerForDay($day)) {
             return false;
@@ -116,7 +107,7 @@ class Runner
         return (trim($result) == trim($this->answerForDay($day)));
     }
 }
-
+define('MUTE_DEBUG', true);
 $errorCount = (new Runner())->runFiles(glob('day*.php'));
 if ($errorCount > 0) {
     echo $errorCount;
