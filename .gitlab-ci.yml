@@ -1,8 +1,14 @@
 stages:
  - test
 
-test-2018-php:
+test-2018-php7.2:
   stage: test
   image: php:7.2-cli
+  script:
+    - cd 2018/php && php ./all.php
+
+test-2018-php7.3:
+  stage: test
+  image: php:7.3-cli
   script:
     - cd 2018/php && php ./all.php
