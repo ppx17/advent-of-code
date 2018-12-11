@@ -1,7 +1,5 @@
 <?php
 $data = $data ?? file_get_contents("../input/input-" . basename(__FILE__, '.php') . ".txt");
-require_once 'helpers.php';
-$serial = intval($data);
 
 class PowerCalculator
 {
@@ -30,25 +28,24 @@ class PowerCalculator
     function gridPower(int $x, int $y, int $size = 3): int
     {
         $sum = 0;
-        if (true) {
-            if ($size > 3) {
-                if ($size % 3 === 0) {
-                    for ($addX = 0; $addX < $size; $addX += 3) {
-                        for ($addY = 0; $addY < $size; $addY += 3) {
-                            $sum += $this->threeByThree[$x + $addX][$y + $addY];
-                        }
+        if ($size > 3) {
+            if ($size % 3 === 0) {
+                for ($addX = 0; $addX < $size; $addX += 3) {
+                    for ($addY = 0; $addY < $size; $addY += 3) {
+                        $sum += $this->threeByThree[$x + $addX][$y + $addY];
                     }
-                    return $sum;
-                } elseif ($size % 2 === 0) {
-                    for ($addX = 0; $addX < $size; $addX += 2) {
-                        for ($addY = 0; $addY < $size; $addY += 2) {
-                            $sum += $this->twoByTwo[$x + $addX][$y + $addY];
-                        }
-                    }
-                    return $sum;
                 }
+                return $sum;
+            } elseif ($size % 2 === 0) {
+                for ($addX = 0; $addX < $size; $addX += 2) {
+                    for ($addY = 0; $addY < $size; $addY += 2) {
+                        $sum += $this->twoByTwo[$x + $addX][$y + $addY];
+                    }
+                }
+                return $sum;
             }
         }
+
         for ($addX = 0; $addX < $size; $addX++) {
             for ($addY = 0; $addY < $size; $addY++) {
                 $sum += $this->cellPower($x + $addX, $y + $addY);
@@ -63,11 +60,10 @@ class PowerCalculator
     }
 }
 
-$s = ms();
 $highest = 0;
 $highestX = 0;
 $highestY = 0;
-$calculator = new PowerCalculator($serial);
+$calculator = new PowerCalculator($data);
 for ($x = 1; $x <= 298; $x++) {
     for ($y = 1; $y <= 298; $y++) {
         $power = $calculator->gridPower($x, $y);
@@ -80,13 +76,10 @@ for ($x = 1; $x <= 298; $x++) {
 }
 
 printf("Part 1: %s,%s\n", $highestX, $highestY);
-msp('part 1', ms($s));
 
-$p2s = ms();
 $highestSize = $highest;
 $lastHighestForSize = 3;
 for ($size = 1; $size <= 300; $size++) {
-    $s = ms();
     // Size 3 was already in the highest vars from part 1.
     if ($size === 3) {
         continue;
@@ -108,7 +101,6 @@ for ($size = 1; $size <= 300; $size++) {
         }
     }
 
-    debug("%s: %s in %.2f ms", $size, $highestForSize, ms($s));
     if ($highestForSize < $lastHighestForSize) {
         // there seems to be an clear bell curve, when it drops we can stop.
         break;
@@ -117,5 +109,3 @@ for ($size = 1; $size <= 300; $size++) {
 }
 
 printf("Part 2: %s,%s,%s\n", $highestX, $highestY, $highestSize);
-
-msp('part 2', ms($p2s));
