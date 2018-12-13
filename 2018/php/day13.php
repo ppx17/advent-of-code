@@ -1,6 +1,5 @@
 <?php
 $data = $data ?? file_get_contents("../input/input-" . basename(__FILE__, '.php') . ".txt");
-require_once 'helpers.php';
 
 class Vector
 {
