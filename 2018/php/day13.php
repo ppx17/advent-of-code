@@ -23,7 +23,7 @@ class Vector
         return $this->x === $vector->x && $this->y === $vector->y;
     }
 
-    public function turnLeft()
+    public function turnLeft(): void
     {
         if ($this->x === 0) {
             $this->x = $this->y;
@@ -34,7 +34,7 @@ class Vector
         }
     }
 
-    public function turnRight()
+    public function turnRight(): void
     {
         if ($this->x === 0) {
             $this->x = -$this->y;
@@ -45,22 +45,22 @@ class Vector
         }
     }
 
-    public function isLeft()
+    public function isLeft(): bool
     {
         return $this->x === -1 && $this->y === 0;
     }
 
-    public function isRight()
+    public function isRight(): bool
     {
         return $this->x === 1 && $this->y === 0;
     }
 
-    public function isUp()
+    public function isUp(): bool
     {
         return $this->x === 0 && $this->y === -1;
     }
 
-    public function isDown()
+    public function isDown(): bool
     {
         return $this->x === 0 && $this->y === 1;
     }
@@ -150,6 +150,107 @@ class Tracks
     }
 }
 
+class Simulator
+{
+    private $carts;
+    private $tracks;
+
+    private $lastCartStanding;
+    private $firstImpactLocation;
+
+    public function __construct(array $carts, Tracks $tracks)
+    {
+        $this->carts = $carts;
+        $this->tracks = $tracks;
+        $this->firstImpactLocation = null;
+    }
+
+    public function run(): void
+    {
+        while ($this->runTick());
+
+        // Re-key array so first is at index 0 again.
+        $carts = array_values($this->carts);
+        $this->lastCartStanding = $carts[0];
+    }
+
+    /**
+     * @return mixed
+     */
+    public function getLastCartStanding(): Cart
+    {
+        return $this->lastCartStanding;
+    }
+
+    /**
+     * @return mixed
+     */
+    public function getFirstImpactLocation(): Vector
+    {
+        return $this->firstImpactLocation;
+    }
+
+    private function sortCartsByPosition(): void
+    {
+        usort($this->carts, function ($a, $b) {
+            if ($a->location->y !== $b->location->y) {
+                // First sort on Y
+                return $a->location->y - $b->location->y;
+            }
+            return $a->location->x - $b->location->x;
+        });
+    }
+
+    private function hasMultipleCarts(): bool
+    {
+        return count($this->carts) > 1;
+    }
+
+    private function collideCarts(int $firstKey, int $secondKey): void
+    {
+        unset($this->carts[$firstKey], $this->carts[$secondKey]);
+    }
+
+    private function finishPartOne(Cart $cart): void
+    {
+        if ($this->firstImpactLocation === null) {
+            $this->firstImpactLocation = $cart->location;
+        }
+    }
+
+    private function runTick(): bool
+    {
+        $this->sortCartsByPosition();
+        foreach ($this->carts as $key => $cart) {
+            $cart->move();
+
+            $this->checkForCollisions($cart, $key);
+
+            if (!$this->hasMultipleCarts()) {
+                return false;
+            }
+
+            $cart->changeDirectionForTrack($this->tracks->at($cart->location));
+        }
+        return true;
+    }
+
+    /**
+     * @param $cart
+     * @param $key
+     */
+    private function checkForCollisions(Cart $cart, int $key): void
+    {
+        foreach ($this->carts as $otherKey => $otherCart) {
+            if ($cart->collidesWith($otherCart)) {
+                $this->finishPartOne($cart);
+                $this->collideCarts($key, $otherKey);
+            }
+        }
+    }
+}
+
+
 $lines = explode("\n", $data);
 $tracksArray = [];
 $carts = [];
@@ -183,42 +284,12 @@ for ($y = 0; $y < count($lines); $y++) {
 }
 
 $tracks = new Tracks($tracksArray);
+$simulator = new Simulator($carts, $tracks);
 
-function simulateCarts(array $carts, Tracks $tracks): void
-{
-    $firstCollision = false;
-    while (count($carts) > 1) {
-        // Sort carts on their position
-        usort($carts, function ($a, $b) {
-            if ($a->location->y !== $b->location->y) {
-                // First sort on Y
-                return $a->location->y - $b->location->y;
-            }
-            return $a->location->x - $b->location->x;
-        });
-        foreach ($carts as $key => $cart) {
-            $cart->move();
-            foreach ($carts as $otherKey => $otherCart) {
-                if ($cart->collidesWith($otherCart)) {
-                    if ($firstCollision === false) {
-                        $firstCollision = true;
-                        printf("Part 1: %s,%s\n", $cart->location->x, $cart->location->y);
-                    }
-                    unset($carts[$key], $carts[$otherKey]);
-                    break;
-                }
-            }
-            if (count($carts) === 1) {
-                break;
-            }
+$simulator->run();
 
-            $cart->changeDirectionForTrack($tracks->at($cart->location));
-        }
-    }
+$location = $simulator->getFirstImpactLocation();
+printf("Part 1: %s,%s\n", $location->x, $location->y);
 
-    $carts = array_values($carts);
-    printf("Part 2: %s,%s\n", $carts[0]->location->x, $carts[0]->location->y);
-
-}
-
-simulateCarts($carts, $tracks);
+$cart = $simulator->getLastCartStanding();
+printf("Part 2: %s,%s\n", $cart->location->x, $cart->location->y);
