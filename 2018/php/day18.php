@@ -144,11 +144,9 @@ class Simulator
 }
 
 
-$s = ms();
 $part1 = new Simulator($data);
 $part2 = clone $part1;
 
 echo "Part 1: " . $part1->simulate(10) . PHP_EOL;
 echo "Part 2: " . $part2->simulate(1000000000) . PHP_EOL;
-msp('runtime', ms($s));
 
