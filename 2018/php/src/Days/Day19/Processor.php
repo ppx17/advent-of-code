@@ -6,13 +6,12 @@ use Ppx17\Aoc2018\Days\Common\InstructionSet;
 
 class Processor
 {
-    private $instructions;
-    private $ip;
-    private $previousIp;
-    private $ipRegister;
-    private $codeCount;
-    private $code;
-    private $registers = [0, 0, 0, 0, 0, 0];
+    protected $instructions;
+    protected $previousIp;
+    protected $ipRegister;
+    protected $codeCount;
+    protected $code;
+    protected $registers = [0, 0, 0, 0, 0, 0];
 
     public function __construct(InstructionSet $instructions, string $code)
     {
@@ -23,7 +22,7 @@ class Processor
     public function execute(): int
     {
         while ($this->runInstruction()) {
-            if ($this->ip === 34) {
+            if ($this->getIp() === 34) {
                 $masterNumber = $this->registers[$this->code[$this->previousIp]['input'][3]];
                 return $this->sumOfFactors($masterNumber);
                 break;
@@ -42,7 +41,7 @@ class Processor
         return $this->registers[$register];
     }
 
-    private function parseCode(string $code): void
+    protected function parseCode(string $code): void
     {
         $lines = explode("\n", trim($code));
         $this->ipRegister = (explode(" ", $lines[0]))[1];
@@ -50,38 +49,44 @@ class Processor
         array_shift($lines);
         foreach ($lines as $line) {
             $parts = explode(' ', $line);
+            $name = $parts[0];
+            InstructionSet::arrayToNumbers($parts);
             $this->code[] = [
-                'name' => $parts[0],
+                'name' => $name,
                 'input' => $parts
             ];
         }
         $this->codeCount = count($this->code);
     }
 
-    private function isValidIp(): bool
+    protected function isValidIp(): bool
     {
-        return $this->ip < $this->codeCount;
+        return $this->getIp() < $this->codeCount;
     }
 
-    private function runInstruction(): bool
+    protected function runInstruction(): bool
     {
-        $this->ip = $this->registers[$this->ipRegister];
-
         if (!$this->isValidIp()) {
             return false;
         }
 
-        $this->registers = $this->instructions->runInstruction(
-            $this->code[$this->ip]['name'],
-            $this->code[$this->ip]['input'],
+        $this->instructions->runInstruction(
+            $this->code[$this->getIp()]['name'],
+            $this->code[$this->getIp()]['input'],
             $this->registers);
-        $this->previousIp = $this->ip;
+        $this->previousIp = $this->getIp();
 
-        $this->ip = $this->registers[$this->ipRegister];
-        $this->ip++;
-        $this->registers[$this->ipRegister] = $this->ip;
+        $this->upIp();
 
         return true;
+    }
+
+    protected function getIp(): int {
+        return $this->registers[$this->ipRegister];
+    }
+
+    protected function upIp(): void {
+        $this->registers[$this->ipRegister]++;
     }
 
     private function sumOfFactors(int $number): int

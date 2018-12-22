@@ -28,7 +28,7 @@ $runner->setDays([
     \Ppx17\Aoc2018\Days\Day16\Day16::class, //    6 ms
     \Ppx17\Aoc2018\Days\Day17\Day17::class, //   50 ms
     \Ppx17\Aoc2018\Days\Day18\Day18::class, // 1800 ms
-    \Ppx17\Aoc2018\Days\Day19\Day19::class, // 4200 ms
+    \Ppx17\Aoc2018\Days\Day19\Day19::class, // 2700 ms
     \Ppx17\Aoc2018\Days\Day20\Day20::class, //  128 ms
     \Ppx17\Aoc2018\Days\Day21\Day21::class, //  128 ms
     \Ppx17\Aoc2018\Days\Day22\Day22::class, //  128 ms

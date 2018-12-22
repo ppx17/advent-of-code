@@ -17,9 +17,10 @@ class Instruction
         return new self($name, $closure);
     }
 
-    public function run(array $inputs, array $registers): array
+    public function run(array $inputs, array &$registers): void
     {
-        return $this->closure->call($this, $inputs, $registers);
+        $callable = $this->closure;
+        $callable($inputs, $registers);
     }
 
     public function getName(): string

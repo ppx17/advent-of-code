@@ -1,10 +1,4 @@
 <?php
-/**
- * Created by PhpStorm.
- * User: niels
- * Date: 20-12-18
- * Time: 13:27
- */
 
 namespace Ppx17\Aoc2018\Days\Common;
 

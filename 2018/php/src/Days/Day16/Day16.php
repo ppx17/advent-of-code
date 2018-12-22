@@ -56,16 +56,16 @@ class Day16 extends Day
                 $this->part1++;
             }
 
-            $currentOpcode = intval($input[0]);
+            $currentOpCode = intval($input[0]);
 
-            if (!isset($opCodes[$currentOpcode])) {
-                if (!isset($opCodeOptions[$currentOpcode])) {
-                    $opCodeOptions[$currentOpcode] = $options;
+            if (!isset($opCodes[$currentOpCode])) {
+                if (!isset($opCodeOptions[$currentOpCode])) {
+                    $opCodeOptions[$currentOpCode] = $options;
                 } else {
-                    $opCodeOptions[$currentOpcode] = array_intersect($opCodeOptions[$currentOpcode], $options);
+                    $opCodeOptions[$currentOpCode] = array_intersect($opCodeOptions[$currentOpCode], $options);
 
-                    if (count($opCodeOptions[$currentOpcode]) == 1) {
-                        $opCodes[$currentOpcode] = $opCodeOptions[$currentOpcode][0];
+                    if (count($opCodeOptions[$currentOpCode]) == 1) {
+                        $opCodes[$currentOpCode] = $opCodeOptions[$currentOpCode][0];
                     }
                 }
             }
@@ -94,12 +94,11 @@ class Day16 extends Day
         $register = [0, 0, 0, 0];
         foreach ($lines as $line) {
             $input = explode(" ", $line);
-            $result = $this->instructions->runInstruction(
+            $this->instructions->runInstruction(
                 $this->opCodes[intval($input[0])],
                 $input,
                 $register
             );
-            $register = $result;
         }
 
         return $register;

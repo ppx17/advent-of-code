@@ -4,8 +4,6 @@ namespace aoc2018\tests\day20;
 
 use aoc2018\day20\Solver;
 
-require_once 'day20.php';
-
 class Day20Test extends \PHPUnit\Framework\TestCase
 {
     public function testPart1Sample1()

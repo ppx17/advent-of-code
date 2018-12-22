@@ -47,7 +47,7 @@ class Vector
         return $neighbors;
     }
 
-    public function distance(Vector $other)
+    public function manhattanDistance(Vector $other)
     {
         return abs($this->x - $other->x) + abs($this->y - $other->y);
     }
@@ -58,9 +58,9 @@ class Vector
     }
 }
 
-class Order
+class Sort
 {
-    public static function sortUnitsReadingOrder(array &$units)
+    public static function unitsByReadingOrder(array &$units)
     {
         usort($units, function (Unit $a, Unit $b) {
             if ($a->location->y !== $b->location->y) {
@@ -70,14 +70,14 @@ class Order
         });
     }
 
-    public static function sortEnemiesByHitPoints(array &$units)
+    public static function enemiesByHitPoints(array &$units)
     {
         usort($units, function (Unit $a, Unit $b) {
             return $a->hitPoints - $b->hitPoints;
         });
     }
 
-    public static function sortPathsByLengthAndReadingOrder(array &$paths)
+    public static function pathsByLengthAndReadingOrder(array &$paths)
     {
         usort($paths, function (array $a, array $b) {
             $countA = count($a);
@@ -325,7 +325,7 @@ class Simulator
      */
     private function simulateRound(): bool
     {
-        Order::sortUnitsReadingOrder($this->map->allUnits);
+        Sort::unitsByReadingOrder($this->map->allUnits);
 
         foreach ($this->map->allUnits as $unit) {
             if ($this->oneSideRemaining()) {
@@ -367,7 +367,7 @@ class Simulator
      */
     private function unitFight(Unit $unit, array $enemies): void
     {
-        Order::sortEnemiesByHitPoints($enemies);
+        Sort::enemiesByHitPoints($enemies);
 
         $this->unitHitBy($enemies[0], $unit);
     }
@@ -392,7 +392,7 @@ class Simulator
             return;
         }
         //TODO: First select all paths with their destination closest and in reading order, then sort.
-        Order::sortPathsByLengthAndReadingOrder($paths);
+        Sort::pathsByLengthAndReadingOrder($paths);
 
         $this->map->moveUnit($unit, $paths[0][0]->getLocation());
     }
@@ -485,7 +485,7 @@ class AStar extends BaseAStar
         $neighbors = $node->getLocation()->neighbors();
         $result = [];
         foreach ($neighbors as $neighbor) {
-            if ($this->target->distance($neighbor) == 0 || !$this->map->isOccupied($neighbor)) {
+            if ($this->target->manhattanDistance($neighbor) == 0 || !$this->map->isOccupied($neighbor)) {
                 $result[] = new AStarNode($neighbor);
             }
         }
