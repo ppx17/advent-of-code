@@ -6,7 +6,7 @@ test-2018-php7.2:
   image: php:7.2-cli
   before_script:
     - cd 2018/php
-    - ./ci/install_composer.sh
+    - bash ./ci/install_composer.sh
     - composer install
   script:
     - php ./run.php
@@ -16,7 +16,7 @@ test-2018-php7.3:
   image: php:7.3-cli
   before_script:
     - cd 2018/php
-    - ./ci/install_composer.sh
+    - bash ./ci/install_composer.sh
     - composer install
   script:
     - php ./run.php
