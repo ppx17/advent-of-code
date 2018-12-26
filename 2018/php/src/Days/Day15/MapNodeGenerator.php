@@ -12,7 +12,12 @@ class MapNodeGenerator implements NodeGenerator
 
     private $target;
 
-    public function __construct(Map $map, Vector $target)
+    /**
+     * MapNodeGenerator constructor.
+     * @param Map $map
+     * @param Vector|null $target Can be left blank when used with Dijkstra, needed for AStar
+     */
+    public function __construct(Map $map, ?Vector $target)
     {
         $this->map = $map;
         $this->target = $target;
@@ -20,7 +25,7 @@ class MapNodeGenerator implements NodeGenerator
 
     public function generateAdjacentNodes(AStarNode $node): UniqueNodeList
     {
-
+        /** @var MapNode $node */
         $neighbors = $node->getLocation()->neighbors();
         $list = new UniqueNodeList();
         foreach ($neighbors as $neighbor) {
@@ -37,10 +42,14 @@ class MapNodeGenerator implements NodeGenerator
         return 1;
     }
 
+    /**
+     * Unused in Dijkstra's, only for AStar.
+     * @param AStarNode $start
+     * @param AStarNode $end
+     * @return int
+     */
     public function calculateEstimatedCost(AStarNode $start, AStarNode $end): int
     {
-        /** @var MapNode $start */
-        /** @var MapNode $end */
-        return $start->getLocation()->manhattanDistance($end->getLocation());
+        return 0;
     }
 }

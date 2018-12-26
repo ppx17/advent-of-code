@@ -43,8 +43,16 @@ class Map
             $grid[$unit->location->y][$unit->location->x] = $unit->type;
         }
 
-        foreach ($grid as $row) {
-            echo implode('', $row) . PHP_EOL;
+        foreach ($grid as $y => $row) {
+            echo implode('', $row);
+            if ($this->unitsByLocation[$y] !== null) {
+                ksort($this->unitsByLocation[$y]);
+                echo '     ' . implode(' ', array_map(function (Unit $unit) {
+                        return $unit->hitPoints;
+                    }, $this->unitsByLocation[$y]));
+            }
+
+            echo PHP_EOL;
         }
     }
 

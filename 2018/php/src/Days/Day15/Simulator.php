@@ -4,6 +4,7 @@ namespace Ppx17\Aoc2018\Days\Day15;
 
 
 use Ppx17\Aoc2018\Days\Common\AStar\AStar;
+use Ppx17\Aoc2018\Days\Common\AStar\Dijkstra;
 
 class Simulator
 {
@@ -23,28 +24,22 @@ class Simulator
      */
     public function simulate(bool $printMap = true): int
     {
-        for ($round = 1; $round < 100; $round++) {
+        for ($round = 1; $round < 10000; $round++) {
 
             if (!$this->simulateRound()) {
                 // Round ended halfway
-                if ($printMap) {
-                    $this->map->print();
-                }
+                $this->printMapIf($printMap, $round);
                 return $this->finishFight($round - 1);
             } else {
                 // Round played until end
                 if ($this->oneSideRemaining()) {
-                    if ($printMap) {
-                        $this->map->print();
-                    }
+                    $this->printMapIf($printMap, $round);
                     return $this->finishFight($round);
                 }
             }
-            if ($printMap) {
-                echo PHP_EOL;
-                $this->map->print();
-            }
+            $this->printMapIf($printMap, $round);
         }
+        throw new \Exception('Round limiter hit');
     }
 
     /**
@@ -110,19 +105,42 @@ class Simulator
             $enemies = $this->map->elves;
         }
 
-        $paths = [];
+        $targetLocations = [];
         foreach ($enemies as $key => $enemy) {
-            $possiblePaths = $this->pathsToEnemy($unit, $enemy);
-            if (count($possiblePaths) > 0) {
-                $paths = array_merge($paths, $possiblePaths);
+            /** @var Unit $enemy */
+            $neighbors = $enemy->location->neighbors();
+            foreach ($neighbors as $neighbor) {
+                if (!$this->map->isOccupied($neighbor)) {
+                    $targetLocations[] = new MapNode($neighbor);
+                }
+            }
+        }
+
+        $generator = new MapNodeGenerator($this->map, null);
+        $pathFinder = new Dijkstra($generator);
+        $paths = [];
+        foreach($unit->location->neighbors() as $startPoint) {
+            if( ! $this->map->isOccupied($startPoint)) {
+                $paths = array_merge($paths, $pathFinder->run(new MapNode($startPoint), $targetLocations));
             }
         }
 
         if (count($paths) == 0) {
             return;
         }
-        //TODO: First select all paths with their destination closest and in reading order, then sort.
         Sort::pathsByLengthAndReadingOrder($paths);
+//
+//        if(count($paths) > 1) {
+//
+//            debug('------ (%s)', count($paths));
+//            foreach($paths as $path) {
+//                debug("Path length %s,  from %s,%s to %s,%s",
+//                    count($path), $path[0]->getLocation()->x, $path[0]->getLocation()->y,
+//                    $path[count($path)-1]->getLocation()->x, $path[count($path)-1]->getLocation()->y);
+//            }
+//            $this->map->print();
+//            debug('------');
+//        }
 
         $this->map->moveUnit($unit, $paths[0][0]->getLocation());
     }
@@ -196,5 +214,19 @@ class Simulator
         return array_filter($this->map->neighborsFrom($unit->location), function ($neighbor) use ($unit) {
             return $neighbor->type !== $unit->type;
         });
+    }
+
+    /**
+     * @param bool $printMap
+     */
+    private function printMapIf(bool $printMap, ?int $round = null): void
+    {
+        if ($printMap) {
+            echo PHP_EOL;
+            if($round !== null) {
+                debug("Round %s", $round);
+            }
+            $this->map->print();
+        }
     }
 }

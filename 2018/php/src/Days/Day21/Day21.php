@@ -23,7 +23,7 @@ class Day21 extends Day
 
     public function part2(): string
     {
-        return '13192622'; // Runtime of about 1100 seconds, ways to slow :(
+        return '13192622'; // Runtime of about 1100 seconds, ways too slow :(
         return (string)$this->processor->executePart2();
     }
 }

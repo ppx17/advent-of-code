@@ -9,11 +9,13 @@ class Day25 extends Day
 
     public function part1(): string
     {
-        return 'Not implemented';
+        $constellations = (new ConstellationFactory())->create($this->dataLines());
+
+        return count($constellations);
     }
 
     public function part2(): string
     {
-        return 'Not implemented';
+        return 'Finished!';
     }
 }

@@ -9,12 +9,20 @@ class Day15 extends Day
 {
     public function part1(): string
     {
-        return (new Simulator(new Map($this->data)))->simulate(false);
+        return (new Simulator(new Map($this->data)))
+            ->simulate(false);
     }
 
     public function part2(): string
     {
-        return '';
+        for($elfStrength = 4; $elfStrength < 30; $elfStrength++) {
+            try {
+                return (new Simulator(new Map($this->data, $elfStrength), true))
+                    ->simulate(false);
+            }catch(ElfDiedException $ex) {
+                continue;
+            }
+        }
+        return 'Elves died everywhere :(';
     }
 }
-// 57800 too high

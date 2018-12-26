@@ -23,18 +23,18 @@ $runner->setDays([
     \Ppx17\Aoc2018\Days\Day11\Day11::class, // 3050 ms
     \Ppx17\Aoc2018\Days\Day12\Day12::class, //    3 ms
     \Ppx17\Aoc2018\Days\Day13\Day13::class, //   46 ms
-    \Ppx17\Aoc2018\Days\Day14\Day14::class, //      ms
+    \Ppx17\Aoc2018\Days\Day14\Day14::class, // 4000 ms
     \Ppx17\Aoc2018\Days\Day15\Day15::class, //      ms
     \Ppx17\Aoc2018\Days\Day16\Day16::class, //    6 ms
     \Ppx17\Aoc2018\Days\Day17\Day17::class, //   50 ms
     \Ppx17\Aoc2018\Days\Day18\Day18::class, // 1800 ms
     \Ppx17\Aoc2018\Days\Day19\Day19::class, // 2700 ms
-    \Ppx17\Aoc2018\Days\Day20\Day20::class, //  128 ms
-    \Ppx17\Aoc2018\Days\Day21\Day21::class, //  128 ms
-    \Ppx17\Aoc2018\Days\Day22\Day22::class, //  128 ms
-    \Ppx17\Aoc2018\Days\Day23\Day23::class, //  128 ms
-    \Ppx17\Aoc2018\Days\Day24\Day24::class, //  128 ms
-    \Ppx17\Aoc2018\Days\Day25\Day25::class, //  128 ms
+    \Ppx17\Aoc2018\Days\Day20\Day20::class, //  115 ms
+    \Ppx17\Aoc2018\Days\Day21\Day21::class, // 1100  s !!
+    \Ppx17\Aoc2018\Days\Day22\Day22::class, // 1830 ms
+    \Ppx17\Aoc2018\Days\Day23\Day23::class, //  450 ms
+    \Ppx17\Aoc2018\Days\Day24\Day24::class, // 1968 ms
+    \Ppx17\Aoc2018\Days\Day25\Day25::class, //  917 ms
 ]);
 
 $options = getopt('', ['day:']);

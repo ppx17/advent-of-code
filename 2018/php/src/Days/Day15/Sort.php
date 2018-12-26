@@ -32,25 +32,25 @@ class Sort
                 return $countA - $countB;
             }
 
-            // Paths of same length, choose start in reading order
-            if (!$a[0]->getLocation()->equals($b[0]->getLocation())) {
-                if ($a[0]->getLocation()->y !== $b[0]->getLocation()->y) {
+            // Paths of same length, choose destination in reading order
+            if (!$a[$countA - 1]->getLocation()->equals($b[$countB - 1]->getLocation())) {
+                if ($a[$countA - 1]->getLocation()->y !== $b[$countB - 1]->getLocation()->y) {
                     // first top down...
-                    return $a[0]->getLocation()->y - $b[0]->getLocation()->y;
+                    return $a[$countA - 1]->getLocation()->y - $b[$countB - 1]->getLocation()->y;
                 }
                 // Then left to right
-                return $a[0]->getLocation()->x - $b[0]->getLocation()->x;
+                return $a[$countA - 1]->getLocation()->x - $b[$countB - 1]->getLocation()->x;
 
             }
 
-            // Starting position is equal, sort destination in reading order
-            if ($a[$countA - 1]->getLocation()->y !== $b[$countB - 1]->getLocation()->y) {
+            // Destination position is equal, sort start position in reading order
+            if ($a[0]->getLocation()->y !== $b[0]->getLocation()->y) {
                 // top down..
-                return $a[$countB - 1]->getLocation()->y - $b[$countB - 1]->getLocation()->y;
+                return $a[0]->getLocation()->y - $b[0]->getLocation()->y;
             }
 
             // left to right
-            return $a[$countB - 1]->getLocation()->x - $b[$countB - 1]->getLocation()->x;
+            return $a[0]->getLocation()->x - $b[0]->getLocation()->x;
 
         });
     }

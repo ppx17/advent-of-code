@@ -206,7 +206,7 @@ class Day15Test extends \PHPUnit\Framework\TestCase
     /**
      * @throws ElfDiedException
      */
-    public function disableTestBattleProduction()
+    public function testBattleProduction()
     {
         $map = new Map($this->dataProduction());
         $simulator = new Simulator($map);
@@ -217,22 +217,21 @@ class Day15Test extends \PHPUnit\Framework\TestCase
     /**
      * @throws ElfDiedException
      */
-    public function disableTtestElvesSurviveProduction()
+    public function testElvesSurviveProduction()
     {
         $data = $this->dataProduction();
 
         $map = new Map($data, 20);
         $simulator = new Simulator($map, true);
 
-        $result = $simulator->simulate(false);
-        $this->assertNotEquals(55019, $result);
-        $this->assertLessThan(57800, $result);
+        $result = $simulator->simulate(true);
+        $this->assertEquals(54096, $result);
     }
 
     /**
      * @throws ElfDiedException
      */
-    public function disableTtestElvesDieProduction()
+    public function testElvesDieProduction()
     {
         $data = $this->dataProduction();
 

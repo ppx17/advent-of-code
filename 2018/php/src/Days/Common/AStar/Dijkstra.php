@@ -2,7 +2,7 @@
 namespace Ppx17\Aoc2018\Days\Common\AStar;
 
 
-class AStar
+class Dijkstra
 {
     private $openList;
     private $closedList;
@@ -31,32 +31,40 @@ class AStar
         $this->getClosedList()->clear();
     }
 
-    public function run(AStarNode $start, AStarNode $goal): array
+    public function run(AStarNode $start, array $goals): array
     {
-        $path = [];
+        $goalIds = array_map(function(AStarNode $node) { return $node->getID(); }, $goals);
 
         $this->clear();
 
         $start->setG(0);
-        $start->setH($this->nodeProvider->calculateEstimatedCost($start, $goal));
 
-        $this->getOpenList()->add($start, -$start->getF());
+        $this->getOpenList()->add($start, 0);
+
+        $foundG = null;
+        $foundPaths = [];
 
         while (!$this->getOpenList()->isEmpty()) {
             $currentNode = $this->getOpenList()->extractBest();
 
-            $this->getClosedList()->add($currentNode);
-
-            if ($currentNode->getID() === $goal->getID()) {
-                $path = $this->generatePathFromStartNodeTo($currentNode);
-                break;
+            if($foundG !== null && $currentNode->getG() > $foundG) {
+                return $foundPaths;
             }
 
-            $successors = $this->computeAdjacentNodes($currentNode, $goal);
+            $this->getClosedList()->add($currentNode);
+
+            if (in_array($currentNode->getID(), $goalIds)) {
+                $foundPaths[] = $this->generatePathFromStartNodeTo($currentNode);
+                $foundG = $currentNode->getG();
+                continue;
+            }
+
+            $successors = $this->computeAdjacentNodes($currentNode);
 
             foreach ($successors as $successor) {
-                /** @var $successor Node */
+                /** @var $successor AStarNode */
                 if ($this->getOpenList()->contains($successor)) {
+                    /** @var $successorInOpenList AStarNode */
                     $successorInOpenList = $this->getOpenList()->get($successor);
 
                     if ($successor->getG() >= $successorInOpenList->getG()) {
@@ -65,6 +73,7 @@ class AStar
                 }
 
                 if ($this->getClosedList()->contains($successor)) {
+                    /** @var $successorInClosedList AStarNode */
                     $successorInClosedList = $this->getClosedList()->get($successor);
 
                     if ($successor->getG() >= $successorInClosedList->getG()) {
@@ -76,11 +85,11 @@ class AStar
 
                 $this->getClosedList()->remove($successor);
 
-                $this->getOpenList()->add($successor, -$successor->getF());
+                $this->getOpenList()->add($successor, -$successor->getG());
             }
         }
 
-        return $path;
+        return $foundPaths;
     }
 
     private function generatePathFromStartNodeTo(AStarNode $node): array
@@ -98,14 +107,13 @@ class AStar
         return $path;
     }
 
-    private function computeAdjacentNodes(AStarNode $node, AStarNode $goal): UniqueNodeList
+    private function computeAdjacentNodes(AStarNode $node): UniqueNodeList
     {
         $nodes = $this->nodeProvider->generateAdjacentNodes($node);
 
         foreach ($nodes as $adjacentNode) {
             /** @var $adjacentNode AStarNode */
             $adjacentNode->setG($node->getG() + $this->nodeProvider->calculateRealCost($node, $adjacentNode));
-            $adjacentNode->setH($this->nodeProvider->calculateEstimatedCost($adjacentNode, $goal));
         }
 
         return $nodes;

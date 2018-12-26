@@ -6,7 +6,7 @@ use Traversable;
 
 class UniqueNodeList implements \IteratorAggregate
 {
-    private $nodesById;
+    private $nodesById = [];
 
     public function add(AStarNode $node)
     {

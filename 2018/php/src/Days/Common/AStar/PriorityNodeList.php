@@ -15,10 +15,10 @@ class PriorityNodeList
         $this->clear();
     }
 
-    public function add(AStarNode $node)
+    public function add(AStarNode $node, int $priority)
     {
         $this->nodesById[$node->getID()] = $node;
-        $this->queue->insert($node, -$node->getF());
+        $this->queue->insert($node, $priority);
     }
 
     public function isEmpty()
