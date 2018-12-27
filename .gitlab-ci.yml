@@ -1,22 +1,19 @@
 stages:
  - test
 
+before_script:
+  - cd 2018/php
+  - bash ./ci/install_composer.sh
+  - php composer.phar install
+
 test-2018-php7.2:
   stage: test
   image: php:7.2-cli
-  before_script:
-    - cd 2018/php
-    - bash ./ci/install_composer.sh
-    - composer install
   script:
     - php ./run.php
 
 test-2018-php7.3:
   stage: test
   image: php:7.3-cli
-  before_script:
-    - cd 2018/php
-    - bash ./ci/install_composer.sh
-    - composer install
   script:
     - php ./run.php
