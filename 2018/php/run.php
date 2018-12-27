@@ -54,6 +54,13 @@ if (isset($options['day'])) {
         $result->getPart1(), $result->getPart2());
 } else {
     $results = $runner->runAll($printResult);
+
+    $totalRunTime = 0;
+    foreach ($results as $result) {
+        $totalRunTime += $result->getTotalRuntimeMs();
+    }
+    printf("\nRan %s days in %.2f ms, averaging %.2f ms per day.\n", count($results), $totalRunTime,
+        $totalRunTime / count($results));
 }
 
 
