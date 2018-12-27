@@ -8,6 +8,7 @@ use Ppx17\Aoc2018\Days\Day;
 
 class Day11 extends Day
 {
+    /** @var PowerCalculator */
     private $calculator;
     private $highestPower = 0;
     private $highestLocation;
@@ -16,13 +17,13 @@ class Day11 extends Day
     {
         $this->highestLocation = new Vector(0, 0);
         $this->calculator = new PowerCalculator($this->data);
+
         for ($x = 1; $x <= 298; $x++) {
             for ($y = 1; $y <= 298; $y++) {
-                $currentLocation = new Vector($x, $y);
-                $power = $this->calculator->gridPower($currentLocation);
+                $power = $this->calculator->gridPower($x, $y);
                 if ($power > $this->highestPower) {
                     $this->highestPower = $power;
-                    $this->highestLocation = $currentLocation;
+                    $this->highestLocation = new Vector($x, $y);
                 }
             }
         }
@@ -32,7 +33,7 @@ class Day11 extends Day
 
     public function part2(): string
     {
-        if($this->calculator === null) {
+        if ($this->calculator === null) {
             $this->part1();
         }
 
@@ -48,7 +49,7 @@ class Day11 extends Day
             for ($x = 1; $x <= $maxCoordinate; $x++) {
                 for ($y = 1; $y <= $maxCoordinate; $y++) {
                     $currentLocation = new Vector($x, $y);
-                    $power = $this->calculator->gridPower($currentLocation, $size);
+                    $power = $this->calculator->gridPower($x, $y, $size);
                     if ($power > $this->highestPower) {
                         $this->highestPower = $power;
                         $this->highestLocation = $currentLocation;
