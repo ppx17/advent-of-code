@@ -35,22 +35,22 @@ class Simulator
             }, $this->grid)) . PHP_EOL;
     }
 
-    public function resourceValue(): int
-    {
-        $trees = 0;
-        $camps = 0;
-
-        foreach ($this->grid as $row) {
-            foreach ($row as $acre) {
-                if ($acre === '|') {
-                    $trees++;
-                }
-                if ($acre === '#') {
-                    $camps++;
-                }
+    public function fieldCounts(): array {
+        $counts = [];
+        foreach($this->grid as $row){
+            foreach($row as $acre) {
+                $counts[$acre]++;
             }
         }
-        return $trees * $camps;
+        return $counts;
+    }
+
+    public function resourceValue(array $counts = []): int
+    {
+        if(count($counts) === 0) {
+            $counts = $this->fieldCounts();
+        }
+        return $counts['|'] * $counts['#'];
     }
 
     private function simulateMinute(): void
@@ -118,17 +118,19 @@ class Simulator
             $this->simulateMinute();
             $value = $this->resourceValue();
             $history[$minute] = $value;
-            $seenCount[$value]++;
+            $seenCount[sprintf("%s:%s", $value, md5((string)$this))]++;
 
             $minute++;
-        } while (max($seenCount) < 5);
+        } while (max($seenCount) < 2);
 
         arsort($seenCount, SORT_NUMERIC);
-        $mostSeenValue = key($seenCount);
+        $mostSeenKey = key($seenCount);
+
+        list($mostSeenValue) = explode(':', $mostSeenKey);
 
         $mostSeenAtMinutes = [];
         foreach ($history as $minute => $value) {
-            if ($value === $mostSeenValue) {
+            if ($value == $mostSeenValue) {
                 $mostSeenAtMinutes[] = $minute;
             }
         }
