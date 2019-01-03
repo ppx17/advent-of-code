@@ -136,8 +136,8 @@ class Simulator
         }
 
         $increment = $mostSeenAtMinutes[1] - $mostSeenAtMinutes[0];
-        $firstOccurence = $mostSeenAtMinutes[0];
+        $firstOccurrence = $mostSeenAtMinutes[0];
 
-        return $history[$firstOccurence + (($minutes - $firstOccurence) % $increment)];
+        return $history[$firstOccurrence + (($minutes - $firstOccurrence) % $increment)];
     }
 }
