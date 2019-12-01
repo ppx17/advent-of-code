@@ -2,18 +2,39 @@ stages:
  - test
 
 before_script:
-  - cd 2018/php
-  - bash ./ci/install_composer.sh
-  - php composer.phar install
 
 test-2018-php7.2:
   stage: test
   image: php:7.2-cli
+  only:
+    changes:
+     - 2018/php/*
   script:
+    - cd 2018/php
+    - bash ./ci/install_composer.sh
+    - php composer.phar install
     - php ./run.php
 
 test-2018-php7.3:
   stage: test
   image: php:7.3-cli
+  only:
+    changes:
+     - 2018/php/*
   script:
+    - cd 2018/php
+    - bash ./ci/install_composer.sh
+    - php composer.phar install
+    - php ./run.php
+
+test-2019-php7.4:
+  stage: test
+  image: php:7.4-cli
+  only:
+    changes:
+     - 2019/php/*
+  script:
+    - cd 2019/php
+    - bash ./ci/install_composer.sh
+    - php composer.phar install
     - php ./run.php

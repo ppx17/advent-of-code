@@ -11,6 +11,7 @@ use IteratorAggregate;
  * @package Ppx17\Aoc2019\Aoc\Runner
  *
  * @method each(callable $callback);
+ * @method map(callable $callback);
  */
 class DayRepository implements IteratorAggregate
 {
@@ -40,7 +41,7 @@ class DayRepository implements IteratorAggregate
     public function __call($name, $arguments)
     {
         if(method_exists($this->days, $name)) {
-            $this->days->{$name}(...$arguments);
+            return $this->days->{$name}(...$arguments);
         }
     }
 }

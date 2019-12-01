@@ -7,6 +7,7 @@ namespace Ppx17\Aoc2019\Aoc\Runner;
 use Illuminate\Container\Container;
 use Illuminate\Support\Collection;
 use Illuminate\Support\Str;
+use ReflectionClass;
 
 class DayLoader
 {
@@ -21,9 +22,9 @@ class DayLoader
         $this->container = $container;
     }
 
-    public function load(string $folder): Collection
+    public function load(string $daysFolder, string $inputFolder): Collection
     {
-        $content = scandir($folder);
+        $content = scandir($daysFolder);
         if (!$content) return new Collection();
 
         return collect($content)
@@ -33,17 +34,27 @@ class DayLoader
             ->map(function($file) {
                 return Str::substr($file, 0, -strlen(self::EXT));
             })
-            ->map(function($file) use($folder) {
-                return $this->resolveNamespace($folder . DIRECTORY_SEPARATOR . $file . self::EXT) . '\\' . $file;
+            ->map(function($file) use($daysFolder) {
+                return $this->resolveNamespace($daysFolder . DIRECTORY_SEPARATOR . $file . self::EXT) . '\\' . $file;
             })
             ->filter(function($fqdn) {
                 return class_exists($fqdn);
+            })
+            ->filter(function($fqdn) {
+                return (new ReflectionClass($fqdn))->isInstantiable();
             })
             ->map(function($fqdn) {
                 return $this->container->build($fqdn);
             })
             ->filter(function($instance) {
                 return $instance instanceof DayInterface;
+            })
+            ->each(function(DayInterface $instance) use($inputFolder) {
+                $inputPath = $inputFolder . DIRECTORY_SEPARATOR . 'input-day' . $instance->dayNumber() . '.txt';
+                if(file_exists($inputPath))
+                {
+                    $instance->setInput(file_get_contents($inputPath));
+                }
             });
 
     }

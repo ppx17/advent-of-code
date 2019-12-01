@@ -4,27 +4,17 @@
 namespace Ppx17\Aoc2019\Aoc\Runner\Commands;
 
 
+use Illuminate\Support\Collection;
 use Ppx17\Aoc2019\Aoc\Runner\DayInterface;
-use Ppx17\Aoc2019\Aoc\Runner\DayLoader;
-use Ppx17\Aoc2019\Aoc\Runner\DayRepository;
-use Symfony\Component\Console\Command\Command;
+use Ppx17\Aoc2019\Aoc\Runner\Result;
+use Ppx17\Aoc2019\Aoc\Runner\Validator\ValidatedResult;
+use Symfony\Component\Console\Helper\Table;
+use Symfony\Component\Console\Helper\TableCell;
 use Symfony\Component\Console\Input\InputInterface;
 use Symfony\Component\Console\Output\OutputInterface;
 
-class RunCommand extends Command
+class RunCommand extends AocCommand
 {
-
-    /**
-     * @var DayRepository
-     */
-    private $days;
-
-    public function __construct(DayRepository $repository)
-    {
-        parent::__construct(null);
-        $this->days = $repository;
-    }
-
     protected function configure()
     {
         $this->setName('run')
@@ -33,8 +23,55 @@ class RunCommand extends Command
 
     protected function execute(InputInterface $input, OutputInterface $output)
     {
-        $this->days->each(function(DayInterface $day) use($output) {
-            $output->writeln('Executing day '.$day->dayNumber());
-        });
+        $progressSection = $output->section();
+
+        $progressSection->writeln('Running all days...');
+
+        $currentSection = $output->section();
+
+        $results = $this
+            ->getDays()
+            ->map(function (DayInterface $day) use ($currentSection) {
+                $currentSection->writeln('Currently running day ' . $day->dayNumber() . '...');
+                $result = $this->getRunner()->run($day);
+                $currentSection->clear();
+                return $result;
+            })
+            ->map(function (Result $result) {
+                return $this->getValidator()->validate($result);
+            });
+
+        $progressSection->clear();
+
+        $this->printResultTable($output, $results);
+    }
+
+    private function printResultTable(OutputInterface $output, Collection $results)
+    {
+        $table = new Table($output);
+        $table
+            ->setHeaders([
+                    [
+                        'Day',
+                        new TableCell('Timings', ['colspan' => 4]),
+                        new TableCell('Results', ['colspan' => 2])
+                    ],
+                    ['Day', 'Init', 'Part 1', 'Part 2', 'Total', 'Part 1', 'Part 2']
+                ]
+            )
+            ->setRows($results
+                ->map(function (ValidatedResult $result) {
+                    return [
+                        $result->getResult()->getDay()->dayNumber(),
+                        $this->formatTime($result->getResult()->getTimeSetup()),
+                        $this->formatTime($result->getResult()->getTimePart1()),
+                        $this->formatTime($result->getResult()->getTimePart2()),
+                        $this->formatTime($result->getResult()->getTimeTotal()),
+                        $this->formatResult($this->resultCell($result->getPart1())),
+                        $this->formatResult($this->resultCell($result->getPart2())),
+                    ];
+                })
+                ->toArray());
+        $table->render();
     }
 }
