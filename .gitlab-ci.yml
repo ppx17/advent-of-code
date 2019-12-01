@@ -36,5 +36,5 @@ test-2019-php7.4:
   script:
     - cd 2019/php
     - bash ./ci/install_composer.sh
-    - php composer.phar install
-    - php ./run.php
+    - php composer.phar install -d ./src --no-progress --prefer-dist
+    - php ./cli.php run
