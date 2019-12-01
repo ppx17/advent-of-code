@@ -37,9 +37,7 @@ class RunCommand extends AocCommand
                 $currentSection->clear();
                 return $result;
             })
-            ->map(function (Result $result) {
-                return $this->getValidator()->validate($result);
-            });
+            ->map(fn(Result $result) => $this->getValidator()->validate($result));
 
         $progressSection->clear();
 
@@ -67,8 +65,8 @@ class RunCommand extends AocCommand
                         $this->formatTime($result->getResult()->getTimePart1()),
                         $this->formatTime($result->getResult()->getTimePart2()),
                         $this->formatTime($result->getResult()->getTimeTotal()),
-                        $this->formatResult($this->resultCell($result->getPart1())),
-                        $this->formatResult($this->resultCell($result->getPart2())),
+                        $this->resultCell($result->getPart1()),
+                        $this->resultCell($result->getPart2()),
                     ];
                 })
                 ->toArray());

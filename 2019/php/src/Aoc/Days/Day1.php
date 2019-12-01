@@ -6,7 +6,6 @@ namespace Ppx17\Aoc2019\Aoc\Days;
 
 class Day1 extends AbstractDay
 {
-
     public function dayNumber(): int
     {
         return 1;

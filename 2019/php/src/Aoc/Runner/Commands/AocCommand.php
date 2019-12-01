@@ -61,13 +61,6 @@ abstract class AocCommand extends Command
         return sprintf('%.2f ms', $ms);
     }
 
-    protected function formatResult(?bool $isValid)
-    {
-        if (is_null($isValid)) {
-            return $this->unknown();
-        }
-        return ($isValid) ? $this->success() : $this->fail();
-    }
     protected function unknown(string $message = ''): string
     {
         return '<fg=blue>? '.$message.'</>';

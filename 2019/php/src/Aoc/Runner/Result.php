@@ -9,19 +9,14 @@ class Result
     /**
      * @var DayInterface
      */
-    private $day;
+    private DayInterface $day;
 
-    /** @var string */
-    private $part1;
-    /** @var string */
-    private $part2;
+    private string $part1;
+    private string $part2;
 
-    /** @var float */
-    private $timeSetup;
-    /** @var float */
-    private $timePart1;
-    /** @var float */
-    private $timePart2;
+    private float $timeSetup;
+    private float $timePart1;
+    private float $timePart2;
 
     public function __construct(DayInterface $day)
     {

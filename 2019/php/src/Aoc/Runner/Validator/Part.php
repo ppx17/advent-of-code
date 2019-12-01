@@ -6,12 +6,9 @@ namespace Ppx17\Aoc2019\Aoc\Runner\Validator;
 
 class Part
 {
-    /** @var int */
-    private $partNumber;
-    /** @var string */
-    private $expectation = null;
-    /** @var string */
-    private $result = null;
+    private int $partNumber;
+    private ?string $expectation = null;
+    private ?string $result = null;
 
     public function __construct(int $partNumber)
     {

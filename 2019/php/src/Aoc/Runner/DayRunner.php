@@ -8,7 +8,6 @@ use Symfony\Component\Console\Output\OutputInterface;
 
 class DayRunner
 {
-
     public function run(DayInterface $day, OutputInterface $output = null): Result
     {
         $result = new Result($day);

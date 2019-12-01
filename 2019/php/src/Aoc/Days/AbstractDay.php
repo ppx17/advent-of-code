@@ -8,7 +8,7 @@ use Ppx17\Aoc2019\Aoc\Runner\DayInterface;
 
 abstract class AbstractDay implements DayInterface
 {
-    private $input = '';
+    private string $input = '';
 
     public function setUp(): void
     {

@@ -8,8 +8,7 @@ use Ppx17\Aoc2019\Aoc\Runner\Result;
 
 class ResultValidator
 {
-    /** @var string */
-    private $path;
+    private string $path;
 
     public function __construct(string $path)
     {
@@ -21,14 +20,17 @@ class ResultValidator
         $validationResult = new ValidatedResult($result);
 
         $content = $this->getExpectedContent($result->getDay()->dayNumber());
-        if(is_null($content))
-        {
+        if (is_null($content)) {
             return $validationResult;
         }
 
         $parts = $this->parseParts($content);
-        $validationResult->getPart1()->setExpectation($parts[0]);
-        $validationResult->getPart2()->setExpectation($parts[1]);
+        if (isset($parts[0]) && $parts[0] !== false) {
+            $validationResult->getPart1()->setExpectation($parts[0]);
+        }
+        if (isset($parts[1]) && $parts[1] !== false) {
+            $validationResult->getPart2()->setExpectation($parts[1]);
+        }
 
         return $validationResult;
     }
@@ -44,9 +46,7 @@ class ResultValidator
     private function parseParts(string $content): array
     {
         return collect(explode("\n", $content))
-            ->map(function($line) {
-                return substr($line, 8);
-            })
+            ->map(fn ($line) => substr($line, 8))
             ->toArray();
 
     }

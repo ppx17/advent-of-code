@@ -15,7 +15,7 @@ use IteratorAggregate;
  */
 class DayRepository implements IteratorAggregate
 {
-    private $days;
+    private Collection $days;
 
     public function __construct()
     {

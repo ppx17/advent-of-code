@@ -11,11 +11,9 @@ class ValidatedResult
     /**
      * @var Result
      */
-    private $result;
-    /** @var Part */
-    private $part1;
-    /** @var Part */
-    private $part2;
+    private Result $result;
+    private Part $part1;
+    private Part $part2;
 
     public function __construct(Result $result)
     {
