@@ -32,7 +32,7 @@ test-2019-php7.4:
   image: php:7.4-cli
   only:
     changes:
-     - 2019/php/*
+     - 2019/php/**
   script:
     - cd 2019/php
     - bash ./ci/install_composer.sh
