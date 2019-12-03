@@ -30,9 +30,6 @@ test-2018-php7.3:
 test-2019-php7.4:
   stage: test
   image: php:7.4-cli
-  only:
-    changes:
-     - 2019/php/**
   script:
     - cd 2019/php
     - bash ./ci/install_composer.sh
