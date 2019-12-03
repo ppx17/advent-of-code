@@ -1,0 +1,2 @@
+#!/bin/bash
+docker run -ti --rm -v $(pwd)/../input:/usr/app/input -v $(pwd):/usr/app/src python_advent python "$@"
