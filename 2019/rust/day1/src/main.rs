@@ -1,40 +1,38 @@
-use std::fs::File;
-use std::io::{self, BufReader};
-use std::io::prelude::*;
+use std::io;
 
 fn main() -> io::Result<()> {
-    let f = File::open("../../input/input-day1.txt")?;
-    let f = BufReader::new(f);
+    let contents = aoc::input::read_input(1)?;
+    let perf = aoc::perf::InitialPerformance::new();
 
-    let mut sum: i64 = 0;
-    let mut compensated_sum: i64 = 0;
+    let masses: Vec<i32> = contents
+        .trim()
+        .split_whitespace()
+        .map(|s| s.parse().unwrap())
+        .collect();
 
-    for line in f.lines() {
-        let line = line.unwrap();
-        if line.is_empty() {
-            continue;
-        }
-        let mass = line.parse::<i64>().unwrap();
-        sum += fuel_for_mass(mass);
-        compensated_sum += compensated_fuel_for_mass(mass);
-    }
+    let perf = perf.part1();
+    let part1: i32 = masses.iter().map(|x| fuel_for_mass(&x)).sum();
+    let perf = perf.part2();
+    let part2: i32 = masses.iter().map(|x| compensated_fuel_for_mass(*x)).sum();
 
-    println!("Part 1: {}", sum);
-    println!("Part 2: {}", compensated_sum);
+    println!("Part 1: {}", part1);
+    println!("Part 2: {}", part2);
+    
+    perf.print();
 
     Ok(())
 }
 
-fn fuel_for_mass(mass: i64) -> i64 {
+fn fuel_for_mass(mass: &i32) -> i32 {
     return (mass / 3) - 2;
 }
 
-fn compensated_fuel_for_mass(mass: i64) -> i64 {
-    let mut sum: i64 = 0;
-    let mut last_fuel = fuel_for_mass(mass);
+fn compensated_fuel_for_mass(mass: i32) -> i32 {
+    let mut sum: i32 = 0;
+    let mut last_fuel = fuel_for_mass(&mass);
     while last_fuel > 0 {
         sum += last_fuel;
-        last_fuel = fuel_for_mass(last_fuel);
+        last_fuel = fuel_for_mass(&last_fuel);
     }
-    return sum;
+    sum
 }

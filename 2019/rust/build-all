@@ -1,0 +1,7 @@
+#!/bin/bash
+
+for day in day*
+do
+  [[ -e "$day" ]] || break
+  cargo build --release --manifest-path "./${day}/Cargo.toml"
+done;
