@@ -12,18 +12,9 @@ use Symfony\Component\Console\Command\Command;
 
 abstract class AocCommand extends Command
 {
-    /**
-     * @var DayRepository
-     */
-    private $days;
-    /**
-     * @var DayRunner
-     */
-    private $runner;
-    /**
-     * @var ResultValidator
-     */
-    private $validator;
+    private DayRepository $days;
+    private DayRunner $runner;
+    private ResultValidator $validator;
 
     public function __construct(DayRepository $repository, DayRunner $runner, ResultValidator $validator)
     {
@@ -50,7 +41,7 @@ abstract class AocCommand extends Command
 
     protected function formatTime(float $ms): string
     {
-        if ($ms < 0.01) {
+        if ($ms < 1) {
             return sprintf('%.2f µs', $ms * 1000);
         }
 

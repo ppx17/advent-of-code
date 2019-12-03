@@ -18,7 +18,6 @@ class Day1 extends AbstractDay
 
     public function part2(): string
     {
-
         return (string)array_sum(array_map([ $this, 'fuelForMassAndFuel'], $this->getInputLines()));
     }
 
