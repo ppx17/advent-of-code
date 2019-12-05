@@ -4,6 +4,7 @@ namespace Ppx17\Aoc2019\Aoc\Days\Day2;
 
 class IntCode
 {
+    protected const MAX_TICKS = 1000;
     public array $memory;
     public int $pointer = 0;
     protected array $initialMemory;
@@ -13,19 +14,16 @@ class IntCode
         $this->memory = $this->initialMemory = $memory;
     }
 
-    public function run(int $noun, int $verb): int
+    public function run(): int
     {
-        $this->memory[1] = $noun;
-        $this->memory[2] = $verb;
-
-        while (true) {
+        for ($tick = 0; $tick < self::MAX_TICKS; $tick++) {
             $instruction = $this->memory[$this->pointer];
 
             if ($instruction === 99) {
                 return $this->memory[0];
             }
 
-            $this->runInstruction($instruction);
+            $this->processInstruction($instruction);
         }
         throw new \RuntimeException('Instruction limit reached');
     }
@@ -36,17 +34,17 @@ class IntCode
         $this->memory = $this->initialMemory;
     }
 
-    protected function runInstruction($instruction): void
+    protected function runOpCode($opCode): void
     {
-        if ($instruction === 1) {
-            $this->opAdd();
-            return;
-        } elseif ($instruction === 2) {
-            $this->opMultiply();
-            return;
+        switch ($opCode) {
+            case 1:
+                $this->opAdd();
+                return;
+            case 2:
+                $this->opMultiply();
+                return;
         }
-
-        throw new \RuntimeException('Invalid instruction (' . $instruction . ')');
+        throw new \RuntimeException('Invalid instruction (' . $opCode . ')');
     }
 
     protected function opAdd(): void
@@ -69,5 +67,10 @@ class IntCode
     protected function b(): int
     {
         return $this->memory[$this->memory[$this->pointer + 2]];
+    }
+
+    protected function processInstruction($instruction): void
+    {
+        $this->runOpCode($instruction);
     }
 }

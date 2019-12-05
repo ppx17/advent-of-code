@@ -22,7 +22,9 @@ class Day2 extends AbstractDay
 
     public function part1(): string
     {
-        return (string)$this->intCode->run(12, 2);
+        $this->intCode->memory[1] = 12;
+        $this->intCode->memory[2] = 2;
+        return (string)$this->intCode->run();
     }
 
     public function part2($target = 19690720): string
@@ -30,7 +32,9 @@ class Day2 extends AbstractDay
         for ($noun = 99; $noun >= 0; $noun--) {
             for ($verb = 99; $verb >= 0; $verb--) {
                 $this->intCode->reset();
-                $result = $this->intCode->run($noun, $verb);
+                $this->intCode->memory[1] = $noun;
+                $this->intCode->memory[2] = $verb;
+                $result = $this->intCode->run();
                 if ($result === $target) {
                     return (string)(100 * $noun + $verb);
                 }
