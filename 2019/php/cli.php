@@ -3,6 +3,7 @@
 
 use Illuminate\Container\Container;
 use Ppx17\Aoc2019\Aoc\Runner\Commands\DayCommand;
+use Ppx17\Aoc2019\Aoc\Runner\Commands\NewCommand;
 use Ppx17\Aoc2019\Aoc\Runner\Commands\RunCommand;
 use Ppx17\Aoc2019\Aoc\Runner\DayInterface;
 use Ppx17\Aoc2019\Aoc\Runner\DayLoader;
@@ -37,5 +38,6 @@ $app->singleton(ResultValidator::class, function (Container $app) {
 $cli = $app->build(ConsoleApplication::class);
 $cli->add($app->build(RunCommand::class));
 $cli->add($app->build(DayCommand::class));
+$cli->add($app->build(NewCommand::class));
 
 $cli->run();
