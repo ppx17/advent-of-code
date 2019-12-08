@@ -11,6 +11,7 @@ class Day8 extends AbstractDay
     private const IMAGE_WIDTH = 25;
     private const IMAGE_HEIGHT = 6;
     private Collection $layers;
+    private array $image;
 
     public function dayNumber(): int
     {
@@ -28,17 +29,10 @@ class Day8 extends AbstractDay
 
     public function part1(): string
     {
-        $counted = $this
+        $layer = $this
             ->layers
-            ->map(function(Collection $layer) {
-                return $layer->countBy(fn($x) => $x);
-            });
-
-        $leastZeroes = $counted
-            ->min(fn($layer) => $layer[0]);
-
-        $layer = $counted
-            ->filter(fn($x) => $x[0] === $leastZeroes)
+            ->map(fn(Collection $layer) => $layer->countBy())
+            ->sortBy(fn(Collection $x) => $x->get(0))
             ->first();
 
         return $layer[1] * $layer[2];
@@ -46,20 +40,23 @@ class Day8 extends AbstractDay
 
     public function part2(): string
     {
-        $image = [];
-        $this->layers->each(function ($layer) use (&$image) {
-            foreach ($layer->values() as $pos => $color) {
-                if(!isset($image[$pos]) || $image[$pos] == 2) {
-                    $image[$pos] = $color;
-                }
-            }
-        });
-        return $this->render($image);
+        $this->image = [];
+        $this->layers->each(fn($layer) => $this->applyLayer($layer));
+        return $this->render();
     }
 
-    private function render(array $image): string
+    private function applyLayer(Collection $layer): void
     {
-        return collect($image)
+        foreach ($layer->values() as $pos => $color) {
+            if (!isset($this->image[$pos]) || $this->image[$pos] == 2) {
+                $this->image[$pos] = $color;
+            }
+        }
+    }
+
+    private function render(): string
+    {
+        return collect($this->image)
             ->chunk(self::IMAGE_WIDTH)
             ->map(fn($line) => $line
                 ->map(fn($pixel) => ($pixel === 1) ? '#' : ' ')
