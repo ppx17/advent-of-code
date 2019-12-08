@@ -75,6 +75,8 @@ abstract class AocCommand extends Command
         if ($part->isValid()) {
             return $this->success();
         }
+        dump($part->getExpectation());
+        dump($part->getResult());
         return $this->fail(sprintf('Expected "%s" but got "%s"',
             $part->getExpectation(), $part->getResult()));
 

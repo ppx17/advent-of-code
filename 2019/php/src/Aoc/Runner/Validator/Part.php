@@ -38,7 +38,7 @@ class Part
     public function isValid(): bool
     {
         return $this->hasExpectation()
-            && $this->getExpectation() === $this->getResult();
+            && $this->trimLines($this->getExpectation()) === $this->trimLines($this->getResult());
     }
 
     public function hasExpectation()
@@ -49,5 +49,13 @@ class Part
     public function getPartNumber(): int
     {
         return $this->partNumber;
+    }
+
+    private function trimLines(string $input): string
+    {
+        return collect(explode("\n", $input))
+            ->map(fn($l) => trim($l))
+            ->reject(fn($l) => empty($l))
+            ->join("\n");
     }
 }

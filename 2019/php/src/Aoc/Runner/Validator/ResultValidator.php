@@ -4,6 +4,7 @@
 namespace Ppx17\Aoc2019\Aoc\Runner\Validator;
 
 
+use Illuminate\Support\Str;
 use Ppx17\Aoc2019\Aoc\Runner\Result;
 
 class ResultValidator
@@ -45,10 +46,18 @@ class ResultValidator
 
     private function parseParts(string $content): array
     {
-        return collect(explode("\n", $content))
-            ->map(fn ($line) => substr($line, 8))
-            ->toArray();
-
+        $parts = [];
+        $active = 0;
+        collect(explode("\n", $content))
+            ->each(function($line) use(&$parts, &$active) {
+                if(Str::startsWith($line, 'Part 1: ')) {
+                    $active = 0;
+                }elseif(Str::startsWith($line,'Part 2: ')) {
+                    $active = 1;
+                }
+                $parts[$active] .= substr($line, 8)."\n";
+            });
+        return $parts;
     }
 
     private function getExpectedPath(int $day)
