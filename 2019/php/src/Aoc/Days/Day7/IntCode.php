@@ -6,7 +6,7 @@ use Ppx17\Aoc2019\Aoc\Days\Day5\IntCode as Day5IntCode;
 
 class IntCode extends Day5IntCode
 {
-    protected const MAX_TICKS = 10000;
+    protected int $maxTicks = 10000;
     public array $inputList;
     public int $inputIndex =  0;
     public ?\Closure $outputCallable = null;

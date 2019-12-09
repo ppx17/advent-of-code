@@ -28,11 +28,11 @@ class IntCode extends Day2IntCode
                 parent::runOpCode($opCode);
                 return;
             case 3: // input
-                $this->memory[$this->memory[$this->pointer + 1]] = $this->input;
+                $this->writeA($this->input);
                 $this->pointer += 2;
                 return;
             case 4: // output
-                $this->output = $this->memory[$this->memory[$this->pointer + 1]];
+                $this->output = $this->a();
                 $this->pointer += 2;
                 return;
             case 5: // jump-if-true
@@ -50,11 +50,11 @@ class IntCode extends Day2IntCode
                 }
                 return;
             case 7: // less than
-                $this->memory[$this->memory[$this->pointer + 3]] = ($this->a() < $this->b()) ? 1 : 0;
+                $this->writeC(($this->a() < $this->b()) ? 1 : 0);
                 $this->pointer += 4;
                 return;
             case 8: //equals
-                $this->memory[$this->memory[$this->pointer + 3]] = ($this->a() === $this->b()) ? 1 : 0;
+                $this->writeC(($this->a() === $this->b()) ? 1 : 0);
                 $this->pointer += 4;
                 return;
             default:
@@ -64,22 +64,34 @@ class IntCode extends Day2IntCode
 
     protected function a(): int
     {
-        $instruction = $this->memory[$this->pointer];
-        $aMode = (int)(($instruction >= 100) ? floor(($instruction % 1000) / 100) : 0);
-        return ($aMode === 0)
+        return ($this->aMode() === 0)
             ? $this->memory[$this->memory[$this->pointer + 1]]
             : $this->memory[$this->pointer + 1];
     }
 
     protected function b(): int
     {
-        $instruction = $this->memory[$this->pointer];
-        $bMode = (int)(($instruction >= 1000) ? floor(($instruction % 10000) / 1000) : 0);
         return (
-            ($bMode === 0)
+            ($this->bMode() === 0)
                 ? $this->memory[$this->memory[$this->pointer + 2]]
                 : $this->memory[$this->pointer + 2]
             ) ?? 0;
+    }
+
+    protected function aMode(): int
+    {
+        $instruction = $this->memory[$this->pointer];
+        return (int)(($instruction >= 100) ? floor(($instruction % 1000) / 100) : 0);
+    }
+
+    protected function bMode(): int
+    {
+        $instruction = $this->memory[$this->pointer];
+        return (int)(($instruction >= 1000) ? floor(($instruction % 10000) / 1000) : 0);
+    }
+
+    protected function writeA(int $value): void {
+        $this->memory[$this->memory[$this->pointer + 1]] = $value;
     }
 }
 

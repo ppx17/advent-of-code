@@ -4,7 +4,7 @@ namespace Ppx17\Aoc2019\Aoc\Days\Day2;
 
 class IntCode
 {
-    protected const MAX_TICKS = 1000;
+    protected int $maxTicks = 1000;
     public array $memory;
     public int $pointer = 0;
     protected array $initialMemory;
@@ -16,7 +16,7 @@ class IntCode
 
     public function run(): int
     {
-        for ($tick = 0; $tick < self::MAX_TICKS; $tick++) {
+        for ($tick = 0; $tick < $this->maxTicks; $tick++) {
             $instruction = $this->memory[$this->pointer];
 
             if ($instruction === 99) {
@@ -49,14 +49,19 @@ class IntCode
 
     protected function opAdd(): void
     {
-        $this->memory[$this->memory[$this->pointer + 3]] = $this->a() + $this->b();
+        $this->writeC($this->a() + $this->b());
         $this->pointer += 4;
     }
 
     protected function opMultiply(): void
     {
-        $this->memory[$this->memory[$this->pointer + 3]] = $this->a() * $this->b();
+        $this->writeC($this->a() * $this->b());
         $this->pointer += 4;
+    }
+
+    protected function writeC(int $value): void
+    {
+        $this->memory[$this->memory[$this->pointer + 3]] = $value;
     }
 
     protected function a(): int
