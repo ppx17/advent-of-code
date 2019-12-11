@@ -64,9 +64,9 @@ class IntCode extends Day2IntCode
 
     protected function a(): int
     {
-        return ($this->aMode() === 0)
+        return (($this->aMode() === 0)
             ? $this->memory[$this->memory[$this->pointer + 1]]
-            : $this->memory[$this->pointer + 1];
+            : $this->memory[$this->pointer + 1]) ?? 0;
     }
 
     protected function b(): int
