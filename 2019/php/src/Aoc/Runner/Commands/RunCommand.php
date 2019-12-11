@@ -58,6 +58,7 @@ class RunCommand extends AocCommand
                 ]
             )
             ->setRows($results
+                ->sortBy(fn(ValidatedResult $result) => $result->getResult()->getDay()->dayNumber())
                 ->map(function (ValidatedResult $result) {
                     return [
                         $result->getResult()->getDay()->dayNumber(),
