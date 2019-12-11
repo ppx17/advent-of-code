@@ -46,7 +46,7 @@ abstract class AocCommand extends Command
         }
 
         if ($ms > 1000) {
-            return '<fg=red>' . sprintf('%.2f s', $ms) . '</>';
+            return '<fg=red>' . sprintf('%.2f s', $ms/1000) . '</>';
         }
 
         return sprintf('%.2f ms', $ms);
