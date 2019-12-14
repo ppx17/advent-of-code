@@ -8,7 +8,7 @@ use Ppx17\Aoc2019\Aoc\Days\Day10\Vector;
 
 class Map
 {
-    private Collection $map;
+    public Collection $map;
     private string $defaultColor;
 
     public function __construct($defaultColor = '.')
@@ -42,10 +42,10 @@ class Map
         return $result;
     }
 
-    public function countTiles(): int
+    public function countTiles(?string $filter = null): int
     {
         return $this->map
-            ->map(fn(Collection $row) => $row->count())
+            ->map(fn(Collection $row) => $row->filter(fn($x) => ($filter) === null ? true : $x === $filter)->count())
             ->sum();
     }
 
