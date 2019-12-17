@@ -39,27 +39,26 @@ class Day10 extends AbstractDay
 
     public function part1(): string
     {
-        $bestVector = $this
-            ->vectors
-            ->map(fn(Vector $vector) => [
-                $vector,
-                $this
-                    ->vectors
-                    ->reject(function (Vector $b) use ($vector) {
-                        return $b->equals($vector) || $this
-                                ->vectors
-                                ->first(fn(Vector $c
-                                ) => !$c->equals($vector) && !$c->equals($b) && $c->isBetween($vector, $b)
-                                ) !== null;
-                    })
-                    ->count(),
-            ])
-            ->sortBy(fn($x) => $x[1])
-            ->last();
+        $len = $this->vectors->count();
 
-        $this->bestPosition = $bestVector[0];
+        $canSee = []; // pre-filling with zeroes it is actually slower...
 
-        return (string)$bestVector[1];
+        for($ai = 0; $ai < $len - 1; $ai++) {
+            for($bi = $ai + 1; $bi < $len; $bi++) {
+                foreach ($this->vectors as $ci => $c) {
+                    if($bi === $ci || $ai === $ci) continue;
+                    if($c->isBetween($this->vectors[$ai], $this->vectors[$bi]))
+                    {
+                        continue 2;
+                    }
+                }
+                $canSee[$ai]++;
+                $canSee[$bi]++;
+            }
+        }
+        $bestView = max($canSee);
+        $this->bestPosition = $this->vectors[array_search($bestView, $canSee)];
+        return (string)$bestView;
     }
 
     public function part2(): string
