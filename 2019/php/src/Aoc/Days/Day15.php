@@ -31,6 +31,7 @@ class Day15 extends AbstractDay
 
     public function setUp(): void
     {
+        ini_set('memory_limit', '256M');
         parent::setUp();
         $this->map = new Map(' ');
     }
