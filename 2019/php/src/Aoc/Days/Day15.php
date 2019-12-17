@@ -6,13 +6,12 @@ namespace Ppx17\Aoc2019\Aoc\Days;
 
 use Illuminate\Support\Collection;
 use Ppx17\Aoc2019\Aoc\Days\Day10\Vector;
+use Ppx17\Aoc2019\Aoc\Days\Day11\Map;
 use Ppx17\Aoc2019\Aoc\Days\Day15\Direction;
 use Ppx17\Aoc2019\Aoc\Days\Day15\Droid;
-use Ppx17\Aoc2019\Aoc\Days\Day11\Map;
 
 class Day15 extends AbstractDay
 {
-    private Droid $droid;
     private Map $map;
 
     private array $tiles = [
@@ -23,6 +22,7 @@ class Day15 extends AbstractDay
 
     private Collection $directions;
     private Vector $tankLocation;
+    private array $visited = [];
 
     public function dayNumber(): int
     {
@@ -32,10 +32,7 @@ class Day15 extends AbstractDay
     public function setUp(): void
     {
         parent::setUp();
-        $this->droid = new Droid(array_map('intval', explode(',', $this->getInput())));
         $this->map = new Map(' ');
-
-        ini_set('memory_limit', '1024M');
     }
 
     public function part1(): string
@@ -44,7 +41,7 @@ class Day15 extends AbstractDay
 
         $this->tankLocation = $droidThatFoundTank->location;
 
-        return (string)$droidThatFoundTank->generation - 1;
+        return (string)($droidThatFoundTank->generation + 1);
     }
 
     public function part2(): string
@@ -81,28 +78,23 @@ class Day15 extends AbstractDay
 
         $droidThatFoundTank = null;
 
-        $this->droid->onTileDetected(function (Droid $droid, int $tile, Vector $location) use (
-            &$droidThatFoundTank,
-            &$droids
-        ) {
-            $droid->computer->halt();
-            if ($tile === Droid::TILE_OXYGEN) {
-                $droidThatFoundTank = $droid;
-            } elseif ($tile === Droid::TILE_SPACE) {
-                $this->map->paint($location, '.');
-            } else {
-                $this->map->paint($location, $this->tiles[$tile]);
-            }
-
-            $this->unexploredNeighbors($droid)->each(fn(Direction $dir) => $droids->enqueue($droid->spawn($dir)));
-        });
+        $initialDroid = new Droid(new Vector(0, 0), new Direction(1, 0), $this->getInputIntCode());
 
         $droids = new \SplQueue();
-        $droids->enqueue($this->droid);
+        $droids->enqueue($initialDroid);
 
         while (!$droids->isEmpty()) {
+            /** @var Droid $droid */
             $droid = $droids->dequeue();
-            $droid->computer->run();
+            $tile = $droid->discover();
+            if ($tile->type === Droid::TILE_OXYGEN) {
+                $droidThatFoundTank = $droid;
+            } elseif ($tile->type === Droid::TILE_SPACE) {
+                $this->map->paint($tile->location, '.');
+            } else {
+                $this->map->paint($tile->location, $this->tiles[$tile->type]);
+            }
+            $this->unexploredNeighbors($droid)->each(fn(Direction $dir) => $droids->enqueue($droid->spawn($dir)));
         }
 
         return $droidThatFoundTank;
@@ -112,11 +104,20 @@ class Day15 extends AbstractDay
     {
         return $this
             ->directions
-            ->filter(fn($direction) => $this->tileInDirection($droid, $direction) === ' ');
+            ->filter(fn($direction) => $this->tileInDirection($droid, $direction) === ' ')
+            ->reject(fn($direction) => $this->visited($droid, $direction));
     }
 
     private function tileInDirection(Droid $droid, Direction $direction)
     {
         return $this->map->color($droid->location->add($direction));
+    }
+
+    private function visited(Droid $droid, $direction)
+    {
+        $key = (string)$droid->location->add($direction);
+        $result = isset($this->visited[$key]);
+        $this->visited[$key] = true;
+        return $result;
     }
 }
