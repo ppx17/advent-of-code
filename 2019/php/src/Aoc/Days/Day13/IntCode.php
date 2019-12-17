@@ -9,7 +9,7 @@ class IntCode extends Day9IntCode
 {
     protected int $maxTicks = 100_000_000;
     public ?\Closure $inputCallable;
-    public bool $isHalted;
+    public bool $isHalted = false;
 
     public function halt()
     {
@@ -32,11 +32,10 @@ class IntCode extends Day9IntCode
     public function runOpCode($opCode): void
     {
         if($opCode === 3) { // input
-            if(!is_callable($this->inputCallable))
+            if(isset($this->inputCallable) && is_callable($this->inputCallable))
             {
-                return;
+                $this->inputList[] = ($this->inputCallable)();
             }
-            $this->inputList[] = ($this->inputCallable)();
         }
 
         parent::runOpCode($opCode);

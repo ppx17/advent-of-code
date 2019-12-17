@@ -49,24 +49,24 @@ class Map
             ->sum();
     }
 
-    private function minY(): int
+    protected function minY(): int
     {
         return (int)$this->map->keys()->min();
     }
 
-    private function maxY(): int
+    protected function maxY(): int
     {
         return (int)$this->map->keys()->max();
     }
 
-    private function minX(): int
+    protected function minX(): int
     {
         return (int)$this->map
             ->map(fn($row) => $row->keys()->min())
             ->min();
     }
 
-    private function maxX(): int
+    protected function maxX(): int
     {
         return (int)$this->map
             ->map(fn($row) => $row->keys()->max())

@@ -9,24 +9,24 @@ class Direction extends Vector
 {
     public static function up()
     {
-        return new Direction(0, -1);
+        return new static(0, -1);
     }
 
     public function left()
     {
         if($this->x !== 0) {
-            return new Direction(0, -$this->x);
+            return new static(0, -$this->x);
         }elseif($this->y !== 0) {
-            return new Direction($this->y, 0);
+            return new static($this->y, 0);
         }
     }
 
     public function right()
     {
         if($this->x !== 0) {
-            return new Direction(0, $this->x);
+            return new static(0, $this->x);
         }elseif($this->y !== 0) {
-            return new Direction(-$this->y, 0);
+            return new static(-$this->y, 0);
         }
     }
 }
