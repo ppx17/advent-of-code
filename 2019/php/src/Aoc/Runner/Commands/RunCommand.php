@@ -10,6 +10,7 @@ use Ppx17\Aoc2019\Aoc\Runner\Result;
 use Ppx17\Aoc2019\Aoc\Runner\Validator\ValidatedResult;
 use Symfony\Component\Console\Helper\Table;
 use Symfony\Component\Console\Helper\TableCell;
+use Symfony\Component\Console\Helper\TableSeparator;
 use Symfony\Component\Console\Input\InputInterface;
 use Symfony\Component\Console\Output\OutputInterface;
 
@@ -31,6 +32,7 @@ class RunCommand extends AocCommand
 
         $results = $this
             ->getDays()
+            ->sortBy(fn(DayInterface $day) => $day->dayNumber())
             ->map(function (DayInterface $day) use ($currentSection) {
                 $currentSection->writeln('Currently running day ' . $day->dayNumber() . '...');
                 $result = $this->getRunner()->run($day);
@@ -58,7 +60,6 @@ class RunCommand extends AocCommand
                 ]
             )
             ->setRows($results
-                ->sortBy(fn(ValidatedResult $result) => $result->getResult()->getDay()->dayNumber())
                 ->map(function (ValidatedResult $result) {
                     return [
                         $result->getResult()->getDay()->dayNumber(),
@@ -70,7 +71,32 @@ class RunCommand extends AocCommand
                         $this->resultCell($result->getPart2()),
                     ];
                 })
-                ->toArray());
+                ->toArray())
+            ->addRow(new TableSeparator())
+            ->addRow($this->totalRow($results))
+            ->addRow($this->averageRow($results));
         $table->render();
+    }
+
+    private function totalRow(Collection $results)
+    {
+        return [
+            'Total',
+            $this->formatTime($results->map(fn($r) => $r->getResult()->getTimeSetup())->sum()),
+            $this->formatTime($results->map(fn($r) => $r->getResult()->getTimePart1())->sum()),
+            $this->formatTime($results->map(fn($r) => $r->getResult()->getTimePart2())->sum()),
+            $this->formatTime($results->map(fn($r) => $r->getResult()->getTimeTotal())->sum()),
+        ];
+    }
+
+    private function averageRow(Collection $results)
+    {
+        return [
+            'Average',
+            $this->formatTime($results->map(fn($r) => $r->getResult()->getTimeSetup())->avg()),
+            $this->formatTime($results->map(fn($r) => $r->getResult()->getTimePart1())->avg()),
+            $this->formatTime($results->map(fn($r) => $r->getResult()->getTimePart2())->avg()),
+            $this->formatTime($results->map(fn($r) => $r->getResult()->getTimeTotal())->avg()),
+        ];
     }
 }
