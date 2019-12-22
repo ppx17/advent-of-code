@@ -4,7 +4,6 @@
 namespace Ppx17\Aoc2019\Aoc\Days;
 
 
-use Illuminate\Support\Collection;
 use Ppx17\Aoc2019\Aoc\Runner\DayInterface;
 
 abstract class AbstractDay implements DayInterface
@@ -19,6 +18,11 @@ abstract class AbstractDay implements DayInterface
     public function getInput(): string
     {
         return $this->input;
+    }
+
+    public function setInput(string $input): void
+    {
+        $this->input = $input;
     }
 
     public function getInputTrimmed(): string
@@ -36,13 +40,10 @@ abstract class AbstractDay implements DayInterface
         return array_map('intval', $this->getInputCsv());
     }
 
-    public function getInputLines(): array
+    public function getInputLines(bool $trim = true): array
     {
-        return explode("\n", trim($this->getInput()));
-    }
-
-    public function setInput(string $input): void
-    {
-        $this->input = $input;
+        return ($trim)
+            ? explode("\n", trim($this->getInput()))
+            : explode("\n", $this->getInput());
     }
 }
