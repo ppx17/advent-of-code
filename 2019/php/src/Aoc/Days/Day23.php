@@ -38,10 +38,7 @@ class Day23 extends AbstractDay
             $computer->outputCallable = fn($out) => $this->output($address, $out);
             return $computer;
         });
-        $this->queues = Collection::times(self::COMPUTER_COUNT, function ($address) {
-            $address--; // 1 to zero indexed.
-            return collect([$address]);
-        });
+        $this->queues = Collection::times(self::COMPUTER_COUNT, fn($address) => collect([--$address]));
         $this->messageBuffer = [];
     }
 
