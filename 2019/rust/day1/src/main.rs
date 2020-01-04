@@ -1,8 +1,9 @@
 use std::io;
+use aoc::helpers::{Input, Perf};
 
 fn main() -> io::Result<()> {
-    let contents = aoc::input::read_input(1)?;
-    let perf = aoc::perf::InitialPerformance::new();
+    let contents = input::read_input(1)?;
+    let perf = perf::InitialPerformance::new();
 
     let masses: Vec<i32> = contents
         .trim()
