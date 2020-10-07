@@ -101,9 +101,6 @@ begin
 	@assert test4.mem == [30,1,1,4,2,5,6,0,99]
 end
 
-# ╔═╡ 97df28be-08c5-11eb-327f-ed2e3514017e
-
-
 # ╔═╡ 8c1f8720-08c1-11eb-0a01-058d2fba6c2d
 md"""
 # Part 1
@@ -159,7 +156,6 @@ println("Part 2: ", p2())
 # ╠═5dbfc812-08c2-11eb-18da-3972743acc60
 # ╠═6402b4c0-08c0-11eb-1e26-bbf931197409
 # ╠═10c6c4cc-08c0-11eb-20cd-2533ba22e672
-# ╟─97df28be-08c5-11eb-327f-ed2e3514017e
 # ╟─8c1f8720-08c1-11eb-0a01-058d2fba6c2d
 # ╠═9c107912-08c5-11eb-3aad-75c9fbe4e0b3
 # ╠═a79c8914-08bf-11eb-2103-a1b743080aff
