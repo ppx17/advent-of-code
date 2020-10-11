@@ -3,9 +3,10 @@
 
 using Markdown
 using InteractiveUtils
+include("Aoc.jl")
 
 # ╔═╡ ac364e24-0164-11eb-2361-fb8b883b7c68
-input = filter(x -> x != "", readlines("../input/input-day1.txt"))
+input = filter(x -> x != "", Aoc.input_lines(1))
 
 # ╔═╡ bec36f16-0164-11eb-0170-d55d9fde8548
 md"""
@@ -25,7 +26,10 @@ part1(mass) = (mass ÷ 3) - 2
 solve_part(method) = sum(map(x -> method(Base.parse(Int64, x)), input))
 
 # ╔═╡ 85aae7e4-0160-11eb-277d-95f1dc8e8473
-ans1 = solve_part(part1)
+begin
+        ans1 = solve_part(part1)
+        println("Part 1: ", ans1)
+end
 
 # ╔═╡ aafe1ef2-0172-11eb-3e47-495d3c19f58b
 @assert ans1 == 3361976
@@ -51,7 +55,10 @@ end
 @assert part2(100756) == 50346
 
 # ╔═╡ 477ca744-0171-11eb-3c7f-795223761787
-ans2 = solve_part(part2)
+begin
+        ans2 = solve_part(part2)
+        println("Part 1: ", ans2)
+end
 
 # ╔═╡ 4e9fe040-0171-11eb-2ea8-f979e5f33cac
 @assert ans2 == 5040085
