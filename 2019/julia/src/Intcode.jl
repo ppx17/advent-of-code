@@ -8,18 +8,19 @@ struct Op
 	size::Int64
 end
 
-mutable struct Computer
-	mem::Vector{Int64}
-	ptr::Int64
-	input::Int64
-	output::Int64
-	Computer(mem) = new(mem, 1)
-end
-
 struct Instruction
 	operation::Op
 	param_a::Int64
 	param_b::Int64
+end
+
+mutable struct Computer
+	mem::Vector{Int64}
+	ptr::Int64
+	input::Vector{Int64}
+	output::Int64
+	output_callable::Function
+	Computer(mem) = new(mem, 1, [])
 end
 
 function instruction(c::Computer)
@@ -35,41 +36,26 @@ end
 
 read_pos(c::Computer, offset) = c.mem[read_val(c, offset)+1]
 read_val(c::Computer, offset) = c.mem[c.ptr+offset]
+write(c::Computer, offset, value::Int64) = c.mem[read_val(c, offset) + 1] = value
 
-write_pos(c::Computer, offset, value::Int64) = c.mem[read_val(c, offset) + 1] = value
+function op_output!(c::Computer, i::Instruction)
+	c.output = i.param_a;
 
-add!(c::Computer, i::Instruction) = write_pos(c, 3, i.param_a + i.param_b)
-mul!(c::Computer, i::Instruction) = write_pos(c, 3, i.param_a * i.param_b)
-input!(c::Computer, i::Instruction) = write_pos(c, 1, c.input)
-
-function output!(c::Computer, i::Instruction) 
-	c.output = i.param_a
-end
-
-function jump_if_true!(c::Computer, i::Instruction) 
-	if i.param_a != 0
-		c.ptr = i.param_b + 1
+	if isdefined(c, :output_callable)
+	 	c.ptr += i.operation.size
+		c.output_callable(c.output)
 	end
 end
-
-function jump_if_false!(c::Computer, i::Instruction)
-	if i.param_a == 0
-		c.ptr = i.param_b + 1
-	end
-end
-
-less_than!(c::Computer, i::Instruction) = write_pos(c, 3, i.param_a < i.param_b ? 1 : 0) 
-equals!(c::Computer, i::Instruction) = write_pos(c, 3, i.param_a == i.param_b ? 1 : 0) 
 
 operations = Dict(
-	1 => Op(add!, 4),
-	2 => Op(mul!, 4),
-	3 => Op(input!, 2),
-	4 => Op(output!, 2),
-	5 => Op(jump_if_true!, 3),
-	6 => Op(jump_if_false!, 3),
-	7 => Op(less_than!, 4),
-	8 => Op(equals!, 4)
+	1 => Op((c, i) -> write(c, 3, i.param_a + i.param_b), 4),
+	2 => Op((c, i) -> write(c, 3, i.param_a * i.param_b), 4),
+	3 => Op((c, i) -> write(c, 1, popfirst!(c.input)), 2),
+	4 => Op(op_output!, 2),
+	5 => Op((c, i) -> i.param_a != 0 && (c.ptr = i.param_b + 1), 3),
+	6 => Op((c, i) -> i.param_a == 0 && (c.ptr = i.param_b + 1), 3),
+	7 => Op((c, i) -> write(c, 3, i.param_a < i.param_b ? 1 : 0) , 4),
+	8 => Op((c, i) -> write(c, 3, i.param_a == i.param_b ? 1 : 0) , 4)
 )
 
 function run!(computer::Computer)
@@ -79,11 +65,7 @@ function run!(computer::Computer)
 	computer.mem[1]
 end
 
-function run_step!(c::Computer)
-	i = instruction(c)
-	run_instruction!(c, i)
-	c
-end
+run_step!(c::Computer) = run_instruction!(c, instruction(c))
 
 function run_instruction!(c::Computer, i::Instruction)
 	original_pointer = c.ptr
@@ -91,6 +73,7 @@ function run_instruction!(c::Computer, i::Instruction)
 	if original_pointer == c.ptr
 		c.ptr += i.operation.size
 	end
+	c
 end
 
 end
