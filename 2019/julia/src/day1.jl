@@ -57,7 +57,7 @@ end
 # ╔═╡ 477ca744-0171-11eb-3c7f-795223761787
 begin
         ans2 = solve_part(part2)
-        println("Part 1: ", ans2)
+        println("Part 2: ", ans2)
 end
 
 # ╔═╡ 4e9fe040-0171-11eb-2ea8-f979e5f33cac
