@@ -30,8 +30,6 @@ function count_orbits(node, level)
     return (length(node.children) * level) + (length(node.children) === 0 ? 0 : sum([count_orbits(child, level + 1) for child in node.children]))
 end
 
-println("Part 1: ", count_orbits(tree["COM"], 1))
-
 function walkback(node)
     result = []
     while node.parent !== nothing
@@ -41,12 +39,18 @@ function walkback(node)
     return result
 end
 
-santa_path = walkback(tree["SAN"])
+part1() = count_orbits(tree["COM"], 1)
 
-for (y, node) in enumerate(walkback(tree["YOU"]))
-    z = findfirst((x) -> x === node, santa_path)
-    if z !== nothing
-        println("Part 2: ", y + z - 2) # Account for SAN and YOU themselves
-        break
+function part2()
+    santa_path = walkback(tree["SAN"])
+
+    for (y, node) in enumerate(walkback(tree["YOU"]))
+        z = findfirst((x) -> x === node, santa_path)
+        if z !== nothing
+            return y + z - 2 # Account for SAN and YOU themselves
+        end
     end
 end
+
+println("Part 1: ", part1())
+println("Part 2: ", part2())

@@ -13,15 +13,14 @@ function run(noun, verb)
 	Intcode.run!(comp)
 end
 
-println("Part 1: ", run(12, 2))
+part1() = run(12, 2)
 
-
-function p2()
+function part2()
 	for noun in 1:100, verb in 1:100
-		if run(noun, verb) == 19690720
-			return 100noun + verb
-		end
+		run(noun, verb) == 19690720 && return 100noun + verb
 	end
 end
 
-println("Part 2: ", p2())
+
+println("Part 1: ", part1())
+println("Part 2: ", part2())

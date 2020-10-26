@@ -3,7 +3,6 @@ using .Aoc
 include("Intcode.jl")
 using .Intcode
 
-
 function calculate_combinations()
     result = Set{Vector{Int64}}()
     for a in 0:4, b in 0:4, c in 0:4, d in 0:4, e in 0:4
@@ -29,10 +28,6 @@ function run_combination(combination)
     inputSignal
 end
 
-println("Part 1: ", maximum(run_combination.(combinations)))
-
-part2_combinations = [c.+=5 for c in combinations]
-
 function run_combination_recursive(combination)
     computers = Array{Computer,1}()
     for phase in combination
@@ -53,4 +48,8 @@ function run_combination_recursive(combination)
     computers[5].output
 end
 
-println("Part 2: ", maximum(run_combination_recursive.(combinations)))
+part1() = maximum(run_combination.(calculate_combinations()))
+part2() = maximum(run_combination_recursive.([c.+=5 for c in calculate_combinations()]))
+
+println("Part 1: ", part1())
+println("Part 2: ", part2())

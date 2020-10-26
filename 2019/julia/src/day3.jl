@@ -34,5 +34,8 @@ crossings = intersect(keys(positions[1]), keys(positions[2]))
 
 manhattan(position) = sum(abs.(position))
 
-println("Part 1: ", minimum(manhattan.(crossings)))
-println("Part 2: ", minimum([positions[1][crossing] + positions[2][crossing] for crossing in crossings]))
+part1() = minimum(manhattan.(crossings))
+part2() = minimum([positions[1][crossing] + positions[2][crossing] for crossing in crossings])
+
+println("Part 1: ", part1())
+println("Part 2: ", part2())

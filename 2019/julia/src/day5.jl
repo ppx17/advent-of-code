@@ -3,19 +3,17 @@ using .Aoc
 include("Intcode.jl")
 using .Intcode
 
-
 intcode = Aoc.intcode(5)
 
-part1 = Computer(copy(intcode))
+function run(input)
+    computer = Computer(copy(intcode))
+    computer.input = [input]
+    Intcode.run!(computer)
+    computer.output
+end
 
-part1.input = [1]
-Intcode.run!(part1)
+part1() = run(1)
+part2() = run(5)
 
-println("Part 1: ", part1.output)
-
-part2 = Computer(copy(intcode))
-
-part2.input = [5]
-Intcode.run!(part2)
-
-println("Part 2: ", part2.output)
+println("Part 1: ", part1())
+println("Part 2: ", part2())
