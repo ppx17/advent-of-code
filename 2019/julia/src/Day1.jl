@@ -1,3 +1,5 @@
+module Day1
+
 include("Aoc.jl")
 using .Aoc
 
@@ -20,5 +22,5 @@ solve(method) = sum(method.(Base.parse.(Int64, input)))
 part1() = solve(fuel)
 part2() = solve(fuel_recursive)
 
-println("Part 1: ", part1())
-println("Part 2: ", part2())
+export part1, part2
+end

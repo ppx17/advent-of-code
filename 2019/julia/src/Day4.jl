@@ -1,3 +1,5 @@
+module Day4
+
 include("Aoc.jl")
 using .Aoc
 
@@ -51,5 +53,5 @@ end
 part1() = solve()[1]
 part2() = solve()[2]
 
-println("Part 1: ", part1())
-println("Part 2: ", part2())
+export part1, part2
+end

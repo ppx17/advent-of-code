@@ -1,3 +1,5 @@
+module Day3
+
 include("Aoc.jl")
 using .Aoc
 import Base.+
@@ -37,5 +39,5 @@ manhattan(position) = sum(abs.(position))
 part1() = minimum(manhattan.(crossings))
 part2() = minimum([positions[1][crossing] + positions[2][crossing] for crossing in crossings])
 
-println("Part 1: ", part1())
-println("Part 2: ", part2())
+export part1, part2
+end

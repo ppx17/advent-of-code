@@ -1,3 +1,5 @@
+module Day6
+
 include("Aoc.jl")
 using .Aoc
 
@@ -52,5 +54,5 @@ function part2()
     end
 end
 
-println("Part 1: ", part1())
-println("Part 2: ", part2())
+export part1, part2
+end

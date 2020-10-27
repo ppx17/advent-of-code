@@ -1,3 +1,5 @@
+module Day2
+
 include("Aoc.jl")
 using .Aoc
 include("Intcode.jl")
@@ -21,6 +23,5 @@ function part2()
 	end
 end
 
-
-println("Part 1: ", part1())
-println("Part 2: ", part2())
+export part1, part2
+end

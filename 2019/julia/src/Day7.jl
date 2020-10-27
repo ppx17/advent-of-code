@@ -1,3 +1,5 @@
+module Day7
+
 include("Aoc.jl")
 using .Aoc
 include("Intcode.jl")
@@ -51,5 +53,5 @@ end
 part1() = maximum(run_combination.(calculate_combinations()))
 part2() = maximum(run_combination_recursive.([c.+=5 for c in calculate_combinations()]))
 
-println("Part 1: ", part1())
-println("Part 2: ", part2())
+export part1, part2
+end
