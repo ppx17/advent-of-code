@@ -1,0 +1,25 @@
+{
+    "name": "ppx17/aoc2020",
+    "type": "project",
+    "authors": [
+        {
+            "name": "Niels",
+            "email": "info@codelink.nl"
+        }
+    ],
+    "require": {
+        "illuminate/support": "^8.17",
+        "symfony/console": "^5.2",
+        "illuminate/container": "^8.17",
+        "larapack/dd": "1.*"
+    },
+    "require-dev": {
+        "phpunit/phpunit": "^8.0"
+    },
+    "autoload": {
+        "psr-4": {
+            "Ppx17\\Aoc2020\\": "",
+            "Ppx17\\Aoc2020\\Tests\\": "Tests/"
+        }
+    }
+}
