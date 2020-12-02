@@ -4,6 +4,7 @@ export input_lines, input_line, intcode
 
 input_lines(day::Int64) = readlines("../../input/input-day$day.txt")
 input_line(day::Int64) = readline("../../input/input-day$day.txt")
+input_string(day::Int64) = read("../../input/input-day$day.txt", String)
 intcode(day::Int64) = parse.(Int64, split(input_line(day), ","))
 
 function validate(day::Int64, part1, part2)
