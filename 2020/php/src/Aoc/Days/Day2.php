@@ -38,8 +38,7 @@ class Day2 extends AbstractDay
     public function part2(): string
     {
         return $this->countWith(function($match, $min, $max, $letter, $password) {
-            return ($password[$min - 1] === $letter || $password[$max - 1] === $letter)
-                && $password[$min - 1] !== $password[$max - 1];
+            return ($password[$min - 1] === $letter xor $password[$max - 1] === $letter);
         });
     }
 
