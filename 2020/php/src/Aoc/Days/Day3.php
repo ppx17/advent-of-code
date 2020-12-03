@@ -39,15 +39,10 @@ class Day3 extends AbstractDay
                 ->toArray());
     }
 
-    public function part1(): string
-    {
-        return $this->treesOnSlope(3);
-    }
-
-    private function treesOnSlope($xStep = 3, $yStep = 1)
+    private function treesOnSlope($xStep, $yStep)
     {
         $trees = 0;
-        for ($x = 0, $y = 0; $y < $this->height; $x += $xStep, $y += $yStep) {
+        for ($x = $y = 0; $y < $this->height; $x += $xStep, $y += $yStep) {
             $trees += ($this->getPos($x, $y) === '#' ? 1 : 0);
         }
 
@@ -57,5 +52,10 @@ class Day3 extends AbstractDay
     private function getPos($x, $y): string
     {
         return $this->map[$y][$x % $this->width];
+    }
+
+    public function part1(): string
+    {
+        return $this->treesOnSlope(3, 1);
     }
 }
