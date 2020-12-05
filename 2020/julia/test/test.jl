@@ -2,7 +2,7 @@ push!(LOAD_PATH, "../src")
 
 using Test
 using Aoc
-@time using Day1, Day2, Day3
+@time using Day1, Day2, Day3, Day5
 
 for day in 1:25
     day_symbol = Symbol("Day", day)

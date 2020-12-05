@@ -2,7 +2,10 @@ module Aoc
 using Printf
 export input_lines, input_line, intcode
 
-input_lines(day::Int64) = readlines("../../input/input-day$day.txt")
+function input_lines(day::Int64)
+    lines = readlines("../../input/input-day$day.txt")
+    return lines[end] == "" ? lines[1:end-1] : lines
+end
 input_line(day::Int64) = readline("../../input/input-day$day.txt")
 input_string(day::Int64) = read("../../input/input-day$day.txt", String)
 intcode(day::Int64) = parse.(Int64, split(input_line(day), ","))
