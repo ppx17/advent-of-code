@@ -23,17 +23,7 @@ class Day5 extends AbstractDay
 
     private function seatId(string $seat)
     {
-        return ($this->row($seat) * 8) + $this->col($seat);
-    }
-
-    private function row(string $seat)
-    {
-        return bindec(str_replace(['F', 'B'], [0, 1], substr($seat, 0, 7)));
-    }
-
-    private function col(string $seat)
-    {
-        return bindec(str_replace(['L', 'R'], [0, 1], substr($seat, 7, 3)));
+        return bindec(str_replace(['F', 'L', 'B', 'R'], [0, 0, 1, 1], $seat));
     }
 
     public function part1(): string

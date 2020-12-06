@@ -15,9 +15,9 @@ abstract class AbstractDay implements DayInterface
 
     }
 
-    public function getInput(): string
+    public function getInput(bool $trim = true): string
     {
-        return $this->input;
+        return $trim ? trim($this->input) : $this->input;
     }
 
     public function setInput(string $input): void
