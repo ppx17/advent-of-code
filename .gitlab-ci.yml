@@ -1,37 +1,67 @@
 stages:
  - test
 
-before_script:
+.composer:
+  before_script:
+    - bash ${CI_PROJECT_DIR}/.ci/php/install_composer.sh
 
-test-2018-php7.2:
-  stage: test
-  image: php:7.2-cli
-  only:
-    changes:
-     - 2018/php/*
-  script:
-    - cd 2018/php
-    - bash ./ci/install_composer.sh
-    - php composer.phar install
-    - php ./run.php
-
-test-2018-php7.3:
+test:2018:php7.3:
+  extends: .composer
   stage: test
   image: php:7.3-cli
   only:
     changes:
-     - 2018/php/*
+     - 2018/php/**
   script:
     - cd 2018/php
-    - bash ./ci/install_composer.sh
-    - php composer.phar install
+    - composer install
     - php ./run.php
 
-test-2019-php7.4:
+test:2019:php7.4:
+  extends: .composer
+  stage: test
+  image: php:7.4-cli
+  only:
+    changes:
+     - 2019/php/**
+  script:
+    - cd 2019/php
+    - composer install -d ./src --no-progress --prefer-dist
+    - php ./cli.php run
+
+test:2019:rust1.48:
+  stage: test
+  image: rust:1.48
+  only:
+    changes:
+     - 2019/rust/**
+  script:
+    - cd 2019/rust
+    - ./build-all
+    - ./run-all
+
+test:2019:julia1.5:
+  stage: test
+  image: julia:1.5-alpine
+  only:
+    changes:
+     - 2019/julia/**
+  script:
+   - cd 2019/julia/test
+   - julia test.jl
+
+test:2020:php7.4:
+  extends: .composer
   stage: test
   image: php:7.4-cli
   script:
-    - cd 2019/php
-    - bash ./ci/install_composer.sh
-    - php composer.phar install -d ./src --no-progress --prefer-dist
+    - cd 2020/php
+    - composer install -d ./src --no-progress --prefer-dist
     - php ./cli.php run
+
+test:2020:julia1.5:
+  stage: test
+  image: julia:1.5-alpine
+  script:
+   - cd 2020/julia/test
+   - julia test.jl

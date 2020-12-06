@@ -1,5 +1,5 @@
 use std::io;
-use aoc::helpers::{Input, Perf};
+use aoc::helpers::{input, perf};
 
 fn main() -> io::Result<()> {
     let contents = input::read_input(1)?;
