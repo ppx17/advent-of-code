@@ -38,12 +38,12 @@ class Day10 extends AbstractDay
     public function part2(): string
     {
         $routes = [$this->adapters->count() - 1 => 1]; // last adapter can only reach device
-        for($index = $this->adapters->count() - 2; $index >= 0; $index--) {
+        for ($index = $this->adapters->count() - 2; $index >= 0; $index--) {
             $routes[$index] = Collection::times(3)
                 ->map(fn($x) => $this->adapters[$index] + $x)
                 ->map(fn($nextAdapter) => $routes[$this->adaptersByKey[$nextAdapter]] ?? 0)
                 ->sum();
-        };
+        }
 
         return Collection::times(3)
             ->filter(fn($x) => isset($this->adaptersByKey[$x]))

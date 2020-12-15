@@ -25,6 +25,11 @@ class Day15 extends AbstractDay
         return $this->play(2020);
     }
 
+    public function part2(): string
+    {
+        return $this->play(30_000_000);
+    }
+
     private function play($rounds): int
     {
         $this->diffs = [];
@@ -43,16 +48,11 @@ class Day15 extends AbstractDay
 
     private function speak(int $number, int $round): int
     {
-        if(isset($this->previous[$number])) {
+        if (isset($this->previous[$number])) {
             $this->diffs[$number] = $round - $this->previous[$number] ?? 0;
         }
         $this->previous[$number] = $round;
 
         return $number;
-    }
-
-    public function part2(): string
-    {
-        return $this->play(30_000_000);
     }
 }

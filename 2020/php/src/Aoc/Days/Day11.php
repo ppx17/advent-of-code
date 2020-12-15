@@ -52,9 +52,9 @@ class Day11 extends AbstractDay
     {
         $this->runningPart = $part;
         $this->map = $this->cleanMap;
-        while(true) {
+        while (true) {
             $nextMap = $this->simulateStep();
-            if($nextMap === $this->map) break;
+            if ($nextMap === $this->map) break;
             $this->map = $nextMap;
         }
         return substr_count($this->mapAsString(), '#');
@@ -106,11 +106,11 @@ class Day11 extends AbstractDay
 
     private function occupiedNeighborsInSight(int $y, int $x): int
     {
-        return array_sum(array_map(function($direction) use ($y, $x) {
+        return array_sum(array_map(function ($direction) use ($y, $x) {
             do {
                 $y += $direction[0];
                 $x += $direction[1];
-            }while($this->map[$y][$x] === '.');
+            } while ($this->map[$y][$x] === '.');
 
             return (int)($this->map[$y][$x] === '#');
         }, $this->directions));

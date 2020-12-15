@@ -29,7 +29,7 @@ class Day2 extends AbstractDay
 
     public function part1(): string
     {
-        return $this->countWith(function($match, $min, $max, $letter, $password) {
+        return $this->countWith(function ($match, $min, $max, $letter, $password) {
             $occurrences = substr_count($password, $letter);
             return ($occurrences >= $min && $occurrences <= $max);
         });
@@ -37,12 +37,13 @@ class Day2 extends AbstractDay
 
     public function part2(): string
     {
-        return $this->countWith(function($match, $min, $max, $letter, $password) {
+        return $this->countWith(function ($match, $min, $max, $letter, $password) {
             return ($password[$min - 1] === $letter xor $password[$max - 1] === $letter);
         });
     }
 
-    private function countWith(callable $callable) {
+    private function countWith(callable $callable)
+    {
         return $this
             ->matches
             ->filter(fn($match) => $callable(...$match))
