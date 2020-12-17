@@ -59,6 +59,15 @@ test:2020:php7.4:
     - composer install -d ./src --no-progress --prefer-dist
     - php ./cli.php run
 
+test:2020:php8.0:
+  extends: .composer
+  stage: test
+  image: php:8.0-cli
+  script:
+    - cd 2020/php
+    - composer install -d ./src --no-progress --prefer-dist
+    - php ./cli.php run
+
 test:2020:julia1.5:
   stage: test
   image: julia:1.5-alpine
