@@ -50,19 +50,15 @@ test:2019:julia1.5:
    - cd 2019/julia/test
    - julia test.jl
 
-test:2020:php7.4:
+test:2020:php:
   extends: .composer
+  parallel:
+    matrix:
+      - IMAGE:
+        - php:7.4-cli
+        - php:8.0-cli
   stage: test
-  image: php:7.4-cli
-  script:
-    - cd 2020/php
-    - composer install -d ./src --no-progress --prefer-dist
-    - php ./cli.php run
-
-test:2020:php8.0:
-  extends: .composer
-  stage: test
-  image: php:8.0-cli
+  image: $IMAGE
   script:
     - cd 2020/php
     - composer install -d ./src --no-progress --prefer-dist
