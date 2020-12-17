@@ -55,6 +55,7 @@ class ResultValidator
                 }elseif(Str::startsWith($line,'Part 2: ')) {
                     $active = 1;
                 }
+                $parts[$active] ??= '';
                 $parts[$active] .= substr($line, 8)."\n";
             });
         return $parts;

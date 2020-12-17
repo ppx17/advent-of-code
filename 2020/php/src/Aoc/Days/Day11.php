@@ -101,7 +101,7 @@ class Day11 extends AbstractDay
 
     private function occupiedNeighborsNextDoor(int $y, int $x): int
     {
-        return array_sum(array_map(fn($dir) => (int)($this->map[$dir[0] + $y][$dir[1] + $x] === '#'), $this->directions));
+        return array_sum(array_map(fn($dir) => (int)(($this->map[$dir[0] + $y][$dir[1] + $x] ?? null) === '#'), $this->directions));
     }
 
     private function occupiedNeighborsInSight(int $y, int $x): int
@@ -110,9 +110,9 @@ class Day11 extends AbstractDay
             do {
                 $y += $direction[0];
                 $x += $direction[1];
-            } while ($this->map[$y][$x] === '.');
+            } while (($this->map[$y][$x] ?? null) === '.');
 
-            return (int)($this->map[$y][$x] === '#');
+            return (int)(($this->map[$y][$x] ?? null) === '#');
         }, $this->directions));
     }
 }

@@ -41,7 +41,7 @@ class Day10 extends AbstractDay
         for ($index = $this->adapters->count() - 2; $index >= 0; $index--) {
             $routes[$index] = Collection::times(3)
                 ->map(fn($x) => $this->adapters[$index] + $x)
-                ->map(fn($nextAdapter) => $routes[$this->adaptersByKey[$nextAdapter]] ?? 0)
+                ->map(fn($nextAdapter) => $routes[$this->adaptersByKey->get($nextAdapter)] ?? 0)
                 ->sum();
         }
 
