@@ -41,14 +41,12 @@ class Day19 extends AbstractDay
         $eight = $fortyTwo . '+';
         $thirtyOne = $this->resolveRule(31);
 
-        $matches = new Collection();
-
-        for ($i = 1; $i < 10; $i++) { // found 5 to be the min.
-            $regex = "#^{$eight}{$fortyTwo}{{$i}}{$thirtyOne}{{$i}}$#";
-            $matches = $matches->concat($this->messages->filter(fn($m) => preg_match($regex, $m) === 1));
-        }
-
-        return $matches->count();
+        return Collection::times(10)
+            ->map(fn($i) => $this->messages
+                ->filter(fn($m) => preg_match("#^{$eight}{$fortyTwo}{{$i}}{$thirtyOne}{{$i}}$#", $m) === 1)
+                ->count()
+            )
+            ->sum();
     }
 
     private function resolveRule(int $rule): string
