@@ -6,7 +6,7 @@ using Printf
 
 days = vcat(1:6, 9)
 
-@time using Day1, Day2, Day3, Day4, Day5, Day6, Day9, Day12, Day13, Day14
+@time using Day1, Day3, Day5, Day6, Day9, Day12, Day18
 
 for day in 1:25
     day_symbol = Symbol("Day", day)
