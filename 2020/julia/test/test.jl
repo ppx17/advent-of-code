@@ -6,7 +6,7 @@ using Printf
 
 days = vcat(1:6, 9)
 
-@time using Day1, Day3, Day5, Day6, Day9, Day12, Day18
+@time using Day1, Day3, Day5, Day6, Day9, Day12, Day18, Day23
 
 for day in 1:25
     day_symbol = Symbol("Day", day)
@@ -28,14 +28,14 @@ end
    
 
 
-println("Day\t  Part 1\t  Part 2\t  Result 1\t  Result 2")
-println(repeat("-", 67))
+println("Day\t  Part 1\t  Part 2\t       Result 1\t       Result 2")
+println(repeat("-", 71))
 for day in 1:25
     day_symbol = Symbol("Day", day)
     if isdefined(Main, day_symbol)
         day_module = getfield(Main, day_symbol)
         p1time = @timed day_module.part1()
         p2time = @timed day_module.part2()
-        println(@sprintf("%s\t%s\t%s\t% 10s\t% 10s", day, format_time(p1time[2]), format_time(p2time[2]), p1time[1], p2time[1]))
+        println(@sprintf("%s\t%s\t%s\t% 15s\t% 15s", day, format_time(p1time[2]), format_time(p2time[2]), p1time[1], p2time[1]))
     end
 end
