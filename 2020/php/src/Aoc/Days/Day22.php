@@ -1,8 +1,6 @@
 <?php
 
-
 namespace Ppx17\Aoc2020\Aoc\Days;
-
 
 use SplDoublyLinkedList;
 
