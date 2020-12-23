@@ -7,26 +7,18 @@ labels = [parse(Int64, c) for c in Aoc.input_line(23)]
 mutable struct Cup
     label::Int64
     next::Union{Nothing,Cup}
-
-    function Cup(label::Int64)
-        new(label, nothing)
-    end
+    Cup(label::Int64) = new(label, nothing)
 end
 
 pick_label(label::Int64, count::Int64) = label > 1 ? label - 1 : count
 
 function play(labels::Array{Int64}, rounds::Int64)
-
     count = length(labels)
-
     cups = [Cup(l) for l in labels]
     cups_map = Dict{Int64,Cup}()
 
     for (i,c) in enumerate(cups)
-        ni = i+1
-        if ni > count
-            ni = 1
-        end
+        ni = i == count ? 1 : i + 1
         c.next = cups[ni]
         cups_map[c.label] = c
     end
@@ -48,7 +40,6 @@ function play(labels::Array{Int64}, rounds::Int64)
         end
 
         destination = cups_map[dest_label]
-
         oldNext = destination.next
         destination.next = one
         three.next = oldNext
