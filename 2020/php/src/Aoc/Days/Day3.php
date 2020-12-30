@@ -32,7 +32,7 @@ class Day3 extends AbstractDay
 
     private function treesOnSlope($xStep, $yStep)
     {
-        for ($x = $y = 0, $trees = 0; $y < $this->height; $x += $xStep, $y += $yStep) {
+        for ($x = $y = $trees = 0; $y < $this->height; $x += $xStep, $y += $yStep) {
             $trees += ($this->map[$y][$x % $this->width] === '#' ? 1 : 0);
         }
 
