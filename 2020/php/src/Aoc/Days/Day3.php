@@ -1,14 +1,10 @@
 <?php
 
-
 namespace Ppx17\Aoc2020\Aoc\Days;
-
-
-use Illuminate\Support\Collection;
 
 class Day3 extends AbstractDay
 {
-    private Collection $map;
+    private array $map;
     private int $width;
     private int $height;
 
@@ -19,43 +15,27 @@ class Day3 extends AbstractDay
 
     public function setUp(): void
     {
-        $this->map = collect($this->getInputLines())
-            ->map(fn($l) => str_split($l));
+        $this->map = $this->getInputLines();
         $this->height = count($this->map);
-        $this->width = count($this->map[0]);
-    }
-
-    public function part2(): string
-    {
-        return array_product(
-            collect([
-                [1, 1],
-                [3, 1],
-                [5, 1],
-                [7, 1],
-                [1, 2]
-            ])
-                ->map(fn($s) => $this->treesOnSlope(...$s))
-                ->toArray());
-    }
-
-    private function treesOnSlope($xStep, $yStep)
-    {
-        $trees = 0;
-        for ($x = $y = 0; $y < $this->height; $x += $xStep, $y += $yStep) {
-            $trees += ($this->getPos($x, $y) === '#' ? 1 : 0);
-        }
-
-        return $trees;
-    }
-
-    private function getPos($x, $y): string
-    {
-        return $this->map[$y][$x % $this->width];
+        $this->width = strlen($this->map[0]);
     }
 
     public function part1(): string
     {
         return $this->treesOnSlope(3, 1);
+    }
+
+    public function part2(): string
+    {
+        return array_product(array_map(fn($s) => $this->treesOnSlope(...$s), [[1, 1], [3, 1], [5, 1], [7, 1], [1, 2]]));
+    }
+
+    private function treesOnSlope($xStep, $yStep)
+    {
+        for ($x = $y = 0, $trees = 0; $y < $this->height; $x += $xStep, $y += $yStep) {
+            $trees += ($this->map[$y][$x % $this->width] === '#' ? 1 : 0);
+        }
+
+        return $trees;
     }
 }
