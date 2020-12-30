@@ -23,6 +23,6 @@ function treeCount(direction)
 end
 
 part1() = treeCount([3, 1])
-part2() = mapfoldr(treeCount, *, eachrow([ 1 1; 3 1; 5 1; 7 1; 1 2 ]))
+part2() = mapreduce(treeCount, *, eachrow([ 1 1; 3 1; 5 1; 7 1; 1 2 ]))
 
 end
