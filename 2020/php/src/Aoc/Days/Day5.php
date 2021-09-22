@@ -1,14 +1,12 @@
 <?php
 
-
 namespace Ppx17\Aoc2020\Aoc\Days;
-
 
 use Illuminate\Support\Collection;
 
 class Day5 extends AbstractDay
 {
-    private Collection $seatIds;
+    private Collection $seats;
 
     public function dayNumber(): int
     {
@@ -17,25 +15,20 @@ class Day5 extends AbstractDay
 
     public function setUp(): void
     {
-        $this->seatIds = collect($this->getInputLines())
-            ->map(fn($p) => $this->seatId($p));
-    }
-
-    private function seatId(string $seat)
-    {
-        return bindec(str_replace(['F', 'L', 'B', 'R'], [0, 0, 1, 1], $seat));
+        $this->seats = collect($this->getInputLines())
+            ->map(fn($s) => bindec(str_replace(['F', 'L', 'B', 'R'], [0, 0, 1, 1], $s)));
     }
 
     public function part1(): string
     {
-        return $this->seatIds->max();
+        return $this->seats->max();
     }
 
     public function part2(): string
     {
-        return collect(range($this->seatIds->min(), $this->seatIds->max()))
-            ->first(fn($id) => !$this->seatIds->contains($id)
-                && $this->seatIds->contains($id + 1)
-                && $this->seatIds->contains($id - 1));
+        return collect(range($this->seats->min(), $this->seats->max()))
+            ->first(fn($id) => !$this->seats->contains($id)
+                && $this->seats->contains($id + 1)
+                && $this->seats->contains($id - 1));
     }
 }
