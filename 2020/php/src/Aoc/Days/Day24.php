@@ -76,7 +76,9 @@ class Day24 extends AbstractDay
         $neighbors = $this->determineNeighbors($y, $x);
         $blackCount = array_sum(array_map(fn($n) => ($grid[$n[0]][$n[1]] ?? false), $neighbors));
 
-        return $grid[$y][$x] ? $blackCount === 1 || $blackCount === 2 : $blackCount === 2;
+        return $grid[$y][$x] ?? false
+                ? $blackCount === 1 || $blackCount === 2
+                : $blackCount === 2;
     }
 
     private function makeGrid(): array
