@@ -24,7 +24,7 @@ export class Runner {
     private dayFromNumber(day: number): Day | null {
         const instance = this.days.find(d => d.day() === day);
 
-        if (instance === null) {
+        if (instance === undefined) {
             console.warn(`Day ${day} not found.`);
             return null;
         }
@@ -35,24 +35,35 @@ export class Runner {
 
 export class Judge {
     static judge(day: Day): Result {
+
+        const startNs = process.hrtime.bigint();
         day.setup();
+        const runtimeNs = process.hrtime.bigint() - startNs;
+
         return new Result(
             day,
-            this.judgePart(day.day(), 1, day.part1()),
-            this.judgePart(day.day(), 2, day.part2()),
+            this.judgePart(day.day(), 1, () => day.part1()),
+            this.judgePart(day.day(), 2, () => day.part2()),
+            new Time(runtimeNs)
         )
     }
 
-    private static judgePart(dayNumber: number, part: number, result: string): PartResult {
+    private static judgePart(dayNumber: number, part: number, payload): PartResult {
+
+        const startNs = process.hrtime.bigint();
+        const result = payload();
+        const runtimeNs = process.hrtime.bigint() - startNs;
+
         return new PartResult(
             Tools.expected(dayNumber, part),
             result,
+            new Time(runtimeNs)
         );
     }
 }
 
 export class Result {
-    constructor(public day: Day, public part1: PartResult, public part2: PartResult) {
+    constructor(public day: Day, public part1: PartResult, public part2: PartResult, public setupTime: Time) {
     }
 
     valid(): ValidationResult {
@@ -66,15 +77,36 @@ export class Result {
 
         return ValidationResult.Valid;
     }
+
+    totalTime = (): Time => new Time(this.part1.runtime.time + this.part2.runtime.time + this.setupTime.time);
 }
 
 export class PartResult {
-    constructor(public expected: null | string, public answer: string) {
+    constructor(public expected: null | string, public answer: string, public runtime: Time) {
     }
 
     valid(): ValidationResult {
         if (this.expected === null) return ValidationResult.Unknown;
         return this.expected.trim() === this.answer.trim() ? ValidationResult.Valid : ValidationResult.Invalid;
+    }
+}
+
+export class Time {
+    constructor(public time: bigint) {
+    }
+
+    public toString() {
+        if(this.time < 1000n) {
+            return `${this.time} ns`;
+        }
+        if(this.time < 1000_000n) {
+            return `${this.time / 1000n} µs`;
+        }
+        if(this.time < 1000_000_000n) {
+            return `${this.time / 1000_000n} ms`;
+        }
+
+        return `${this.time / 1000_000_000n} s`;
     }
 }
 
