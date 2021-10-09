@@ -79,47 +79,31 @@ class Map {
         this.dimensions = new Vector(this.map[0].length - 1, this.map.length - 1)
     }
 
-    get(position: Vector): string {
-        return (this.map[position.y] ?? [])[position.x] ?? '';
-    }
-
-    set(position: Vector, tile: string) {
+    set = (position: Vector, tile: string) => {
         this.map[position.y][position.x] = tile;
-    }
+    };
 
-    copy(): Map {
-        return new Map(this.map.map((line: string[]) => [...line]));
-    }
+    get = (position: Vector): string => (this.map[position.y] ?? [])[position.x] ?? '';
 
-    serialize(): string {
-        return this.map.map(row => row.join('')).join('');
-    }
+    copy = (): Map => new Map(this.map.map((line: string[]) => [...line]));
 
-    equals(other: Map): boolean {
-        return this.serialize() === other.serialize();
-    }
+    serialize = (): string => this.map.map(row => row.join('')).join('');
 
-    countOccupied(): number {
-        return this.map.flat().filter(tile => tile === Map.OCCUPIED).length;
-    }
+    equals = (other: Map): boolean => this.serialize() === other.serialize();
 
-    isFloor(position: Vector): boolean {
-        return this.get(position) === Map.FLOOR;
-    }
+    countOccupied = (): number => this.map.flat().filter(tile => tile === Map.OCCUPIED).length;
 
-    isOccupied(position: Vector): boolean {
-        return this.get(position) === Map.OCCUPIED;
-    }
+    isFloor = (position: Vector): boolean => this.get(position) === Map.FLOOR;
 
-    isEmpty(position: Vector): boolean {
-        return this.get(position) === Map.EMPTY;
-    }
+    isOccupied = (position: Vector): boolean => this.get(position) === Map.OCCUPIED;
 
-    forEachTile(closure): void {
+    isEmpty = (position: Vector): boolean => this.get(position) === Map.EMPTY;
+
+    forEachTile = (closure: (position: Vector) => void): void => {
         for (let y = 0; y <= this.dimensions.y; y++) {
             for (let x = 0; x <= this.dimensions.x; x++) {
                 closure(new Vector(x, y));
             }
         }
-    }
+    };
 }
