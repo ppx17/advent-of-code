@@ -3,34 +3,41 @@ import {Day} from "./day";
 export class Day14 extends Day {
     day = (): number => 14;
 
-    part1 = (): string =>
-        this.run((mem, mask, address, param) =>
-            mem.set(address, this.applyMask(mask, param)))
-    part2 = (): string =>
-        this.run((mem, mask, address, param) =>
-            this.expandAddress(mask, address).forEach(address => mem.set(address, BigInt(param))))
+    part1 = (): string => this.runProgram(this.runInstructionPart1.bind(this))
+    part2 = (): string => this.runProgram(this.runInstructionPart2.bind(this))
 
-    private run(execute: (mem: Map<bigint, bigint>, mask: string, address: bigint, param: bigint) => void): string {
-        const mem = new Map<bigint, bigint>();
-        let mask: string = '';
+    private mem: Map<bigint, bigint>;
+    private mask: string;
+
+    private runProgram(runInstruction: (address: bigint, param: bigint) => void): string {
+        this.mem = new Map<bigint, bigint>();
+        this.mask = '';
 
         this.input
             .map(l => l.split(' = '))
             .forEach((instruction) => instruction[0] === 'mask'
-                ? (mask = instruction[1])
-                : execute(mem, mask, BigInt(instruction[0].match(/mem\[(\d+)]/)[1]), BigInt(instruction[1])));
+                ? (this.mask = instruction[1])
+                : runInstruction(BigInt(instruction[0].match(/mem\[(\d+)]/)[1]), BigInt(instruction[1])));
 
-        return Array.from(mem.values()).reduce((a, b) => a + b).toString();
+        return Array.from(this.mem.values()).reduce((a, b) => a + b).toString();
     }
 
-    applyMask(mask: string, input: bigint): bigint {
+    private runInstructionPart1(address: bigint, param: bigint) {
+        this.mem.set(address, Day14.applyMask(this.mask, param));
+    }
+
+    private runInstructionPart2(address: bigint, param: bigint) {
+        Day14.expandAddress(this.mask, address).forEach(address => this.mem.set(address, BigInt(param)));
+    }
+
+    static applyMask(mask: string, input: bigint): bigint {
         const zeroes = BigInt('0b' + mask.replaceAll(/[1|X]/g, '1'));
         const ones = BigInt('0b' + mask.replaceAll('X', '0'));
 
         return input & zeroes | ones;
     }
 
-    expandAddress(mask: string, address: bigint): bigint[] {
+    static expandAddress(mask: string, address: bigint): bigint[] {
         const result = [0n];
 
         mask.split('').forEach((c, pos) => {

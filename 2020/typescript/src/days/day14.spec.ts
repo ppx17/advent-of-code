@@ -3,8 +3,7 @@ import {Day14} from "./day14";
 
 describe('Day 14', () => {
     it('can mask', () => {
-        const sut = new Day14();
-        expect(sut.applyMask('XXXXXXXXXXXXXXXXXXXXXXXXXXXXX1XXXX0X', 11n)).toBe(73n);
+        expect(Day14.applyMask('XXXXXXXXXXXXXXXXXXXXXXXXXXXXX1XXXX0X', 11n)).toBe(73n);
     });
 
     it('can process the part 1 example', () => {
@@ -22,8 +21,7 @@ describe('Day 14', () => {
     });
 
     it('can expand addresses with floating bits', () => {
-        const sut = new Day14();
-        const result = sut.expandAddress('000000000000000000000000000000X1001X', 42n);
+        const result = Day14.expandAddress('000000000000000000000000000000X1001X', 42n);
 
         expect(result).toHaveLength(4);
 
@@ -34,8 +32,7 @@ describe('Day 14', () => {
     });
 
     it('can expand addresses with floating bits, sample 2', () => {
-        const sut = new Day14();
-        const result = sut.expandAddress('00000000000000000000000000000000X0XX', 26n);
+        const result = Day14.expandAddress('00000000000000000000000000000000X0XX', 26n);
 
         expect(result).toHaveLength(8);
 
