@@ -13,16 +13,16 @@ const example = [
     "L.LLLLL.LL"
 ];
 
-describe('day 11', () => {
+describe('Day 11', () => {
 
-    it('Run the part1 example correctly', () => {
+    it('can process the part 2 example', () => {
         const sut = new Day11(example);
         sut.setup();
 
         expect(sut.part1()).toBe("37");
     });
 
-    it('Run the part2 example correctly', () => {
+    it('can process the part 2 example', () => {
         const sut = new Day11(example);
         sut.setup();
 

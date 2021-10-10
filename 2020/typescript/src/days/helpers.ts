@@ -1,6 +1,26 @@
 export class Vector {
     public readonly values: number[];
 
+    public static zero(dimensions: number = 2): Vector {
+        return new this(...Array.from({length: dimensions}).map(() => 0));
+    }
+
+    public static north(): Vector {
+        return new this(0, -1);
+    }
+
+    public static east(): Vector {
+        return new this(1, 0);
+    }
+
+    public static south(): Vector {
+        return new this(0, 1);
+    }
+
+    public static west(): Vector {
+        return new this(-1, 0);
+    }
+
     constructor(...values: number[]) {
         this.values = values;
     }
@@ -40,5 +60,15 @@ export class Vector {
         }
 
         return true;
+    }
+
+    times(t: number): Vector {
+        return new Vector(...this.values.map(v => v * t));
+    }
+
+    manhattan(other: Vector): number {
+        return this.values
+            .map((v: number, i: number) => Math.abs(v - other.values[i] ?? 0))
+            .reduce((x, y) => x + y);
     }
 }

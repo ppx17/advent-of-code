@@ -50,7 +50,7 @@ describe('Vector', () => {
         });
 
         it('sees a vector at the origin as inside of a positive one', () => {
-            const v = new Vector(0, 0);
+            const v = Vector.zero();
             const boundary = new Vector(2, 2);
 
             expect(v.within(boundary)).toBeTruthy();
@@ -63,4 +63,33 @@ describe('Vector', () => {
             expect(v.within(boundary)).toBeTruthy();
         });
     });
+
+    describe('manhattan', () => {
+        it('can calculate the manhattan distance from origin', () => {
+            const a = new Vector(3, 5);
+
+            expect(a.manhattan(Vector.zero())).toBe(8);
+        });
+
+        it('can calculate the manhattan distance from origin to a negative position', () => {
+            const a = new Vector(-4, -9);
+
+            expect(a.manhattan(Vector.zero())).toBe(13);
+        });
+
+        it('can calculate the manhattan distance to a non-origin position', () => {
+            const a = new Vector(4, 9);
+            const b = new Vector(-3, -13);
+
+            expect(a.manhattan(b)).toBe(29);
+        });
+    });
+
+    describe('times', () => {
+        it('can multiply a direction with a distance', () => {
+            const result = Vector.north().times(10);
+            expect(result.x).toBe(0);
+            expect(result.y).toBe(-10);
+        });
+    })
 })
