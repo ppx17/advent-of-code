@@ -13,45 +13,34 @@ export class Day22 extends Day {
         );
     }
 
-    part1 = (): string => {
-        const stacks = this.stacks.clone();
+    part1 = (): string => Day22.combat(this.stacks.clone()).toString()
 
-        while (stacks.bothContainCards()) {
-            Day22.playRegular(stacks.startRound());
-        }
+    part2 = (): string => Day22.combat(this.stacks.clone(), true).toString();
 
-        return stacks.winningScore().toString();
-    }
-
-    part2 = (): string => Day22.recursiveCombat(this.stacks.clone()).toString();
-
-    private static recursiveCombat = (stacks: Stacks, isRecursive: boolean = false): Player | number => {
+    private static combat = (stacks: Stacks, recursive: boolean = false, isSubGame: boolean = false): Player | number => {
         const guard = new InfiniteGuard();
 
         while (stacks.bothContainCards()) {
             if (guard.hasSeen(stacks)) return Player.P1;
 
-            const round = stacks.startRound();
+            const r = stacks.startRound();
 
-            this.shouldPlayRecursive(round)
-                ? this.playRecursive(round)
-                : this.playRegular(round);
+            if(recursive && this.shouldPlayRecursive(r)) {
+                this.combat(r.subStacks(), true, true) === Player.P1
+                    ? r.stack1.addCards(r.p1, r.p2)
+                    : r.stack2.addCards(r.p2, r.p1)
+                continue;
+            }
+
+            r.p1 > r.p2
+                ? r.stack1.addCards(r.p1, r.p2)
+                : r.stack2.addCards(r.p2, r.p1)
         }
 
-        return isRecursive
+        return isSubGame
             ? stacks.winningPlayer()
             : stacks.winningScore();
     };
-
-    private static playRegular(r: Round) {
-        return r.p1 > r.p2 ? r.stack1.addCards(r.p1, r.p2) : r.stack2.addCards(r.p2, r.p1);
-    }
-
-    private static playRecursive(r: Round) {
-        return this.recursiveCombat(r.subStacks(), true) === Player.P1
-            ? r.stack1.addCards(r.p1, r.p2)
-            : r.stack2.addCards(r.p2, r.p1);
-    }
 
     private static shouldPlayRecursive(r: Round) {
         return r.stack1.containsAtLeastNCards(r.p1) && r.stack2.containsAtLeastNCards(r.p2);
@@ -114,10 +103,7 @@ class Stack {
 
     serialize = (): string => this.numbers.join(',');
 
-    score = (): number => {
-        let count = this.numbers.length;
-        return this.numbers.map(n => n * count--).reduce((a, b) => a + b);
-    };
+    score = (): number => this.numbers.reverse().map((v, i) => i * v).reduce((a, b) => a + b);
 }
 
 enum Player {
