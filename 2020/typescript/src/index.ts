@@ -9,7 +9,9 @@ import {Renderer} from "./renderer";
 const runner = new Runner();
 
 for(const day in Days) {
-    runner.register(new Days[day]());
+    if(typeof Days[day] === "function") {
+        runner.register(new Days[day]());
+    }
 }
 
 yargs(hideBin(process.argv))

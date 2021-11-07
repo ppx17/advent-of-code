@@ -102,11 +102,15 @@ export class Time {
         if(this.time < 1000_000n) {
             return `${this.time / 1000n} µs`;
         }
-        if(this.time < 10_000_000_000n) {
+        if(this.time < 1_000_000_000n) {
             return `${this.time / 1000_000n} ms`;
         }
 
-        return `${this.time / 1000_000_000n} s`;
+        if(this.time < 10_000_000_000n) {
+            return `\x1b[31m${this.time / 1000_000n} ms\x1b[0m`;
+        }
+
+        return `\x1b[31m${this.time / 1000_000_000n} s\x1b[0m`;
     }
 }
 
