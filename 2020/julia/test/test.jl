@@ -19,9 +19,11 @@ function format_time(sec::Float64)
     return @sprintf("\x1b[31m% 8.2f ms\x1b[0m", ms)
 end
    
-header = "| Day |   |      Part 1 |      Part 2 |          Result 1 |         Result 2 |"
+header = "│ Day │   │      Part 1 │      Part 2 │          Result 1 │         Result 2 │"
+
+println(repeat("─", length(header)))
 println(header)
-println(repeat("-", length(header)))
+println(repeat("─", length(header)))
 has_invalids = false
 for day in 1:25
     day_symbol = Symbol("Day", day)
@@ -31,7 +33,7 @@ for day in 1:25
         p2time = @timed day_module.part2()
         valid = Aoc.validate(day, p1time.value, p2time.value)
         !valid && (global has_invalids = true)
-        println(@sprintf("| % 2s  | %s | %s | %s |   % 15s |  % 15s |",
+        println(@sprintf("│ % 2s  │ %s │ %s │ %s │   % 15s │  % 15s │",
             day,
             valid ? "\x1b[32m✔\x1b[0m" : "\x1b[31mX\x1b[0m",
             format_time(p1time[2]),
@@ -41,6 +43,7 @@ for day in 1:25
         ))
     end
 end
+println(repeat("─", length(header)))
 
 if has_invalids
     exit(1)

@@ -77,5 +77,5 @@ test:2020:typescript:
   image: node:latest
   script:
     - cd 2020/typescript/src
-    - yarn install
+    - yarn install --prod
     - yarn run aoc
