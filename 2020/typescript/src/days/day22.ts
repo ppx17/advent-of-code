@@ -103,7 +103,7 @@ class Stack {
 
     serialize = (): string => this.numbers.join(',');
 
-    score = (): number => this.numbers.reverse().map((v, i) => (i+1) * v).reduce((a, b) => a + b);
+    score = (): number => this.numbers.reverse().map((v, i) => ++i * v).reduce((a, b) => a + b);
 }
 
 enum Player {

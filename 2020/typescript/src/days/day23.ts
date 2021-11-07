@@ -31,16 +31,14 @@ export class Day23 extends Day {
     }
 
     private static play(cups: Cup[], moves: number, max: number): Cup {
-        // link the cups
-        cups.forEach((value, index, array) => {
-            value.next = (array[index + 1] !== undefined)
+        // link & index the cups
+        const cupsMap: Map<number, Cup> = new Map();
+        cups.forEach((cup, index, array) => {
+            cup.next = (array[index + 1] !== undefined)
                 ? array[index + 1]
                 : array[0];
+            cupsMap.set(cup.label, cup);
         });
-
-        // index the cups
-        const cupsMap: Map<number, Cup> = new Map();
-        cups.forEach(c => cupsMap.set(c.label, c));
 
         let current = cups[0];
 
