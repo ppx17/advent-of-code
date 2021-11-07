@@ -102,7 +102,7 @@ export class Time {
         if(this.time < 1000_000n) {
             return `${this.time / 1000n} µs`;
         }
-        if(this.time < 1000_000_000n) {
+        if(this.time < 10_000_000_000n) {
             return `${this.time / 1000_000n} ms`;
         }
 
