@@ -2,7 +2,7 @@
 
 import yargs from 'yargs'
 import {hideBin} from 'yargs/helpers'
-import {Runner} from "./runner";
+import {Result, Runner} from "./runner";
 import * as Days from "./days";
 import {Renderer} from "./renderer";
 
@@ -17,6 +17,11 @@ for(const day in Days) {
 yargs(hideBin(process.argv))
     .command(['run', 'all'], 'Run all days', () => {
     }, (argv) => console.log(Renderer.multiple(runner.all())))
+    .command('async', 'Run all days async', () => {
+        runner.allAsync().then((results: Result[]) => {
+            console.log(Renderer.multiple(results));
+        })
+    })
     .command('day <day>', 'Run single day', (yargs) => {
         yargs.positional('day', {
             type: 'number',

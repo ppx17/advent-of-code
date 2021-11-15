@@ -17,7 +17,7 @@ export class Renderer {
         ], {
             header: {
                 alignment: 'center',
-                content: `Day ${result.day.day()}`
+                content: `Day ${result.dayNumber}`
             }
         })
     }
@@ -28,7 +28,7 @@ export class Renderer {
         ];
 
         result.forEach((r, i) => data.push([
-            r.day.day().toString(),
+            r.dayNumber.toString(),
             ` ${this.icon(r.valid())} `,
             `${this.icon(r.part1.valid())} ${this.partResult(r.part1)}`,
             `${this.icon(r.part2.valid())} ${this.partResult(r.part2)}`,
@@ -57,7 +57,7 @@ export class Renderer {
     }
 
     private static sumTime(selector: (r: Result) => Time, results: Result[]): string {
-        return (new Time(results.map(selector).map(t => t.time).reduce((a, b) => a + b))).toString();
+        return (new Time(results.map(selector).map(t => t.timeUs).reduce((a, b) => a + b))).toString();
     }
 
     private static partResult(result: PartResult): string {

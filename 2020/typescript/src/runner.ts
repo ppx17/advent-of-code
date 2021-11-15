@@ -1,5 +1,6 @@
 import {Day} from "./days/day";
 import {Tools} from "./tools";
+import {Worker as JestWorker} from 'jest-worker';
 
 
 export class Runner {
@@ -7,10 +8,21 @@ export class Runner {
 
     register = (day: Day) => this.days.push(day);
 
-    all = (): Result[] => this.days
-        .sort((a, b) => a.day() - b.day())
+    all = (): Result[] => this.sortedDays()
         .map(this.day)
         .filter(r => r !== null);
+
+    allAsync = (): Promise<Result[]> => {
+        const worker = new JestWorker(require.resolve('./workerThread'), {forkOptions: {silent: true}}) as WorkerThread;
+
+        worker.getStdout().on('data', (data) => console.log(`Worker: ${data}`));
+
+        return Promise.all(this.sortedDays().map((d: Day) => worker.run(d.day())))
+            .then((serializedResults): Result[] => {
+                worker.end();
+                return serializedResults.map(r => ResultDeserializer.result(r));
+            });
+    }
 
     day = (day: Day | number): Result | null => {
         if (typeof day === "number") {
@@ -20,6 +32,8 @@ export class Runner {
 
         return Judge.judge(day);
     }
+
+    private sortedDays = (): Day[] => this.days.sort((a, b) => a.day() - b.day());
 
     private dayFromNumber(day: number): Day | null {
         const instance = this.days.find(d => d.day() === day);
@@ -33,6 +47,8 @@ export class Runner {
     }
 }
 
+type WorkerThread = JestWorker & { run: (day: number) => undefined | SerializedResult }
+
 export class Judge {
     static judge(day: Day): Result {
 
@@ -41,10 +57,10 @@ export class Judge {
         const runtimeNs = process.hrtime.bigint() - startNs;
 
         return new Result(
-            day,
+            day.day(),
             this.judgePart(day.day(), 1, () => day.part1()),
             this.judgePart(day.day(), 2, () => day.part2()),
-            new Time(runtimeNs)
+            Time.fromNsBigint(runtimeNs)
         )
     }
 
@@ -57,13 +73,49 @@ export class Judge {
         return new PartResult(
             Tools.expected(dayNumber, part),
             result,
-            new Time(runtimeNs)
+            Time.fromNsBigint(runtimeNs)
         );
     }
 }
 
+interface SerializedTime {
+    timeUs: number
+}
+
+interface SerializedPartResult {
+    expected: string | null,
+    answer: string,
+    runtime: SerializedTime
+}
+
+interface SerializedResult {
+    dayNumber: number,
+    part1: SerializedPartResult,
+    part2: SerializedPartResult,
+    setupTime: SerializedTime
+}
+
+export class ResultDeserializer {
+    public static result(serialized: undefined | SerializedResult): undefined | Result {
+        return serialized ? new Result(
+            serialized.dayNumber,
+            this.part(serialized.part1),
+            this.part(serialized.part2),
+            this.time(serialized.setupTime)
+        ) : undefined;
+    }
+
+    private static part(serialized: undefined | SerializedPartResult): undefined | PartResult {
+        return serialized === undefined ? undefined : new PartResult(serialized.expected, serialized.answer, this.time(serialized.runtime));
+    }
+
+    private static time(serialized: SerializedTime): Time {
+        return new Time(serialized?.timeUs ?? 0);
+    }
+}
+
 export class Result {
-    constructor(public day: Day, public part1: PartResult, public part2: PartResult, public setupTime: Time) {
+    constructor(public dayNumber: number, public part1: PartResult, public part2: PartResult, public setupTime: Time) {
     }
 
     valid(): ValidationResult {
@@ -78,7 +130,7 @@ export class Result {
         return ValidationResult.Valid;
     }
 
-    totalTime = (): Time => new Time(this.part1.runtime.time + this.part2.runtime.time + this.setupTime.time);
+    totalTime = (): Time => new Time(this.part1.runtime.timeUs + this.part2.runtime.timeUs + this.setupTime.timeUs);
 }
 
 export class PartResult {
@@ -92,25 +144,27 @@ export class PartResult {
 }
 
 export class Time {
-    constructor(public time: bigint) {
+
+    public static fromNsBigint(ns: bigint) {
+        return new Time(Number(ns / 1000n));
+    }
+
+    constructor(public readonly timeUs: number) {
     }
 
     public toString() {
-        if(this.time < 1000n) {
-            return `${this.time} ns`;
+        if (this.timeUs < 1000) {
+            return `${this.timeUs} µs`;
         }
-        if(this.time < 1000_000n) {
-            return `${this.time / 1000n} µs`;
-        }
-        if(this.time < 1_000_000_000n) {
-            return `${this.time / 1000_000n} ms`;
+        if (this.timeUs < 1_000_000) {
+            return `${this.timeUs / 1000} ms`;
         }
 
-        if(this.time < 10_000_000_000n) {
-            return `\x1b[31m${this.time / 1000_000n} ms\x1b[0m`;
+        if (this.timeUs < 10_000_000) {
+            return `\x1b[31m${this.timeUs / 1000} ms\x1b[0m`;
         }
 
-        return `\x1b[31m${this.time / 1000_000_000n} s\x1b[0m`;
+        return `\x1b[31m${this.timeUs / 1000_000} s\x1b[0m`;
     }
 }
 
