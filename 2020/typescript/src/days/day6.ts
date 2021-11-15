@@ -1,5 +1,6 @@
 import {Day} from "./day";
 import {Tools} from "../tools";
+import {sum} from "./helpers";
 
 export class Day6 extends Day {
     private groups: string[] = [];
@@ -9,7 +10,7 @@ export class Day6 extends Day {
     part1 = (): string => this.groups
         .map(group => group.replaceAll(/\n/g, '').split(''))
         .map(group => new Set(group).size)
-        .reduce((a, b) => a + b)
+        .reduce(sum)
         .toString()
 
     part2 = (): string => this.groups
@@ -19,7 +20,7 @@ export class Day6 extends Day {
             .reduce((personA, personB) => new Set([...personA].filter(ans => personB.has(ans))))
             .size
         )
-        .reduce((a, b) => a + b)
+        .reduce(sum)
         .toString()
 
     setup = () => {

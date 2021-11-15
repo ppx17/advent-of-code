@@ -1,4 +1,5 @@
 import {Day} from "./day";
+import {product} from "./helpers";
 
 export class Day3 extends Day {
     day = (): number => 3;
@@ -12,7 +13,7 @@ export class Day3 extends Day {
         {x: 1, y: 2}
     ]
         .map(this.treeCount)
-        .reduce((a, b) => a * b)
+        .reduce(product)
         .toString();
 
     private width = (): number => this.input[0].length;

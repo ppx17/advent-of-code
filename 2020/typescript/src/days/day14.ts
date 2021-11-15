@@ -1,4 +1,5 @@
 import {Day} from "./day";
+import {sum} from "./helpers";
 
 export class Day14 extends Day {
     day = (): number => 14;
@@ -19,7 +20,7 @@ export class Day14 extends Day {
                 ? (this.mask = instruction[1])
                 : runInstruction(BigInt(instruction[0].match(/mem\[(\d+)]/)[1]), BigInt(instruction[1])));
 
-        return Array.from(this.mem.values()).reduce((a, b) => a + b).toString();
+        return Array.from(this.mem.values()).reduce(sum).toString();
     }
 
     private runInstructionPart1(address: bigint, param: bigint) {

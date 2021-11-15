@@ -1,4 +1,5 @@
 import {Day} from "./day";
+import {sum} from "./helpers";
 
 export class Day22 extends Day {
     day = (): number => 22;
@@ -103,7 +104,7 @@ class Stack {
 
     serialize = (): string => this.numbers.join(',');
 
-    score = (): number => this.numbers.reverse().map((v, i) => ++i * v).reduce((a, b) => a + b);
+    score = (): number => this.numbers.reverse().map((v, i) => ++i * v).reduce(sum);
 }
 
 enum Player {

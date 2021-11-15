@@ -1,4 +1,5 @@
 import {Day} from "./day";
+import {sum} from "./helpers";
 
 export class Day10 extends Day {
     private adapters: number[];
@@ -19,7 +20,7 @@ export class Day10 extends Day {
                 : [1, 2, 3]
                     .filter(adapterOffset => routeMap.has(adapter + adapterOffset))
                     .map(adapterOffset => routeMap.get(adapter + adapterOffset))
-                    .reduce((a, b) => a + b)
+                    .reduce(sum)
             );
         });
 

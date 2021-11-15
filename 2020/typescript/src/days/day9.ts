@@ -1,4 +1,5 @@
 import {Day} from "./day";
+import {sum} from "./helpers";
 
 export class Day9 extends Day {
 
@@ -33,10 +34,10 @@ export class Day9 extends Day {
     private fitEnd = (start: number): number | null => {
         for (let end = start + 1; end < this.numbers.length; end++) {
             const subset = this.numbers.slice(start, end);
-            const sum = subset.reduce((a, b) => a + b);
+            const sumOfNumbers = subset.reduce(sum);
 
-            if (sum === this.invalid) return Math.min(...subset) + Math.max(...subset);
-            if (sum > this.invalid) return null;
+            if (sumOfNumbers === this.invalid) return Math.min(...subset) + Math.max(...subset);
+            if (sumOfNumbers > this.invalid) return null;
         }
         return null;
     };

@@ -5,6 +5,10 @@ export class Vector {
         return new this(...Array.from({length: dimensions}).map(() => 0));
     }
 
+    public static one(dimensions: number = 2): Vector {
+        return new this(...Array.from({length: dimensions}).map(() => 1));
+    }
+
     public static north(): Vector {
         return new this(0, -1);
     }
@@ -41,8 +45,16 @@ export class Vector {
         return this.values.length;
     }
 
+    dimension(dimension: number): number {
+        return this.values[dimension];
+    }
+
     add(other: Vector): Vector {
         return new Vector(...this.values.map((v, i) => v + other.values[i] ?? 0));
+    }
+
+    sub(other: Vector): Vector {
+        return new Vector(...this.values.map((v, i) => v - other.values[i] ?? 0));
     }
 
     within(boundary: Vector): boolean {
@@ -69,6 +81,21 @@ export class Vector {
     manhattan(other: Vector): number {
         return this.values
             .map((v: number, i: number) => Math.abs(v - other.values[i] ?? 0))
-            .reduce((x, y) => x + y);
+            .reduce(sum);
     }
+
+    serialize(): string {
+        return this.values.join(':');
+    }
+}
+
+export function sum(a: number, b: number): number;
+export function sum(a: bigint, b: bigint): bigint;
+export function sum(a: string, b: string): string;
+export function sum(a: any, b: any): any {
+    return a + b;
+}
+
+export function product(a: number, b: number): number {
+    return a * b;
 }
