@@ -1,4 +1,4 @@
-import {Day} from "./day";
+import {Day} from "../aoc/day";
 
 export class Day1 extends Day {
     private amounts: number[] = [];

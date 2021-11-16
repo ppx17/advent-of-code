@@ -1,4 +1,4 @@
-import {Tools} from "../tools";
+import {Tools} from "./tools";
 
 export abstract class Day {
     abstract day(): number;

@@ -1,4 +1,4 @@
-import {Day} from "./day";
+import {Day} from "../aoc/day";
 
 export class Day8 extends Day {
     private instructions: Instruction[] = [];

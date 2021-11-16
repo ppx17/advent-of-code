@@ -1,4 +1,4 @@
-import {Day} from "./day";
+import {Day} from "../aoc/day";
 import {product} from "./helpers";
 
 export class Day3 extends Day {

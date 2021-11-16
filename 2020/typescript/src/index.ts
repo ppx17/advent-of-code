@@ -1,38 +1,16 @@
 #!/usr/bin/env ./node_modules/.bin/ts-node
 
-import yargs from 'yargs'
-import {hideBin} from 'yargs/helpers'
-import {Result, Runner} from "./runner";
+import {Runner} from "./aoc/runner";
 import * as Days from "./days";
-import {Renderer} from "./renderer";
+import {Cli} from "./aoc/cli";
 
 const runner = new Runner();
 
-for(const day in Days) {
-    if(typeof Days[day] === "function") {
+for (const day in Days) {
+    if (typeof Days[day] === "function") {
         runner.register(new Days[day]());
     }
 }
 
-yargs(hideBin(process.argv))
-    .command(['run', 'all'], 'Run all days', () => {
-    }, (argv) => console.log(Renderer.multiple(runner.all())))
-    .command('async', 'Run all days async', () => {
-        runner.allAsync().then((results: Result[]) => {
-            console.log(Renderer.multiple(results));
-        })
-    })
-    .command('day <day>', 'Run single day', (yargs) => {
-        yargs.positional('day', {
-            type: 'number',
-            demand: true,
-            describe: 'the day to run'
-        })
-    }, (argv) => {
-        const result = runner.day(argv.day as number);
-
-        console.log(Renderer.single(result))
-
-    })
-    .demandCommand(1)
-    .argv
+const cli = new Cli(runner);
+cli.execute();

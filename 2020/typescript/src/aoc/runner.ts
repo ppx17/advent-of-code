@@ -1,4 +1,4 @@
-import {Day} from "./days/day";
+import {Day} from "./day";
 import {Tools} from "./tools";
 import {Worker as JestWorker} from 'jest-worker';
 

@@ -1,6 +1,6 @@
 import {Judge, Result} from "./runner";
-import * as Days from "./days";
-import {Day} from "./days/day";
+import * as Days from "../days";
+import {Day} from "./day";
 
 const dayMap = new Map<number, Day>();
 for (const day in Days) {

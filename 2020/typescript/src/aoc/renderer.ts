@@ -1,10 +1,12 @@
 import {PartResult, Result, Time, ValidationResult} from "./runner";
 import {table, TableUserConfig} from "table";
-import {Day} from "./days/day";
+import {Day} from "./day";
 
 export class Renderer {
+    private static readonly MAX_DAYS = 25;
+
     static single(result: Result | null): string {
-        if(result === null) {
+        if (result === null) {
             return 'No result found.';
         }
 
@@ -13,7 +15,7 @@ export class Renderer {
             ['Setup', '', '', '', result.setupTime.toString()],
             [1, this.icon(result.part1.valid()), result.part1.expected, result.part1.answer, result.part1.runtime.toString()],
             [2, this.icon(result.part2.valid()), result.part2.expected, result.part2.answer, result.part2.runtime.toString()],
-                ['Total', '', '', '', result.totalTime().toString()],
+            ['Total', '', '', '', result.totalTime().toString()],
         ], {
             header: {
                 alignment: 'center',
@@ -22,23 +24,50 @@ export class Renderer {
         })
     }
 
-    static multiple(result: Result[]): string {
-        const data = [
-            ['Day', '', 'Part 1', 'Part 2','Setup', 'P1', 'P2', 'Total'],
+    static multiple(results: Result[]): string {
+        const config: TableUserConfig = {
+            drawHorizontalLine: (line) => [0, 1, this.MAX_DAYS + 1, this.MAX_DAYS + 2].indexOf(line) !== -1
+        }
+
+        return table([
+            ['Day', '', 'Part 1', 'Part 2', 'Setup', 'P1', 'P2', 'Total'],
+            ...this.resultLines(results),
+            this.totalLine(results)
+        ], config);
+    }
+
+    private static resultLines = function*(results: Result[]): Generator<string[]> {
+        const resultMap = new Map<number, Result>();
+        results.forEach(r => resultMap.set(r.dayNumber, r));
+
+        for (let day = 1; day <= this.MAX_DAYS; day++) {
+            yield this.line(day, resultMap.get(day));
+        }
+    }
+
+    private static line(dayNumber: number, result: Result | undefined): string[] {
+        return result === undefined ? this.missingDayLine(dayNumber) : this.resultLine(result);
+    }
+
+    private static missingDayLine(dayNumber: number): string[] {
+        return [dayNumber.toString(), ' - ', '', '', '', '', '', ''];
+    }
+
+    private static resultLine(result: Result): string[] {
+        return [
+            result.dayNumber.toString(),
+            ` ${this.icon(result.valid())} `,
+            `${this.icon(result.part1.valid())} ${this.partResult(result.part1)}`,
+            `${this.icon(result.part2.valid())} ${this.partResult(result.part2)}`,
+            result.setupTime.toString(),
+            result.part1.runtime.toString(),
+            result.part2.runtime.toString(),
+            result.totalTime().toString(),
         ];
+    }
 
-        result.forEach((r, i) => data.push([
-            r.dayNumber.toString(),
-            ` ${this.icon(r.valid())} `,
-            `${this.icon(r.part1.valid())} ${this.partResult(r.part1)}`,
-            `${this.icon(r.part2.valid())} ${this.partResult(r.part2)}`,
-            r.setupTime.toString(),
-            r.part1.runtime.toString(),
-            r.part2.runtime.toString(),
-            r.totalTime().toString(),
-        ]));
-
-        data.push([
+    private static totalLine(result: Result[]): string[] {
+        return [
             '',
             '',
             '',
@@ -47,13 +76,7 @@ export class Renderer {
             this.sumTime(r => r.part1.runtime, result),
             this.sumTime(r => r.part2.runtime, result),
             this.sumTime(r => r.totalTime(), result),
-        ]);
-
-        const config: TableUserConfig = {
-            drawHorizontalLine: (line) => [0, 1, result.length + 1, result.length + 2].indexOf(line) !== -1
-        }
-
-        return table(data, config);
+        ];
     }
 
     private static sumTime(selector: (r: Result) => Time, results: Result[]): string {
