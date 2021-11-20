@@ -3,10 +3,12 @@ import {Day} from "../aoc/day";
 export class Day19 extends Day {
     private rules: Rule[];
 
+    private readonly ELEVEN_RECURSION_LIMIT = 4;
+
     day = (): number => 19;
 
     part1 = (): string => {
-        const reg = new RegExp(`^${this.resolveRule('0')}$`, 'g');
+        const reg = new RegExp(`^${this.resolveRule('0')}$`);
         return this.messages.filter(m => m.match(reg) !== null).length.toString();
     }
 
@@ -15,7 +17,7 @@ export class Day19 extends Day {
         const thirtyOne = this.resolveRule('31');
         const eight = `${fortyTwo}+`;
 
-        const eleven = Array.from({length: 4})
+        const eleven = Array.from({length: this.ELEVEN_RECURSION_LIMIT})
             .map((_v, i) => i+1)
             .map(i => `(${fortyTwo}{${i}}${thirtyOne}{${i}})`)
             .join('|');
