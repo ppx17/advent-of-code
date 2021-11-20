@@ -1,21 +1,9 @@
-import {Judge, Result} from "./runner";
+import {Result} from "./runner";
 import * as Days from "../days";
-import {Day} from "./day";
+import {RunnerFactory} from "./runnerFactory";
 
-const dayMap = new Map<number, Day>();
-for (const day in Days) {
-    if (typeof Days[day] === "function") {
-        const d = new Days[day]();
-        dayMap.set(d.day(), d);
-    }
-}
+const runner = RunnerFactory.create(Days);
 
 export function run(day: number): undefined | Result {
-    const instance = dayMap.get(day);
-
-    if (instance === undefined) {
-        return;
-    }
-
-    return Judge.judge(instance);
+    return runner.day(day) ?? undefined;
 }

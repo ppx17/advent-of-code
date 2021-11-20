@@ -6,7 +6,7 @@ import {Worker as JestWorker} from 'jest-worker';
 export class Runner {
     private days: Day[] = [];
 
-    register = (day: Day) => this.days.push(day);
+    register = (day: any | Day) => Runner.isDay(day) && this.days.push(day);
 
     all = (): Result[] => this.sortedDays()
         .map(this.day)
@@ -44,6 +44,10 @@ export class Runner {
         }
 
         return instance;
+    }
+
+    private static isDay(obj: any): obj is Day {
+        return "day" in obj && "part1" in obj && "part2" in obj;
     }
 }
 

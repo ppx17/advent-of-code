@@ -19,6 +19,8 @@
   },
   "scripts": {
     "aoc": "./index.ts all",
+    "all": "./index.ts all",
+    "async": "./index.ts async",
     "day": "./index.ts day",
     "jest": "node_modules/.bin/jest"
   }
