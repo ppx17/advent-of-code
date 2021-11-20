@@ -18,6 +18,8 @@
     "ts-jest": "^27.0.5"
   },
   "scripts": {
-    "aoc": "./index.ts all"
+    "aoc": "./index.ts all",
+    "day": "./index.ts day",
+    "jest": "node_modules/.bin/jest"
   }
 }

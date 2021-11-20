@@ -15,8 +15,7 @@ export * from "./day14"
 export * from "./day15"
 export * from "./day16"
 
-
-
+export * from "./day18"
 
 
 
