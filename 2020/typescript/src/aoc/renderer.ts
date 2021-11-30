@@ -100,7 +100,7 @@ export class Renderer {
             case ValidationResult.Invalid:
                 return '\x1b[31mX\x1b[0m';
             case ValidationResult.Unknown:
-                return '\x1b[36m❔\x1b[0m';
+                return '\x1b[36m?\x1b[0m';
         }
     }
 }

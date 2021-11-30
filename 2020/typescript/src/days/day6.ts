@@ -1,5 +1,4 @@
-import {Day} from "../aoc/day";
-import {Tools} from "../aoc/tools";
+import {Day} from "../aoc";
 import {sum} from "./helpers";
 
 export class Day6 extends Day {
@@ -26,7 +25,7 @@ export class Day6 extends Day {
     setup = () => {
         super.setup();
 
-        this.groups = Tools.inputString(this.day()).trim().split(/\r?\n\r?\n/);
+        this.groups = this.input.join("\n").trim().split(/\r?\n\r?\n/);
     };
 }
 

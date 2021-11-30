@@ -1,4 +1,4 @@
-import {Day} from "../aoc/day";
+import {Day} from "../aoc";
 import {Vector} from "./helpers";
 
 export class Day12 extends Day {

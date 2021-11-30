@@ -1,4 +1,4 @@
-import {Day} from "../aoc/day";
+import {Day} from "../aoc";
 
 export class Day4 extends Day {
     private passports: Map<string, string>[];

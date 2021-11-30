@@ -1,4 +1,4 @@
-import {Day} from "../aoc/day";
+import {Day} from "../aoc";
 import {sum} from "./helpers";
 
 export class Day10 extends Day {

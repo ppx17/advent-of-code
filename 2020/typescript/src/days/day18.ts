@@ -1,5 +1,5 @@
+import {Day} from "../aoc";
 import {product, sum} from "./helpers";
-import {Day} from "../aoc/day";
 
 export class Day18 extends Day {
     day = (): number => 18;

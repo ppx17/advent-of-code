@@ -12,6 +12,9 @@ export class Tools {
 
     static expected(day: number, part: number): null | string {
         const path = `../../expected/day${day}.txt`;
+
+        if( ! fs.existsSync(path)) return null;
+
         const lines = fs.readFileSync(path, 'utf8').split(/\r?\n/);
 
         return lines.find((line) => line.startsWith(`Part ${part}: `))?.split(': ', 2)[1] ?? null;
