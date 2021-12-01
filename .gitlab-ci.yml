@@ -53,6 +53,9 @@ test:2019:julia1.5:
 test:2020:php:
   extends: .composer
   allow_failure: true
+  only:
+    changes:
+      - 2020/php/**
   parallel:
     matrix:
       - IMAGE:
@@ -68,6 +71,9 @@ test:2020:php:
 test:2020:julia1.5:
   stage: test
   image: julia:1.5-alpine
+  only:
+    changes:
+      - 2020/julia/**
   script:
    - cd 2020/julia/test
    - julia test.jl
@@ -75,7 +81,18 @@ test:2020:julia1.5:
 test:2020:typescript:
   stage: test
   image: node:latest
+  only:
+    changes:
+      - 2020/typescript/**
   script:
     - cd 2020/typescript/src
+    - yarn install
+    - yarn run aoc
+
+test:2021:typescript:
+  stage: test
+  image: node:latest
+  script:
+    - cd 2021/typescript/src
     - yarn install
     - yarn run aoc
