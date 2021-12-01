@@ -82,8 +82,9 @@ test:2020:julia1.5:
   stage: test
   image: node:latest
   before_script:
-    - cd $CI_PROJECT_DIR/2020/typescript/src
+    - cd lib/typescript/aoc
     - yarn install
+    - cd $CI_PROJECT_DIR
 
 test:2020:typescript:
   extends: .typescript
@@ -92,12 +93,13 @@ test:2020:typescript:
       - 2020/typescript/**
   script:
     - cd 2020/typescript/src
+    - yarn install
     - yarn run aoc
 
 test:2021:typescript:
   extends: .typescript
   script:
-    - cd $CI_PROJECT_DIR/2021/typescript/src
+    - cd 2021/typescript/src
     - yarn install
     - yarn run aoc
 

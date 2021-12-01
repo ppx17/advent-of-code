@@ -1,5 +1,5 @@
 import {Result} from "./runner";
-import * as Days from "../days";
+import * as Days from "../../../../2020/typescript/src/days";
 import {RunnerFactory} from "./runnerFactory";
 
 const runner = RunnerFactory.create(Days);
