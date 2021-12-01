@@ -1,5 +1,5 @@
 import {Day} from "../aoc";
-import {sum} from "../../../../2020/typescript/src/days/helpers";
+import {sum} from "../aoc";
 
 export class Day1 extends Day {
     day = (): number => 1;
