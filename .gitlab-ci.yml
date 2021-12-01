@@ -78,21 +78,25 @@ test:2020:julia1.5:
    - cd 2020/julia/test
    - julia test.jl
 
-test:2020:typescript:
+.typescript:
   stage: test
   image: node:latest
+  before_script:
+    - cd $CI_PROJECT_DIR/2020/typescript/src
+    - yarn install
+
+test:2020:typescript:
+  extends: .typescript
   only:
     changes:
       - 2020/typescript/**
   script:
     - cd 2020/typescript/src
-    - yarn install
     - yarn run aoc
 
 test:2021:typescript:
-  stage: test
-  image: node:latest
+  extends: .typescript
   script:
-    - cd 2021/typescript/src
+    - cd $CI_PROJECT_DIR/2021/typescript/src
     - yarn install
     - yarn run aoc
