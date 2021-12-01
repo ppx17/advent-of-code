@@ -100,3 +100,10 @@ test:2021:typescript:
     - cd $CI_PROJECT_DIR/2021/typescript/src
     - yarn install
     - yarn run aoc
+
+test:2021:julia:
+  stage: test
+  image: julia:1.7-alpine
+  script:
+    - cd 2021/julia/test
+    - julia test.jl
