@@ -3,9 +3,10 @@ module Day3
 include("Aoc.jl")
 using .Aoc
 
-matrix = permutedims(reduce(hcat, map(l -> [parse(Int64, c) for c in l], Aoc.input_lines(3))))
-
+tomatrix(list) = permutedims(reduce(hcat, list))
 toint(a,b) = (a << 1) + b
+
+matrix = tomatrix(map(l -> [parse(Int64, c) for c in l], Aoc.input_lines(3)))
 
 function reducematrix(matrix, decide)
     for x in eachindex(eachcol(matrix))
@@ -16,7 +17,7 @@ function reducematrix(matrix, decide)
 
         keep = decide(ones, zeroes)
 
-        matrix = permutedims(reduce(hcat, ([matrix[y,:] for y=1:size(matrix)[1] if matrix[y,x] == keep])))
+        matrix = tomatrix([matrix[y,:] for y=1:size(matrix)[1] if matrix[y,x] == keep])
     end
 
     matrix
