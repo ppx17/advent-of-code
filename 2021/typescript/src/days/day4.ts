@@ -55,7 +55,7 @@ class Board {
         this.rows = this.rows.map(r => r.filter(x => x !== n));
     }
 
-    public hasBingo = (): boolean => this.rows.find(r => r.length === 0) !== undefined;
+    public hasBingo = (): boolean => !this.rows.every(r => r.length > 0);
 
     public score = (calledNumber: number): number => this.all.reduce(sum) * calledNumber;
 
