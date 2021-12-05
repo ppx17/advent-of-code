@@ -3,17 +3,13 @@ import {Day, Vector} from "../aoc";
 export class Day5 extends Day {
     day = (): number => 5;
 
-    part1 = (): string => this.countOverlap(this.lines.filter(l => l.isStraight()))
-    part2 = (): string => this.countOverlap(this.lines)
+    part1 = (): string => this.countOverlap(this.lines.filter(l => l.isStraight()));
+    part2 = (): string => this.countOverlap(this.lines);
 
     private countOverlap(lines: Line[]): string {
         const counts = new Map<string, number>();
 
-        lines.forEach(line => {
-            for (const v of line.vectors()) {
-                counts.set(v, (counts.get(v) ?? 0) + 1);
-            }
-        });
+        lines.forEach(line => Array.from(line.vectors()).forEach(v => counts.set(v, (counts.get(v) ?? 0) + 1)));
 
         return Array.from(counts.values()).filter(n => n >= 2).length.toString();
     }
@@ -32,22 +28,19 @@ export class Day5 extends Day {
 }
 
 class Line {
-    constructor(public a: Vector, public b: Vector) {
+    constructor(private a: Vector, private b: Vector) {
     }
 
     public isStraight = (): boolean => this.a.x === this.b.x || this.a.y === this.b.y;
 
     public* vectors(): Generator<string> {
-        const dist = Math.max(Math.abs(this.a.x - this.b.x), Math.abs(this.a.y - this.b.y));
+        const step = new Vector(Math.sign(this.b.x - this.a.x), Math.sign(this.b.y - this.a.y))
+        let pos = this.a;
 
-        const stepX = Math.floor((this.b.x - this.a.x) / dist);
-        const stepY = Math.floor((this.b.y - this.a.y) / dist);
-
-        for (let s = 0; s <= dist; s++) {
-            const x = this.a.x === this.b.x ? this.a.x : this.a.x + (stepX * s);
-            const y = this.a.y === this.b.y ? this.a.y : this.a.y + (stepY * s);
-
-            yield `${x}:${y}`;
+        yield pos.serialize();
+        while (!pos.is(this.b)) {
+            pos = pos.add(step);
+            yield pos.serialize();
         }
     }
 }

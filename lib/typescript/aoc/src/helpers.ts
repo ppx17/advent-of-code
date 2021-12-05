@@ -84,6 +84,11 @@ export class Vector {
             .reduce(sum);
     }
 
+    public is(other: Vector): boolean {
+        return this.values.length === other.values.length
+            && this.values.every((v,i) => v === other.values[i]);
+    }
+
     serialize(): string {
         return this.values.join(':');
     }
