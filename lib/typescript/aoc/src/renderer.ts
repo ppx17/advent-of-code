@@ -20,13 +20,22 @@ export class Renderer {
             header: {
                 alignment: 'center',
                 content: `Day ${result.dayNumber}`
+            },
+            columns: {
+                4: {alignment: 'right'},
             }
         })
     }
 
     static multiple(results: Result[]): string {
         const config: TableUserConfig = {
-            drawHorizontalLine: (line) => [0, 1, this.MAX_DAYS + 1, this.MAX_DAYS + 2].indexOf(line) !== -1
+            drawHorizontalLine: (line) => [0, 1, this.MAX_DAYS + 1, this.MAX_DAYS + 2].indexOf(line) !== -1,
+            columns: {
+                4: {alignment: 'right'},
+                5: {alignment: 'right'},
+                6: {alignment: 'right'},
+                7: {alignment: 'right'},
+            }
         }
 
         return table([

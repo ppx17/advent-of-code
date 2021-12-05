@@ -158,17 +158,17 @@ export class Time {
 
     public toString() {
         if (this.timeUs < 1000) {
-            return `${this.timeUs} µs`;
+            return `${this.timeUs.toFixed(2)} µs`;
         }
         if (this.timeUs < 1_000_000) {
-            return `${this.timeUs / 1000} ms`;
+            return `${(this.timeUs / 1000).toFixed(2)} ms`;
         }
 
         if (this.timeUs < 10_000_000) {
-            return `\x1b[31m${this.timeUs / 1000} ms\x1b[0m`;
+            return `\x1b[31m${(this.timeUs / 1000).toFixed(2)} ms\x1b[0m`;
         }
 
-        return `\x1b[31m${this.timeUs / 1000_000} s\x1b[0m`;
+        return `\x1b[31m${(this.timeUs / 1000_000).toFixed(2)} s\x1b[0m`;
     }
 }
 
