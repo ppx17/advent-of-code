@@ -1,35 +1,46 @@
 stages:
  - test
 
+variables:
+  CURRENT: 2021
+
+##
+## PHP
+##
 .composer:
+  allow_failure: true
+  image: php:8.0-cli
+  stage: test
   before_script:
     - bash ${CI_PROJECT_DIR}/.ci/php/install_composer.sh
-
-test:2018:php7.3:
-  extends: .composer
-  stage: test
-  image: php:7.3-cli
-  only:
-    changes:
-     - 2018/php/**
-  script:
-    - cd 2018/php
-    - composer install
-    - php ./run.php
-
-test:2019:php7.4:
-  extends: .composer
-  stage: test
-  image: php:7.4-cli
-  only:
-    changes:
-     - 2019/php/**
-  script:
-    - cd 2019/php
+    - cd $YEAR/php
     - composer install -d ./src --no-progress --prefer-dist
+  script:
     - php ./cli.php run
 
-test:2019:rust1.48:
+2018:php:
+  extends: .composer
+  image: php:7.3-cli
+  variables:
+    YEAR: 2018
+  script:
+    - php ./run.php
+
+2019:php:
+  extends: .composer
+  image: php:7.4-cli
+  variables:
+    YEAR: 2019
+
+2020:php:
+  extends: .composer
+  variables:
+    YEAR: 2020
+
+##
+## Rust
+##
+2019:rust:
   stage: test
   image: rust:1.48
   only:
@@ -40,72 +51,64 @@ test:2019:rust1.48:
     - ./build-all
     - ./run-all
 
-test:2019:julia1.5:
+##
+## Julia
+##
+.julia:
   stage: test
   image: julia:1.5-alpine
-  only:
-    changes:
-     - 2019/julia/**
+  before_script:
+    - cd $YEAR/julia/test
   script:
-   - cd 2019/julia/test
-   - julia test.jl
+    - julia/test.jl
 
-test:2020:php:
-  extends: .composer
-  allow_failure: true
-  only:
-    changes:
-      - 2020/php/**
-  parallel:
-    matrix:
-      - IMAGE:
-        - php:7.4-cli
-        - php:8.0-cli
-  stage: test
-  image: $IMAGE
-  script:
-    - cd 2020/php
-    - composer install -d ./src --no-progress --prefer-dist
-    - php ./cli.php run
+2019:julia:
+  extends: .julia
+  variables:
+    YEAR: 2019
 
-test:2020:julia1.5:
-  stage: test
-  image: julia:1.5-alpine
-  only:
-    changes:
-      - 2020/julia/**
-  script:
-   - cd 2020/julia/test
-   - julia test.jl
+2020:julia:
+  extends: .julia
+  variables:
+    YEAR: 2020
 
+2021:julia:
+  extends: .julia
+  image: julia:1.7-alpine
+  variables:
+    YEAR: 2021
+
+
+##
+## Typescript
+##
 .typescript:
   stage: test
   image: node:latest
+  variables:
+    YEAR: 2021
   before_script:
     - cd lib/typescript/aoc
     - yarn install
     - cd $CI_PROJECT_DIR
-
-test:2020:typescript:
-  extends: .typescript
-  only:
-    changes:
-      - 2020/typescript/**
   script:
-    - cd 2020/typescript/src
+    - cd $YEAR/typescript/src
     - yarn install
     - yarn run aoc
+  rules:
+    - if:
+      changes:
+         - $YEAR/typescript/src/days/*
+      when: on_success
+    - if: $YEAR != $CURRENT
+      when: manual
 
-test:2021:typescript:
+2020:typescript:
   extends: .typescript
-  script:
-    - cd 2021/typescript/src
-    - yarn install
-    - yarn run aoc
+  variables:
+    YEAR: 2020
 
-test:2021:julia:
-  stage: test
-  image: julia:1.7-alpine
-  script:
-    - cd 2021/julia/test
-    - julia test.jl
+2021:typescript:
+  extends: .typescript
+  variables:
+    YEAR: 2021
