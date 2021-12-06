@@ -6,7 +6,7 @@ using Printf
 
 days = vcat(1:1)
 
-@time using Day1, Day2, Day3
+@time using Day1, Day2, Day3, Day6
 
 function format_time(sec::Float64)
     ms = sec * 1000
@@ -36,8 +36,8 @@ for day in 1:25
         println(@sprintf("│ % 2s  │ %s │ %s │ %s │   % 15s │  % 15s │",
             day,
             valid ? "\x1b[32m✔\x1b[0m" : "\x1b[31mX\x1b[0m",
-            format_time(p1time[2]),
-            format_time(p2time[2]),
+            format_time(p1time.time),
+            format_time(p2time.time),
             p1time[1],
             p2time[1]
         ))
