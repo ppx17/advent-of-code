@@ -9,7 +9,7 @@ variables:
 ##
 .composer:
   allow_failure: true
-  image: php:8.0-cli
+  image: php:7.3-cli
   stage: test
   before_script:
     - bash ${CI_PROJECT_DIR}/.ci/php/install_composer.sh
@@ -20,7 +20,6 @@ variables:
 
 2018:php:
   extends: .composer
-  image: php:7.3-cli
   variables:
     YEAR: 2018
   script:
@@ -34,6 +33,7 @@ variables:
 
 2020:php:
   extends: .composer
+  image: php:8.0-cli
   variables:
     YEAR: 2020
 
@@ -72,6 +72,7 @@ variables:
 
 2020:julia:
   extends: .julia
+  image: julia:1.6-alpine
   variables:
     YEAR: 2020
 
