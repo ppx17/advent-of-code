@@ -10,15 +10,12 @@ export class Day7 extends Day {
 
     part2 = (): string => this.countBagsRecursive('shiny gold').toString();
 
-    setup() {
-        super.setup();
-
+    setup = () =>
         this.input
             .map(l => l.match(/^(?<bag>\w+ \w+) bags contain (?<content>(\d+ \w+ \w+ bags?,? ?)+)\.$/))
             .filter(r => r)
             .map((r): Bag => ({color: r.groups.bag, content: Day7.parseContent(r.groups.content)}))
             .forEach(b => this.bags.set(b.color, b));
-    }
 
     private static parseContent(content: string): ContentLine[] {
         return content.split(',')

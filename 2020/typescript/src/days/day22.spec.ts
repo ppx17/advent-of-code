@@ -19,8 +19,7 @@ const sampleInput = [
 describe('Day 22', () => {
     describe('part 1', () => {
         it('can handle example 1', () => {
-            const sut = new Day22(sampleInput);
-            sut.setup();
+            const sut = new Day22(sampleInput).initializeDay();
 
             expect(sut.part1()).toBe('306');
         });
@@ -28,8 +27,7 @@ describe('Day 22', () => {
 
     describe('part 2', () => {
         it('can handle example 1', () => {
-            const sut = new Day22(sampleInput);
-            sut.setup();
+            const sut = new Day22(sampleInput).initializeDay();
 
             expect(sut.part2()).toBe('291');
         });

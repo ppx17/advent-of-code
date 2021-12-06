@@ -16,8 +16,7 @@ describe('Day 3', () => {
         '01010',
     ];
 
-    const p = new Day3(input);
-    p.setup();
+    const p = new Day3(input).initializeDay();
 
     it('should run part 1 with sample input', () => {
         expect(p.part1()).toBe('198');

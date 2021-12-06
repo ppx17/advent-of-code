@@ -14,14 +14,11 @@ export class Day5 extends Day {
             )
             .toString();
 
-    setup = () => {
-        super.setup();
-
+    setup = () =>
         this.ids = this.input
             .map(l => l.replaceAll(/[FL]/g, '0').replaceAll(/[BR]/g, '1'))
             .map(binary => parseInt(binary, 2))
             .filter(n => !isNaN(n));
-    };
 
     private min = (): number => Math.min(...this.ids);
     private max = (): number => Math.max(...this.ids);

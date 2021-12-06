@@ -29,12 +29,10 @@ export class Day4 extends Day {
     private allNumbers: number[];
     private inputSegments: string[];
 
-    setup() {
-        super.setup();
-
+    setup = () => {
         this.inputSegments = this.input.join("\n").split("\n\n");
         this.allNumbers = this.inputSegments.shift().split(",").map(Number);
-    }
+    };
 
     private generateBoards = (): Board[] => this.inputSegments
         .map(b => b.split("\n").map(l => l.split(/\s+/).map(Number)))

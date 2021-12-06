@@ -6,7 +6,6 @@ export class Day22 extends Day {
     private stacks: Stacks;
 
     setup() {
-        super.setup();
         const middle = this.input.indexOf('');
         this.stacks = new Stacks(
             new Stack(this.input.slice(1, middle).map(n => parseInt(n))),

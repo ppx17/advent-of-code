@@ -10,10 +10,7 @@ export class Day11 extends Day {
     part1 = (): string => this.transform(this.map, Day11.evolvePart1).countOccupied().toString();
     part2 = (): string => this.transform(this.map, Day11.evolvePart2).countOccupied().toString();
 
-    setup() {
-        super.setup();
-        this.map = new Map(this.input.map(line => line.split('')));
-    }
+    setup = () => this.map = new Map(this.input.map(line => line.split('')));
 
     private transform(map: Map, evolveSeat: (map: Map, pos: Vector) => string): Map {
         const newMap = map.copy();

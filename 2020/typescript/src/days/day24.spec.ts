@@ -26,16 +26,14 @@ const sampleInput = ['sesenwnenenewseeswwswswwnenewsewsw',
 describe('Day 24', () => {
     describe('part 1', () => {
         it('can handle the example', () => {
-            const sut = new Day24(sampleInput);
-            sut.setup();
+            const sut = new Day24(sampleInput).initializeDay();
 
             expect(sut.part1()).toBe('10');
         });
     });
     describe('part 2', () => {
         it('can handle the example', () => {
-            const sut = new Day24(sampleInput);
-            sut.setup();
+            const sut = new Day24(sampleInput).initializeDay();
 
             expect(sut.part2(100)).toBe('2208');
         });

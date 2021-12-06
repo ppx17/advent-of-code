@@ -16,15 +16,12 @@ export class Day5 extends Day {
 
     private lines: Line[];
 
-    setup() {
-        super.setup();
-
+    setup = () =>
         this.lines = this.input
             .map(l => l.split(' -> ')
                 .map(point => point.split(',').map(Number))
                 .map(v => new Vector(...v))
             ).map(vectors => new Line(vectors[0], vectors[1]));
-    }
 }
 
 class Line {

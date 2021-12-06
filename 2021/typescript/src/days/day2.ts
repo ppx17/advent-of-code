@@ -16,10 +16,8 @@ export class Day2 extends Day {
         return (pos.x * pos.y).toString();
     }
 
-    setup() {
-        super.setup();
-
+    setup = () => {
         const dirs = { 'forward': Vector.east(), 'down': Vector.south(), 'up': Vector.north() };
         this.course = this.input.map(l => l.split(' ')).map(s => dirs[s[0]].times(Number(s[1])));
-    }
+    };
 }

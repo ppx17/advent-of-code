@@ -27,9 +27,5 @@ export class Day1 extends Day {
         return '';
     }
 
-    setup() {
-        super.setup();
-
-        this.amounts = this.input.map((i) => parseInt(i));
-    }
+    setup = () => this.amounts = this.input.map((i) => parseInt(i));
 }

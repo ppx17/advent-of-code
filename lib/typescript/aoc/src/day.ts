@@ -10,7 +10,13 @@ export abstract class Day {
     constructor(protected input: string[] | undefined = undefined) {
     }
 
-    setup() {
+    initializeDay() {
         this.input ??= Tools.input(this.day());
+        this.setup();
+
+        return this;
+    }
+
+    protected setup() {
     }
 }

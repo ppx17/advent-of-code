@@ -14,8 +14,7 @@ describe('Day 14', () => {
             'mem[8] = 0'
         ];
 
-        const sut = new Day14(program);
-        sut.setup()
+        const sut = new Day14(program).initializeDay();
 
         expect(sut.part1()).toBe("165");
     });
@@ -55,8 +54,7 @@ describe('Day 14', () => {
             'mem[26] = 1',
         ];
 
-        const sut = new Day14(program);
-        sut.setup();
+        const sut = new Day14(program).initializeDay();
 
         expect(sut.part2()).toBe('208');
     })

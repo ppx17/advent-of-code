@@ -6,8 +6,6 @@ export class Day23 extends Day {
     private inputMax: number;
 
     setup() {
-        super.setup();
-
         this.inputCups = this.input[0].split('').map((n): Cup => ({label: Number(n)}));
         this.inputMax = Math.max(...this.inputCups.map(c => c.label));
     }

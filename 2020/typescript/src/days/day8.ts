@@ -20,13 +20,10 @@ export class Day8 extends Day {
         return 'unknown';
     }
 
-    setup() {
-        super.setup();
-
+    setup = () =>
         this.instructions = this.input
             .map(l => l.split(' '))
             .map(i => ({op: i[0], arg: parseInt(i[1])}));
-    }
 }
 
 class Computer {

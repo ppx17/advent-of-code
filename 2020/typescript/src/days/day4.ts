@@ -19,9 +19,7 @@ export class Day4 extends Day {
 
     part2 = (): string => this.passports.filter(p => this.hasValidFields(p)).length.toString();
 
-    setup() {
-        super.setup();
-
+    setup = () =>
         this.passports = this.input
             .join("\n")
             .split("\n\n")
@@ -31,7 +29,6 @@ export class Day4 extends Day {
                 document.forEach(field => map.set(field[0], field[1]));
                 return map;
             });
-    }
 
     private hasRequiredFields(passport: Map<string, string>): boolean {
         for (const field of this.required.keys()) {

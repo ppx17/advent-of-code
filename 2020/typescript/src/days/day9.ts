@@ -42,11 +42,7 @@ export class Day9 extends Day {
         return null;
     };
 
-    setup() {
-        super.setup();
-
-        this.numbers = this.input.map(s => parseInt(s));
-    }
+    setup = () => this.numbers = this.input.map(s => parseInt(s));
 
     private hasSum(curr: number, i: number) {
         for (let a = i - 1; a >= i - this.preamble; a--) {

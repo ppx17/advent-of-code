@@ -57,7 +57,7 @@ export class Judge {
     static judge(day: Day): Result {
 
         const startNs = process.hrtime.bigint();
-        day.setup();
+        day.initializeDay();
         const runtimeNs = process.hrtime.bigint() - startNs;
 
         return new Result(

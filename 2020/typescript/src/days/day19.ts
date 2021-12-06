@@ -30,8 +30,6 @@ export class Day19 extends Day {
     private messages: string[];
 
     setup() {
-        super.setup();
-
         this.rules = this.input.slice(0, this.input.indexOf(''))
             .map(s => s.split(': '))
             .map((p): Rule => ({nr: p[0], content: p[1]}));

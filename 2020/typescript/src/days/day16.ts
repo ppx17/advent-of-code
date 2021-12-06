@@ -24,8 +24,6 @@ export class Day16 extends Day {
     }
 
     setup() {
-        super.setup();
-
         this.rules = this.input
             .map(l => l.match(/^(?<field>[a-z ]+): (?<r1min>\d+)-(?<r1max>\d+) or (?<r2min>\d+)-(?<r2max>\d+)$/))
             .filter(r => r)

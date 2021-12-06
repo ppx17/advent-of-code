@@ -28,15 +28,11 @@ export class Day10 extends Day {
     }
 
     setup(): void {
-        super.setup();
-
         const adapterBag = this.input.map(s => parseInt(s)).sort((a, b) => a - b);
-
         this.adapters = [
             0, // outlet
             ...adapterBag,
             Math.max(...adapterBag) + 3 // device
         ];
     }
-
 }

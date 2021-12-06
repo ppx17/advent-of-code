@@ -22,10 +22,6 @@ export class Day6 extends Day {
         .reduce(sum)
         .toString()
 
-    setup = () => {
-        super.setup();
-
-        this.groups = this.input.join("\n").trim().split(/\r?\n\r?\n/);
-    };
+    setup = () => this.groups = this.input.join("\n").trim().split(/\r?\n\r?\n/);
 }
 

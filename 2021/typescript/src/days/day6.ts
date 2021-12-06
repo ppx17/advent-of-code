@@ -7,7 +7,7 @@ export class Day6 extends Day {
     part2 = (): string => this.cycle(256);
     private fish: number[];
 
-    cycle(days: number): string {
+    cycle = (days: number): string => {
         const f = [...this.fish];
         for(let d = 0; d < days; d++) {
             const b = f[0];
@@ -18,11 +18,10 @@ export class Day6 extends Day {
             f[6] += b;
         }
         return f.reduce(sum).toString();
-    }
+    };
 
-    setup() {
-        super.setup();
+    setup = () => {
         this.fish = Array.from({length: 9}).map(() => 0);
         this.input[0].split(',').map(Number).forEach(f => this.fish[f]++);
-    }
+    };
 }
