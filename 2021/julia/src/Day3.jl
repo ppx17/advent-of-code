@@ -24,8 +24,8 @@ function reducematrix(matrix, decide)
 end
 
 function part1()
-    reduced = mapreduce(i -> sum(i)*2>size(matrix)[1], toint, eachcol(matrix));
-    reduced * (~reduced & 0b111111111111)
+    o2 = mapreduce(i -> sum(i)*2>size(matrix)[1], toint, eachcol(matrix));
+    o2 * (~o2 & 0b111111111111)
 end
 
 function part2()
