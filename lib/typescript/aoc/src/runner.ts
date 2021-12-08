@@ -68,7 +68,7 @@ export class Judge {
         )
     }
 
-    private static judgePart(dayNumber: number, part: number, payload): PartResult {
+    private static judgePart(dayNumber: number, part: number, payload: () => number|string): PartResult {
 
         const startNs = process.hrtime.bigint();
         const result = payload();
@@ -76,7 +76,7 @@ export class Judge {
 
         return new PartResult(
             Tools.expected(dayNumber, part),
-            result,
+            (typeof result === "string") ? result : result.toString(),
             Time.fromNsBigint(runtimeNs)
         );
     }

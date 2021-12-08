@@ -3,9 +3,9 @@ import {Tools} from "./tools";
 export abstract class Day {
     abstract day(): number;
 
-    abstract part1(): string;
+    abstract part1(): string | number;
 
-    abstract part2(): string;
+    abstract part2(): string | number;
 
     constructor(protected input: string[] | undefined = undefined) {
     }
