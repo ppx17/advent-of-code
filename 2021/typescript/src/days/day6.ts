@@ -3,11 +3,11 @@ import {Day, sum} from "../aoc";
 export class Day6 extends Day {
     day = (): number => 6;
 
-    part1 = (): string => this.cycle(80);
-    part2 = (): string => this.cycle(256);
+    part1 = () => this.cycle(80);
+    part2 = () => this.cycle(256);
     private fish: number[];
 
-    cycle = (days: number): string => {
+    cycle = (days: number) => {
         const f = [...this.fish];
         for(let d = 0; d < days; d++) {
             const b = f[0];
@@ -17,7 +17,7 @@ export class Day6 extends Day {
             f[8] = b;
             f[6] += b;
         }
-        return f.reduce(sum).toString();
+        return f.reduce(sum);
     };
 
     setup = () => {

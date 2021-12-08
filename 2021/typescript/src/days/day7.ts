@@ -3,16 +3,15 @@ import {Day, sum} from "../aoc";
 export class Day7 extends Day {
     day = (): number => 7;
 
-    part1 = (): string => {
+    part1 = () => {
         const target = Day7.median(this.pos);
-        return this.pos.map(p => Math.abs(p - target)).reduce(sum).toString();
+        return this.pos.map(p => Math.abs(p - target)).reduce(sum);
     }
 
-    part2 = (): string => {
+    part2 = () => {
         const min = Math.min(...this.pos);
         return Math.min(...Array.from({length: Math.max(...this.pos) - min})
-            .map((v,i) => this.pos.map(p => Day7.triangle(Math.abs(p - i+min))).reduce(sum)))
-            .toString();
+            .map((v,i) => this.pos.map(p => Day7.triangle(Math.abs(p - i+min))).reduce(sum)));
     }
 
     private static triangle = (n: number): number =>

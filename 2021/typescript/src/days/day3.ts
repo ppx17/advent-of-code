@@ -3,19 +3,19 @@ import {Day, product} from "../aoc";
 export class Day3 extends Day {
     day = (): number => 3;
 
-    part1 = (): string => {
+    part1 = () => {
         const counts = this.count(this.input);
         return [
             parseInt(counts.map(n => n > 0 ? 1 : 0).join(''), 2),
             parseInt(counts.map(n => n < 0 ? 1 : 0).join(''), 2)
-        ].reduce(product).toString();
+        ].reduce(product);
     }
 
-    part2 = (): string => {
+    part2 = () => {
         return [
             parseInt(this.reduceOptions(x => x >= 0 ? '1' : '0'), 2),
             parseInt(this.reduceOptions(x => x < 0 ? '1' : '0'), 2)
-        ].reduce(product).toString();
+        ].reduce(product);
     }
 
     private reduceOptions(f: (count: number) => '1'|'0'): string {

@@ -5,15 +5,15 @@ export class Day2 extends Day {
 
     private course: Vector[];
 
-    part1 = (): string => {
+    part1 = () => {
         const pos = this.course.reduce((pos, inst) => pos.add(inst), Vector.zero());
-        return (pos.x * pos.y).toString();
+        return (pos.x * pos.y);
     }
 
-    part2 = (): string => {
+    part2 = () => {
         let [pos, aim] = [Vector.zero(), Vector.zero()];
         this.course.forEach(inst => inst.y !== 0 ? aim = aim.add(inst) : pos = pos.add(aim.times(inst.x)).add(inst));
-        return (pos.x * pos.y).toString();
+        return (pos.x * pos.y);
     }
 
     setup = () => {

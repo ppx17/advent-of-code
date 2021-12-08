@@ -3,15 +3,15 @@ import {Day, Vector} from "../aoc";
 export class Day5 extends Day {
     day = (): number => 5;
 
-    part1 = (): string => this.countOverlap(this.lines.filter(l => l.isStraight()));
-    part2 = (): string => this.countOverlap(this.lines);
+    part1 = () => this.countOverlap(this.lines.filter(l => l.isStraight()));
+    part2 = () => this.countOverlap(this.lines);
 
-    private countOverlap(lines: Line[]): string {
+    private countOverlap(lines: Line[]): number {
         const counts = new Map<string, number>();
 
         lines.forEach(line => Array.from(line.vectors()).forEach(v => counts.set(v, (counts.get(v) ?? 0) + 1)));
 
-        return Array.from(counts.values()).filter(n => n >= 2).length.toString();
+        return Array.from(counts.values()).filter(n => n >= 2).length;
     }
 
     private lines: Line[];
