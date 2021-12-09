@@ -1,5 +1,4 @@
-import {Day} from "../aoc";
-import {product, sum} from "./helpers";
+import {Day, product, sum} from "../aoc";
 
 export class Day16 extends Day {
     private rules: Rule[];

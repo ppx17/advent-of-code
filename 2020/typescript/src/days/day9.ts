@@ -1,5 +1,4 @@
-import {Day} from "../aoc";
-import {sum} from "./helpers";
+import {Day, sum} from "../aoc";
 
 export class Day9 extends Day {
 
@@ -17,7 +16,6 @@ export class Day9 extends Day {
                 return curr.toString();
             }
         }
-
 
         return '';
     }

@@ -1,5 +1,4 @@
-import {Day} from "../aoc";
-import {sum} from "./helpers";
+import {Day, sum} from "../aoc";
 
 export class Day7 extends Day {
     private bags = new Map<Color, Bag>();

@@ -1,5 +1,4 @@
-import {Day} from "../aoc";
-import {sum, Vector} from "./helpers";
+import {Day, sum, Vector} from "../aoc";
 
 export class Day24 extends Day {
 
@@ -12,7 +11,7 @@ export class Day24 extends Day {
     part2 = (days = 100): string => {
         let floor = this.initialFloor();
 
-        for(let day = 1; day <= days; day++) {
+        for (let day = 1; day <= days; day++) {
             floor = Flipper.flip(floor);
         }
 
@@ -66,7 +65,7 @@ class Flipper {
             flipped.set(tile.location, this.newColor(tile, floor));
 
             Navigator.neighbors(tile.location).forEach((location: Vector) => {
-                if(flipped.has(location)) return;
+                if (flipped.has(location)) return;
 
                 const tile: FloorTile = {color: floor.get(location), location: location};
                 flipped.set(location, this.newColor(tile, floor));

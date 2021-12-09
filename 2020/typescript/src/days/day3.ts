@@ -1,5 +1,4 @@
-import {Day} from "../aoc";
-import {product} from "./helpers";
+import {Day, product} from "../aoc";
 
 export class Day3 extends Day {
     day = (): number => 3;

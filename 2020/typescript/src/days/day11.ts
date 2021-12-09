@@ -1,5 +1,4 @@
-import {Day} from "../aoc";
-import {Vector} from "./helpers";
+import {Day, Vector} from "../aoc";
 
 export class Day11 extends Day {
     private map: Map;

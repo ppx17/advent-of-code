@@ -1,5 +1,4 @@
-import {Day} from "../aoc";
-import {sum} from "./helpers";
+import {Day, sum} from "../aoc";
 
 export class Day10 extends Day {
     private adapters: number[];
