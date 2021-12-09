@@ -6,7 +6,7 @@ using Printf
 
 days = vcat(1:1)
 
-@time using Day1, Day2, Day3, Day6, Day7
+@time using Day1, Day2, Day3, Day4, Day6, Day7
 
 function format_time(sec::Float64)
     ms = sec * 1000
