@@ -3,9 +3,9 @@ import {Day, product, sum, Vector} from "../aoc";
 export class Day9 extends Day {
     day = (): number => 9;
 
-    part1 = () => this.lowPoints().map(v => this.fromGrid(v) + 1).reduce(sum)
+    part1 = () => this.low.map(v => this.fromGrid(v) + 1).reduce(sum);
     part2 = () =>
-        this.lowPoints()
+        this.low
             .map(start => {
                 const seen = new Set<string>();
                 const queue = [];
@@ -30,28 +30,28 @@ export class Day9 extends Day {
 
     private dirs: Vector[];
     private grid: number[][];
+    private low: Vector[];
 
     setup = () => {
         this.grid = this.input.map(l => l.split('').map(n => Number(n)));
         this.dirs = [Vector.north(), Vector.east(), Vector.south(), Vector.west()];
+        this.low = this.lowPoints();
     };
 
-    private fromGrid = (pos: Vector): number => (this.grid[pos.y] ?? [])[pos.x] ?? -1;
+    private fromGrid = (pos: Vector): undefined | number => (this.grid[pos.y] ?? [])[pos.x] ?? -1;
 
     private lowPoints = (): Vector[] => {
         const result = [];
 
-        for (let y = 0; y < this.grid.length; y++) {
-            for (let x = 0; x < this.grid[0].length; x++) {
+        this.grid.forEach((r, y) => {
+            r.forEach((v, x) => {
                 const pos = new Vector(x, y);
-
-                const neighbors = this.dirs.map(v => pos.add(v)).map(v => this.fromGrid(v)).filter(n => n > -1);
-
+                const neighbors = this.dirs.map(v => this.fromGrid(pos.add(v))).filter(n => n !== -1);
                 if (neighbors.every(n => n > this.fromGrid(pos))) {
                     result.push(pos);
                 }
-            }
-        }
+            });
+        });
 
         return result;
     };
