@@ -40,10 +40,8 @@ export class Day12 extends Day {
     }
 
     private getOrMakeCave(name: string): Cave {
-        if(this.caves.has(name)) return this.caves.get(name);
-        const c = new Cave(name);
-        this.caves.set(name, c);
-        return c;
+        if(!this.caves.has(name)) this.caves.set(name, new Cave(name));
+        return this.caves.get(name);
     }
 }
 
