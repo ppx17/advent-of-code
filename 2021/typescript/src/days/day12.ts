@@ -48,7 +48,7 @@ export class Day12 extends Day {
 }
 
 class Cave {
-    public connections: Cave[] = [];
+    public readonly connections: Cave[] = [];
     public readonly isBig: boolean;
     constructor(public name: string) {
         this.isBig = name === this.name.toUpperCase();
@@ -56,19 +56,14 @@ class Cave {
 }
 
 class Path {
-    public finished: boolean = false;
-    public lastCave: Cave;
+    public readonly lastCave: Cave;
 
-    constructor(private readonly connections: Cave[] = []) {
+    constructor(private readonly connections: Cave[] = [], public readonly finished: boolean = false) {
         this.lastCave = connections[connections.length - 1];
     }
 
     has = (cave: Cave): boolean => !this.connections.every(c => c !== cave);
     hasTimes = (cave: Cave): number => this.connections.filter(c => c === cave).length;
     serialize = (): string => this.connections.map(c => c.name).join(',');
-    add = (cave: Cave): Path => {
-        const fork = new Path([...this.connections, cave]);
-        fork.finished ||= cave.name === "end";
-        return fork;
-    };
+    add = (cave: Cave): Path => new Path([...this.connections, cave], this.finished || cave.name === "end");
 }
