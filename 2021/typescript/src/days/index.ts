@@ -10,3 +10,5 @@ export {Day9} from "./day9"
 export {Day10} from "./day10"
 export {Day11} from "./day11"
 export {Day12} from "./day12"
+
+export {Day14} from "./day14"
