@@ -6,18 +6,13 @@ export class Day14 extends Day {
     part1 = () => this.stepTimes(10);
     part2 = () => this.stepTimes(40);
 
-    private stepTimes(times: number): number {
-        let pairCounts = new Map<string, number>();
-        for (let i = 1; i < this.template.length; i++) Day14.mapAdd(pairCounts, this.template.substring(i - 1, i + 1));
-        for (let s = 0; s < times; s++) pairCounts = this.stepCounts(pairCounts);
+    private stepTimes = (times: number): number => {
+        let pairCounts = Day14.countPairs(this.template);
+        for (let s = 0; s < times; s++) pairCounts = this.applyRules(pairCounts);
+        return (v => Math.max(...v) - Math.min(...v))([...Day14.countCharacters(pairCounts).values()].map(n => Math.ceil(n / 2)));
+    };
 
-        const lc = new Map<string, number>();
-        pairCounts.forEach((count, pair) => pair.split('').forEach(c => Day14.mapAdd(lc, c, count)));
-
-        return (v => Math.max(...v) - Math.min(...v))([...lc.values()].map(n => Math.ceil(n / 2)));
-    }
-
-    private stepCounts(counts: Map<string, number>): Map<string, number> {
+    private applyRules = (counts: Map<string, number>): Map<string, number> => {
         const result = new Map<string, number>();
 
         this.rules.forEach((insert, pair) => {
@@ -26,6 +21,18 @@ export class Day14 extends Day {
             Day14.mapAdd(result, insert + pair[1], counts.get(pair));
         });
         return result;
+    };
+
+    private static countPairs = (template: string): Map<string, number> => {
+        let pairCounts = new Map<string, number>();
+        for (let i = 0; i < template.length - 1; i++) this.mapAdd(pairCounts, template.substring(i, i + 2));
+        return pairCounts;
+    };
+
+    private static countCharacters(pairCounts: Map<string, number>): Map<string, number> {
+        const lc = new Map<string, number>();
+        pairCounts.forEach((count, pair) => pair.split('').forEach(c => this.mapAdd(lc, c, count)));
+        return lc;
     }
 
     setup = () => {
