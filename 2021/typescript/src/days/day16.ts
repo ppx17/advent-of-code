@@ -31,34 +31,23 @@ class Packet {
         this.isLiteral() ? this.parseLiteral() : this.parseOperator();
     }
 
-    public versionSum(): number {
-        return this.subPackets.map(p => p.versionSum()).reduce(sum, 0) + this.version;
-    }
+    public versionSum = (): number => this.subPackets.map(p => p.versionSum()).reduce(sum, 0) + this.version;
+    public isLiteral = () => this.typeID === 4;
 
     public value(): number {
         const subPacketValues = this.subPackets.map(p => p.value());
 
         switch (this.typeID) {
-            case 0:
-                return subPacketValues.reduce(sum, 0);
-            case 1:
-                return subPacketValues.reduce(product, 1);
-            case 2:
-                return Math.min(...subPacketValues);
-            case 3:
-                return Math.max(...subPacketValues);
-            case 4:
-                return this.literalValue;
-            case 5:
-                return subPacketValues[0] > subPacketValues[1] ? 1 : 0;
-            case 6:
-                return subPacketValues[0] < subPacketValues[1] ? 1 : 0;
-            case 7:
-                return subPacketValues[0] === subPacketValues[1] ? 1 : 0;
+            case 0: return subPacketValues.reduce(sum, 0);
+            case 1: return subPacketValues.reduce(product, 1);
+            case 2: return Math.min(...subPacketValues);
+            case 3: return Math.max(...subPacketValues);
+            case 4: return this.literalValue;
+            case 5: return subPacketValues[0] > subPacketValues[1] ? 1 : 0;
+            case 6: return subPacketValues[0] < subPacketValues[1] ? 1 : 0;
+            case 7: return subPacketValues[0] === subPacketValues[1] ? 1 : 0;
         }
     }
-
-    public isLiteral = () => this.typeID === 4;
 
     private parseLiteral() {
         let data = '';
@@ -80,12 +69,11 @@ class Packet {
 
             this.lengthInBits = 22 + totalSubPacketLength;
 
-            do {
+            while (subPacketsData.length > 0) {
                 const subPacket = new Packet(subPacketsData);
                 subPacketsData = subPacketsData.substring(subPacket.lengthInBits);
                 this.subPackets.push(subPacket);
-            } while (subPacketsData.length > 0);
-
+            }
         } else if (this.lengthTypeID === 1) {
             const totalSubPacketCount = parseInt(this.data.substring(7, 18), 2);
 
