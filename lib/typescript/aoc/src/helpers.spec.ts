@@ -64,6 +64,24 @@ describe('Vector', () => {
         });
     });
 
+    describe('between', () => {
+        it('sees a vector right in the middle of a positive pair as between', () => {
+            const a = new Vector(3, 3);
+            const b = new Vector(5, 5);
+            const v = new Vector(4, 4);
+
+            expect(v.between(a, b)).toBeTruthy();
+        });
+
+        it('sees a vector on the border of a positive pair as between', () => {
+            const a = new Vector(3, 3);
+            const b = new Vector(5, 5);
+            const v = new Vector(3, 3);
+
+            expect(v.between(a, b)).toBeTruthy();
+        });
+    });
+
     describe('manhattan', () => {
         it('can calculate the manhattan distance from origin', () => {
             const a = new Vector(3, 5);

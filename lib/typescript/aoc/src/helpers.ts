@@ -74,6 +74,17 @@ export class Vector {
         return true;
     }
 
+    between(a: Vector, b: Vector): boolean {
+        if (this.dimensions > a.dimensions || this.dimensions > b.dimensions) return false;
+
+        for (let d = 0; d < this.dimensions; d++)
+            if (this.values[d] < Math.min(a.values[d], b.values[d])
+                || this.values[d] > Math.max(a.values[d], b.values[d]))
+                return false;
+
+        return true;
+    }
+
     times(t: number): Vector {
         return new Vector(...this.values.map(v => v * t));
     }
@@ -86,7 +97,7 @@ export class Vector {
 
     public is(other: Vector): boolean {
         return this.values.length === other.values.length
-            && this.values.every((v,i) => v === other.values[i]);
+            && this.values.every((v, i) => v === other.values[i]);
     }
 
     serialize(): string {
