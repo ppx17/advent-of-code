@@ -57,6 +57,10 @@ export class Vector {
         return new Vector(...this.values.map((v, i) => v - other.values[i] ?? 0));
     }
 
+    abs(): Vector {
+        return new Vector(...this.values.map((v) => Math.abs(v)));
+    }
+
     within(boundary: Vector): boolean {
         for (let i = 0; i < boundary.dimensions; i++) {
             const b = boundary.values[i];
@@ -72,6 +76,18 @@ export class Vector {
         }
 
         return true;
+    }
+
+    rotateAroundZ(): Vector {
+        return new Vector(-this.y, this.x, this.z);
+    }
+
+    rotateAroundX(): Vector {
+        return new Vector(this.x, -this.z, this.y);
+    }
+
+    rotateAroundY(): Vector {
+        return new Vector(this.z, this.y, -this.x);
     }
 
     between(a: Vector, b: Vector): boolean {
@@ -102,6 +118,10 @@ export class Vector {
 
     serialize(): string {
         return this.values.join(':');
+    }
+
+    static deserialize(key: string) {
+        return new Vector(...key.split(':').map(Number));
     }
 }
 
