@@ -100,6 +100,7 @@ abstract class BaseVector {
     }
 
     abstract rotate3dLeftAroundDimension(d: number): Vec;
+
     abstract rotate3dRightAroundDimension(d: number): Vec;
 
     rotateAroundX(): Vec {
@@ -109,6 +110,7 @@ abstract class BaseVector {
     rotateAroundY(): Vec {
         return this.rotate3dRightAroundDimension(1);
     }
+
     rotateAroundZ(): Vec {
         return this.rotate3dRightAroundDimension(2);
     }
@@ -124,6 +126,10 @@ abstract class BaseVector {
 }
 
 export class Vector extends BaseVector implements Vec {
+    private static _north: Vector;
+    private static _south: Vector;
+    private static _east: Vector;
+    private static _west: Vector;
     public static zero(dimensions: number = 2): Vector {
         return new this(...Array.from({length: dimensions}).map(() => 0));
     }
@@ -133,28 +139,36 @@ export class Vector extends BaseVector implements Vec {
     }
 
     public static north(): Vector {
-        return new this(0, -1);
+        return this._north ??= new this(0, -1);
     }
 
     public static east(): Vector {
-        return new this(1, 0);
+        return this._east ??= new this(1, 0);
     }
 
     public static south(): Vector {
-        return new this(0, 1);
+        return this._south ??= new this(0, 1);
     }
 
     public static west(): Vector {
-        return new this(-1, 0);
+        return this._west ??= new this(-1, 0);
     }
 
-    add = (other: Vec): Vector => new Vector(...this.values.map((v, i) => v + other.values[i] ?? 0));
+    add(other: Vec): Vector {
+        return new Vector(...this.values.map((v, i) => v + other.values[i] ?? 0));
+    }
 
-    sub = (other: Vec): Vector => new Vector(...this.values.map((v, i) => v - other.values[i] ?? 0));
+    sub(other: Vec): Vector {
+        return new Vector(...this.values.map((v, i) => v - other.values[i] ?? 0));
+    }
 
-    times = (t: number): Vector => new Vector(...this.values.map(v => v * t));
+    times(t: number): Vector {
+        return new Vector(...this.values.map(v => v * t));
+    }
 
-    abs = (): Vector => new Vector(...this.values.map((v) => Math.abs(v)));
+    abs(): Vector {
+        return new Vector(...this.values.map((v) => Math.abs(v)));
+    }
 
     rotate3dRightAroundDimension(d: number): Vec {
         const rotated = [];
@@ -183,6 +197,7 @@ export class Vector extends BaseVector implements Vec {
     rotateAroundY(): Vec {
         return new Vector(-this.z, this.y, this.x);
     }
+
     rotateAroundZ(): Vec {
         return new Vector(-this.y, this.x, this.z);
     }
@@ -191,8 +206,8 @@ export class Vector extends BaseVector implements Vec {
         return new Vector(...key.split(':').map(Number));
     }
 
-    mutable = (): MutableVector => new MutableVector(...this.values);
-    fixed = (): Vector => this;
+    mutable(): MutableVector { return new MutableVector(...this.values) };
+    fixed(): Vector {return this; }
 }
 
 class MutableVector extends BaseVector implements Vec {
