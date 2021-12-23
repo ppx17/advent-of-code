@@ -3,8 +3,8 @@ import {Day, Vec, Vector} from "../aoc";
 export class Day19 extends Day {
     day = (): number => 19;
 
-    part1 = () => new Set<string>(this.knownScanners.map(s => s.beacons.map(b => b.serialize())).flat()).size;
-    part2 = () => Math.max(...this.knownScanners.map(a => Math.max(...this.knownScanners.map(b => a.position.manhattan(b.position)))))
+    part1 = () => new Set<string>(this.mapScanners().map(s => s.beacons.map(b => b.serialize())).flat()).size;
+    part2 = () => Math.max(...this.mapScanners().map(a => Math.max(...this.mapScanners().map(b => a.position.manhattan(b.position)))))
 
     setup = () => {
         let activeScanner: Scanner;
@@ -20,6 +20,10 @@ export class Day19 extends Day {
             }
         })
         if (activeScanner !== undefined) this.allScanners.push(activeScanner);
+    }
+
+    private mapScanners(): Scanner[] {
+        if(this.knownScanners !== undefined) return this.knownScanners;
 
         let unknownScanners = [...this.allScanners.slice(1)];
         this.knownScanners = [this.allScanners[0]];
@@ -39,6 +43,8 @@ export class Day19 extends Day {
                 }
             }
         }
+
+        return this.knownScanners;
     }
 
     private findOffset = (known: Scanner, unknown: Scanner): Offset | undefined => {
