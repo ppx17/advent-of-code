@@ -10,10 +10,9 @@ export class Day18 extends Day {
             .magnitude();
 
     part2 = () => this.input
-        .map(a => this.input
+        .flatMap(a => this.input
             .map(b => a === b ? 0 : this.calculator.add(Parser.parseLine(a), Parser.parseLine(b)).magnitude())
         )
-        .flat()
         .reduce((a, b) => a > b ? a : b);
 
     setup = () => this.calculator = new Calculator();
@@ -56,8 +55,6 @@ export class Parser {
 }
 
 export class Calculator {
-    private actionExecuted = false;
-
     public add(a: Pair, b: Pair): Pair {
         a.levelUp();
         b.levelUp();
@@ -76,60 +73,62 @@ export class Calculator {
         return reduced;
     }
 
-    public reduce(pair: Scalar | Pair): Scalar | Pair {
-        this.actionExecuted = true;
-        while (this.actionExecuted) {
-            this.actionExecuted = false;
-            pair = this.explode(pair);
-            if (this.actionExecuted) continue;
-
-            pair = this.split(pair);
+    public reduce(pair: Element): Element {
+        let result: Result = {el: pair, worked: true};
+        while (result.worked) {
+            result = this.explode(pair);
+            if (result.worked) continue;
+            result = this.split(pair);
         }
 
         return pair;
     }
 
-    public explode(pair: Pair | Scalar): Scalar | Pair {
-        if (pair.isScalar()) return pair;
+    public explode(pair: Pair | Scalar): Result {
+        if (pair.isScalar()) return {el: pair, worked: false};
 
         if (pair.shouldExplode() && pair.left.isScalar() && pair.right.isScalar()) {
             pair.addToParentOnLeft(pair.left.value);
             pair.addToParentOnRight(pair.right.value);
-
-            this.actionExecuted = true;
-            return new Scalar(pair.level, 0, pair.parent);
+            return {el: new Scalar(pair.level, 0, pair.parent), worked: true};
         }
 
+        const leftResult = this.explode(pair.left);
+        pair.left = leftResult.el;
 
-        pair.left = this.explode(pair.left);
-        if (!this.actionExecuted) pair.right = this.explode(pair.right);
+        if (leftResult.worked) return {el: pair, worked: leftResult.worked};
 
-        return pair;
+        const rightResult = this.explode(pair.right);
+        pair.right = rightResult.el;
+
+        return {el: pair, worked: rightResult.worked};
     }
 
-    public split(pair: Pair | Scalar): Pair | Scalar {
-        if (pair instanceof Scalar) return pair;
+    public split(pair: Pair | Scalar): Result {
+        if (pair instanceof Scalar) return {el: pair, worked: false};
 
         if (pair.left.isScalar() && pair.left.shouldSplit()) {
-            this.actionExecuted = true;
             pair.left = pair.left.split();
-            return pair;
+            return {el: pair, worked: true};
         }
 
-        pair.left = this.split(pair.left);
-
-        if (this.actionExecuted) return pair;
+        const leftResult = this.split(pair.left);
+        pair.left = leftResult.el;
+        if(leftResult.worked) return {el: pair, worked: true};
 
         if (pair.right.isScalar() && pair.right.shouldSplit()) {
-            this.actionExecuted = true;
             pair.right = pair.right.split();
-            return pair;
+            return {el: pair, worked: true};
         }
 
-        pair.right = this.split(pair.right);
-        return pair;
+        const rightResult = this.split(pair.right);
+        pair.right = rightResult.el;
+        return {el: pair, worked: rightResult.worked};
     }
 }
+
+type Element = Scalar | Pair;
+type Result = {el: Element, worked: boolean};
 
 abstract class Data {
     parent?: Pair;
@@ -147,8 +146,8 @@ abstract class Data {
 }
 
 export class Pair extends Data {
-    left?: Scalar | Pair;
-    right?: Scalar | Pair;
+    left?: Element;
+    right?: Element;
 
     toString = (): string => `[${this.left.toString()},${this.right.toString()}]`;
 
@@ -204,5 +203,4 @@ export class Scalar extends Data {
 
     shouldSplit = (): boolean => this.value >= 10;
     toString = (): string => this.value.toString();
-
 }
