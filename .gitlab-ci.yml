@@ -98,6 +98,9 @@ test:2020:typescript:
 
 test:2021:typescript:
   extends: .typescript
+  only:
+    changes:
+      - 2021/typescript/**
   script:
     - cd 2021/typescript/src
     - yarn install
@@ -106,6 +109,23 @@ test:2021:typescript:
 test:2021:julia:
   stage: test
   image: julia:1.7-alpine
+  only:
+    changes:
+      - 2021/julia/**
   script:
     - cd 2021/julia/test
+    - julia test.jl
+
+test:2022:typescript:
+  extends: .typescript
+  script:
+    - cd 2022/typescript/src
+    - yarn install
+    - yarn run aoc
+
+test:2022:julia:
+  stage: test
+  image: julia:1.7-alpine
+  script:
+    - cd 2022/julia/test
     - julia test.jl
