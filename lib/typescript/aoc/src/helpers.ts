@@ -267,3 +267,6 @@ export function sum(a: any, b: any): any {
 export function product(a: number, b: number): number {
     return a * b;
 }
+
+export const desc = (x,y) => y - x;
+export const asc = (x,y) => x - y;

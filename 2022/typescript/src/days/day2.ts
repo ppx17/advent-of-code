@@ -5,9 +5,9 @@ export class Day2 extends Day {
   day = (): number => 2;
   part1 = () => this.solve(this.p1)
   part2 = () => this.solve(this.p2)
-  solve = (fn) => String(this.input.map(l => fn(l.charCodeAt(0) - 65, l.charCodeAt(2) - 88)).reduce(sum))
-  p1 = (h, m) => 1 + m + (h === m ? 3 : Number((h + 1) % 3 === m) * 6)
-  p2 = (h, result) => result * 3 + (h + ((result + 2) % 3)) % 3 + 1;
+  private solve = (fn) => String(this.input.map(l => fn(l.charCodeAt(0) - 65, l.charCodeAt(2) - 88)).reduce(sum))
+  private p1 = (h, m) => 1 + m + (h === m ? 3 : Number((h + 1) % 3 === m) * 6)
+  private p2 = (h, result) => result * 3 + (h + ((result + 2) % 3)) % 3 + 1;
 }
 
 /**
